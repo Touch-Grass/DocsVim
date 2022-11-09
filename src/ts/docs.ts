@@ -16,13 +16,7 @@ export class docs {
    */
   pasteText(text: string): void {
     /** Element to paste text into */
-    const el = (
-      (
-        document.querySelectorAll(
-          'docs-texteventtarget-iframe'
-        )[0] as HTMLIFrameElement
-      ).contentDocument as Document
-    ).querySelector('[contenteditable=true]') as HTMLElement;
+    const el = ((document.querySelectorAll('docs-texteventtarget-iframe')[0] as HTMLIFrameElement).contentDocument as Document).querySelector('[contenteditable=true]') as HTMLElement;
     const data = new DataTransfer();
     data.setData('text/plain', text);
     const paste = new ClipboardEvent('paste', {
@@ -33,18 +27,37 @@ export class docs {
     el.dispatchEvent(paste);
   };
 
+  protected getUserCursor(): Element | null {
+    let myCursor: Element | null = null;
+
+    document.querySelectorAll('.kix-cursor').forEach(El => {
+      const caretColor = (El.querySelector('.kix-cursor-caret') as HTMLElement | null);
+      caretColor?.style.borderLeftColor.replace(/,/g, '').replace(/\s/g, '').toLowerCase();
+
+      const cursor_name = ((El.querySelector('.kix-cursor-name') as HTMLElement | null)?.textContent ?? '').trim();
+
+      if (cursor_name.length <= 0) myCursor = El
+    });
+
+    if (myCursor !== null) return myCursor;
+
+    console.error("Couldn't locate the cursor!");
+    return document.querySelector('.kix-cursor');
+  }
+
+
   /**
    * Sets the cursors width.
    * @param width {string} - The width of the cursor.
    * @param isInsertMode If the cursor is in insert mode or not.
    */
   protected setCursorWidth(width: string, isInsertMode?: boolean): void {
-    console.log(width, isInsertMode);
-    // docs.getUserCursor().find('.kix-cursor-caret').css({
-    //   'border-left-width': width,
-    //   'border-right-width': width,
-    //   'border-color': 'rgba(0,0,0,1)',
-    // });
-  };
+    const cursor = this.getUserCursor();
 
+    if (cursor === null) return;
+    const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
+    caret.style.borderLeftWidth = width;
+    caret.style.borderRightWidth = width;
+    caret.style.borderColor = 'rgba(${isInsertMode ?? 255 : 0},0,0,1)';
+  };
 };

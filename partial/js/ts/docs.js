@@ -16,8 +16,28 @@ export class docs {
         el.dispatchEvent(paste);
     }
     ;
+    getUserCursor() {
+        let myCursor = null;
+        document.querySelectorAll('.kix-cursor').forEach(El => {
+            const caretColor = El.querySelector('.kix-cursor-caret');
+            caretColor?.style.borderLeftColor.replace(/,/g, '').replace(/\s/g, '').toLowerCase();
+            const cursor_name = (El.querySelector('.kix-cursor-name')?.textContent ?? '').trim();
+            if (cursor_name.length <= 0)
+                myCursor = El;
+        });
+        if (myCursor !== null)
+            return myCursor;
+        console.error("Couldn't locate the cursor!");
+        return document.querySelector('.kix-cursor');
+    }
     setCursorWidth(width, isInsertMode) {
-        console.log(width, isInsertMode);
+        const cursor = this.getUserCursor();
+        if (cursor === null)
+            return;
+        const caret = cursor.querySelector('.kix-cursor-caret');
+        caret.style.borderLeftWidth = width;
+        caret.style.borderRightWidth = width;
+        caret.style.borderColor = 'rgba(${isInsertMode ?? 255 : 0},0,0,1)';
     }
     ;
 }

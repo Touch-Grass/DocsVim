@@ -24,7 +24,6 @@ const matchConsoleLogs = new RegExp(/console.log\([A-Za-z0-9_.,$]*\);/gim);
 const miniBundle = () => {
   return (
     src(JsFiles)
-      .pipe(gulpIgnore.exclude('**/Inject.js'))
       .pipe(minifyJs())
       .pipe(concat('main.min.js'))
       .pipe(replace(matchImports, ''))
@@ -38,7 +37,6 @@ const miniBundle = () => {
 const bundle = () => {
   return (
     src(JsFiles)
-      .pipe(gulpIgnore.exclude('**/Inject.js'))
       .pipe(concat('main.js'))
       .pipe(replace(matchImports, ''))
       .pipe(replace(matchUseStrict, ''))
@@ -49,7 +47,6 @@ const bundle = () => {
 };
 
 const watchJs = () => watch(AllFiles, miniBundle);
-const watchExtension = () => watch(JsFiles, bundleExtension);
 
 exports.miniBundle = miniBundle;
 exports.bundle = bundle;

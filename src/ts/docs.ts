@@ -1,4 +1,4 @@
-const docs: Record<string, any> = {
+export const docs = {
   id: window.location.href.split('/document/d/')[1].split('/')[0],
 
   /**
@@ -6,10 +6,7 @@ const docs: Record<string, any> = {
    */
   name(): string {
     return (
-      (
-        document.querySelector('.docs-title-input-label-inner') as HTMLElement
-      ).textContent?.trim() ?? ''
-    );
+      (document.querySelector('.docs-title-input-label-inner') as HTMLElement).textContent ?? '').trim() ?? '';
   },
 
   /**

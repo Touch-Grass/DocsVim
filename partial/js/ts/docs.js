@@ -1,8 +1,9 @@
-export const docs = {
-    id: window.location.href.split('/document/d/')[1].split('/')[0],
+export class docs {
+    constructor() { }
     name() {
         return (document.querySelector('.docs-title-input-label-inner').textContent ?? '').trim() ?? '';
-    },
+    }
+    ;
     pasteText(text) {
         const el = document.querySelectorAll('docs-texteventtarget-iframe')[0].contentDocument.querySelector('[contenteditable=true]');
         const data = new DataTransfer();
@@ -13,6 +14,12 @@ export const docs = {
             cancelable: true,
         });
         el.dispatchEvent(paste);
-    },
-};
-console.log(docs.name());
+    }
+    ;
+    setCursorWidth(width, isInsertMode) {
+        console.log(width, isInsertMode);
+    }
+    ;
+}
+docs.id = window.location.href.split('/document/d/')[1].split('/')[0];
+;

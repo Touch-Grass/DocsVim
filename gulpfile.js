@@ -11,7 +11,11 @@ const gulpIgnore = require('gulp-ignore');
 const fs = require('fs');
 
 // Order of the files that they get concatenated in
-const JsFiles = ['partial/js/**/*.js'];
+const JsFiles = [
+  'partial/js/ts/docs.js',
+  'partial/js/ts/mode/mode.js',
+  'partial/js/**/*.js',
+];
 const AllFiles = [...JsFiles];
 
 const matchExports = new RegExp(/export{[A-Za-z0-9_.,$]*};/gim);

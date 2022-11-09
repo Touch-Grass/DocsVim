@@ -1,19 +1,12 @@
 import { docs } from "../docs";
 import { vim } from "../vim";
-
 export class mode extends docs {
-    constructor () {
+    constructor() {
         super();
     }
-
-    /**
-     * Switches the mode to the given mode.
-     * @param mode {string} - The mode to set the editor to.
-     */
-    public switchToMode(mode: 'insert' | 'normal' | 'visual'): void {
+    switchToMode(mode) {
         vim.number = 1;
         console.log(mode);
-
         switch (mode) {
             case 'insert':
                 this.setCursorWidth('9px', true);
@@ -29,8 +22,7 @@ export class mode extends docs {
                 break;
         }
     }
-
-    protected static getMode(): string {
+    static getMode() {
         return vim.mode;
     }
 }

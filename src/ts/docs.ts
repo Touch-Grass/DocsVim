@@ -1,13 +1,14 @@
-export const docs = {
-  id: window.location.href.split('/document/d/')[1].split('/')[0],
+export class docs {
+  constructor () { }
+  static readonly id = window.location.href.split('/document/d/')[1].split('/')[0];
 
   /**
    * @returns {string} - The document title
    */
-  name(): string {
+  protected name(): string {
     return (
       (document.querySelector('.docs-title-input-label-inner') as HTMLElement).textContent ?? '').trim() ?? '';
-  },
+  };
 
   /**
    * Pastes the given text into the document.
@@ -30,6 +31,20 @@ export const docs = {
       cancelable: true,
     });
     el.dispatchEvent(paste);
-  },
+  };
+
+  /**
+   * Sets the cursors width.
+   * @param width {string} - The width of the cursor.
+   * @param isInsertMode If the cursor is in insert mode or not.
+   */
+  protected setCursorWidth(width: string, isInsertMode?: boolean): void {
+    console.log(width, isInsertMode);
+    // docs.getUserCursor().find('.kix-cursor-caret').css({
+    //   'border-left-width': width,
+    //   'border-right-width': width,
+    //   'border-color': 'rgba(0,0,0,1)',
+    // });
+  };
+
 };
-console.log(docs.name());

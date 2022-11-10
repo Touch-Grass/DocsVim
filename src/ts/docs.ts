@@ -3,10 +3,7 @@ export class docs {
    * @returns {string} The documents ID
    */
   static get docID(): string {
-    return window.location.href
-      .split("/document/d/")[1]
-      .split("/")[0];
-
+    return window.location.href.split("/document/d/")[1].split("/")[0];
   }
 
   /**
@@ -82,7 +79,7 @@ export class docs {
    * @param isInsertMode If the cursor is in insert mode or not.
    */
   private static _setCursorWidth(width: string, isInsertMode?: boolean) {
-    const cursor = this.getUserCursor
+    const cursor = this.getUserCursor;
 
     if (cursor === null) return false;
     const caret = cursor.querySelector(".kix-cursor-caret") as HTMLElement;
@@ -100,7 +97,10 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return "0px";
     const caret = cursor.querySelector(".kix-cursor-caret") as HTMLElement;
-    return `${parseInt(caret.style.borderLeftWidth) + parseInt(caret.style.borderRightWidth)}px`;
+    return `${
+      parseInt(caret.style.borderLeftWidth) +
+      parseInt(caret.style.borderRightWidth)
+    }px`;
   }
 
   /**

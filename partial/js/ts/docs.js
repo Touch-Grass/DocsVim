@@ -1,6 +1,11 @@
 var _a;
 export class docs {
-    get name() {
+    static get docID() {
+        return window.location.href
+            .split("/document/d/")[1]
+            .split("/")[0];
+    }
+    static get docName() {
         return ((document.querySelector(".docs-title-input-label-inner")
             .textContent ?? "").trim() ?? "");
     }
@@ -15,7 +20,7 @@ export class docs {
         });
         el.dispatchEvent(paste);
     }
-    static _getUserCursor() {
+    static get getUserCursor() {
         let myCursor = null;
         document.querySelectorAll(".kix-cursor").forEach((El) => {
             const caretColor = El.querySelector(".kix-cursor-caret");
@@ -35,11 +40,8 @@ export class docs {
         console.error("Couldn't locate the cursor!");
         return document.querySelector(".kix-cursor");
     }
-    get getUserCursor() {
-        return docs._getUserCursor();
-    }
     static _setCursorWidth(width, isInsertMode) {
-        const cursor = this._getUserCursor();
+        const cursor = this.getUserCursor;
         if (cursor === null)
             return false;
         const caret = cursor.querySelector(".kix-cursor-caret");
@@ -49,11 +51,11 @@ export class docs {
         return true;
     }
     static _getCursorWidth() {
-        const cursor = this._getUserCursor();
+        const cursor = this.getUserCursor;
         if (cursor === null)
             return "0px";
         const caret = cursor.querySelector(".kix-cursor-caret");
-        return caret.style.borderLeftWidth + caret.style.borderRightWidth;
+        return `${parseInt(caret.style.borderLeftWidth) + parseInt(caret.style.borderRightWidth)}px`;
     }
     static get getCursorWidth() {
         return docs._getCursorWidth();
@@ -72,9 +74,6 @@ export class docs {
     }
 }
 _a = docs;
-docs.id = window.location.href
-    .split("/document/d/")[1]
-    .split("/")[0];
 docs.keydownInit = () => {
     if (!_a.keydown)
         return;

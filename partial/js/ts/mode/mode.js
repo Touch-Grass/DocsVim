@@ -20,6 +20,20 @@ export class mode extends docs {
             default:
                 break;
         }
+        switch (mode) {
+            case "insert":
+                this.setCursorWidth = ["9px", true];
+                vim.mode = "insert";
+                break;
+            case "normal":
+                vim.mode = "normal";
+                this.setCursorWidth = ["9px", false];
+                break;
+            case "visual":
+                vim.mode = "visual";
+                this.setCursorWidth = ["", false];
+                break;
+        }
     }
     static get mode() {
         return vim.mode;

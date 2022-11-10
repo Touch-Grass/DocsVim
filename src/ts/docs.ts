@@ -1,12 +1,18 @@
 export class docs {
-  private static readonly id = window.location.href
-    .split("/document/d/")[1]
-    .split("/")[0];
+  /**
+   * @returns {string} The documents ID
+   */
+  static get docID(): string {
+    return window.location.href
+      .split("/document/d/")[1]
+      .split("/")[0];
+
+  }
 
   /**
    * @returns {string} - The document title
    */
-  get name(): string {
+  static get docName(): string {
     return (
       (
         (document.querySelector(".docs-title-input-label-inner") as HTMLElement)
@@ -16,7 +22,6 @@ export class docs {
   }
 
   /**
-   * Pastes the given text into the document.
    * @param {string} text - Text that will be pasted into the document.
    */
   private static pasteText(text: string): void {
@@ -41,7 +46,7 @@ export class docs {
   /**
    * @returns {Element | null} - The users cursor element. If it can't find one it returns null.
    */
-  private static _getUserCursor(): Element | null {
+  static get getUserCursor(): Element | null {
     let myCursor: Element | null = null;
 
     document.querySelectorAll(".kix-cursor").forEach((El) => {
@@ -71,17 +76,13 @@ export class docs {
     return document.querySelector(".kix-cursor");
   }
 
-  get getUserCursor(): Element | null {
-    return docs._getUserCursor();
-  }
-
   /**
    * Sets the cursors width.
    * @param width {string} - The width of the cursor.
    * @param isInsertMode If the cursor is in insert mode or not.
    */
   private static _setCursorWidth(width: string, isInsertMode?: boolean) {
-    const cursor = this._getUserCursor();
+    const cursor = this.getUserCursor
 
     if (cursor === null) return false;
     const caret = cursor.querySelector(".kix-cursor-caret") as HTMLElement;
@@ -91,17 +92,28 @@ export class docs {
     return true;
   }
 
+  /**
+   * Gets the cursor width
+   * @returns the width of the cursor in PX
+   */
   private static _getCursorWidth(): string {
-    const cursor = this._getUserCursor();
+    const cursor = this.getUserCursor;
     if (cursor === null) return "0px";
     const caret = cursor.querySelector(".kix-cursor-caret") as HTMLElement;
-    return caret.style.borderLeftWidth + caret.style.borderRightWidth;
+    return `${parseInt(caret.style.borderLeftWidth) + parseInt(caret.style.borderRightWidth)}px`;
   }
 
+  /**
+   * Gets the cursor width
+   */
   static get getCursorWidth(): string {
     return docs._getCursorWidth();
   }
 
+  /**
+   * Sets the cursors width
+   * @param {[string, boolean]} - The width of the cursor (in px) and if it's in insert mode or not.
+   */
   static set setCursorWidth([width, isInsertMode]: [string, boolean]) {
     docs._setCursorWidth(width, isInsertMode);
   }

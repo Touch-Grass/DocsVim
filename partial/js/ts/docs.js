@@ -20,13 +20,16 @@ export class docs {
         let myCursor = null;
         document.querySelectorAll('.kix-cursor').forEach(El => {
             const caretColor = El.querySelector('.kix-cursor-caret');
-            caretColor?.style.borderLeftColor
+            if (caretColor === null)
+                return;
+            const caretBorderColor = caretColor.style.borderLeftColor
                 .replace(/,/g, '')
                 .replace(/\s/g, '')
                 .toLowerCase();
-            const cursor_name = (El.querySelector('.kix-cursor-name')
+            console.log(caretBorderColor);
+            const cursorName = ((El.querySelector('.kix-cursor-name'))
                 ?.textContent ?? '').trim();
-            if (cursor_name.length <= 0)
+            if (cursorName.length <= 0)
                 myCursor = El;
         });
         if (myCursor !== null)

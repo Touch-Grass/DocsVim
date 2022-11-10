@@ -8,7 +8,6 @@ const replace = require('gulp-replace');
 const minifyJs = require('gulp-uglify');
 const concat = require('gulp-concat');
 const gulpIgnore = require('gulp-ignore');
-const fs = require('fs');
 
 // Order of the files that they get concatenated in
 const JsFiles = [
@@ -16,14 +15,12 @@ const JsFiles = [
   'partial/js/ts/mode/mode.js',
   'partial/js/**/*.js',
 ];
-const AllFiles = [...JsFiles];
 
 const matchExports = new RegExp(/export{[A-Za-z0-9_.,$]*};/gim);
 const matchImports = new RegExp(
   /import{[A-Za-z0-9_.,$]*}from"[A-Za-z0-9_./-]*";/gim
 );
 const matchUseStrict = new RegExp(/"use strict";/gim);
-const matchConsoleLogs = new RegExp(/console.log\([A-Za-z0-9_.,$]*\);/gim);
 
 const miniBundle = () => {
   return (

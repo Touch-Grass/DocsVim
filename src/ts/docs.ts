@@ -49,17 +49,22 @@ export class docs {
       const caretColor = El.querySelector(
         '.kix-cursor-caret'
       ) as HTMLElement | null;
-      caretColor?.style.borderLeftColor
+
+      if (caretColor === null) return;
+
+      const caretBorderColor = caretColor.style.borderLeftColor
         .replace(/,/g, '')
         .replace(/\s/g, '')
         .toLowerCase();
 
-      const cursor_name = (
-        (El.querySelector('.kix-cursor-name') as HTMLElement | null)
+      console.log(caretBorderColor);
+
+      const cursorName = (
+        (El.querySelector('.kix-cursor-name'))
           ?.textContent ?? ''
       ).trim();
 
-      if (cursor_name.length <= 0) myCursor = El;
+      if (cursorName.length <= 0) myCursor = El;
     });
 
     if (myCursor !== null) return myCursor;

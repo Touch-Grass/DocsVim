@@ -4,4 +4,4 @@ version = 1
 name = "javascript"
 enabled = true
 
-exclude_patterns = ["partial**/*.*"]
+exclude_patterns = ["partial/**/*"]

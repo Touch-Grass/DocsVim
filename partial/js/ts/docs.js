@@ -1,9 +1,7 @@
 var _a;
 export class docs {
     static get docID() {
-        return window.location.href
-            .split("/document/d/")[1]
-            .split("/")[0];
+        return window.location.href.split("/document/d/")[1].split("/")[0];
     }
     static get docName() {
         return ((document.querySelector(".docs-title-input-label-inner")
@@ -55,7 +53,8 @@ export class docs {
         if (cursor === null)
             return "0px";
         const caret = cursor.querySelector(".kix-cursor-caret");
-        return `${parseInt(caret.style.borderLeftWidth) + parseInt(caret.style.borderRightWidth)}px`;
+        return `${parseInt(caret.style.borderLeftWidth) +
+            parseInt(caret.style.borderRightWidth)}px`;
     }
     static get getCursorWidth() {
         return docs._getCursorWidth();

@@ -11,17 +11,17 @@ export class mode extends docs {
     console.log(mode + " mode123");
 
     switch (mode) {
-      case 'insert':
-        this.setCursorWidth = ['9px', true];
-        vim.mode = 'insert';
+      case "insert":
+        this.setCursorWidth = ["9px", true];
+        vim.mode = "insert";
         break;
-      case 'normal':
-        vim.mode = 'normal';
-        this.setCursorWidth = ['9px', false];
+      case "normal":
+        vim.mode = "normal";
+        this.setCursorWidth = ["9px", false];
         break;
-      case 'visual':
-        vim.mode = 'visual';
-        this.setCursorWidth = ['', false]
+      case "visual":
+        vim.mode = "visual";
+        this.setCursorWidth = ["", false];
         break;
 
       default:

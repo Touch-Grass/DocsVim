@@ -1,2 +1,2 @@
 partial/**/* linguist-vendored
-dist/**/* linguist-vendored
+dist/**/*.js linguist-vendored

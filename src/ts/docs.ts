@@ -103,7 +103,7 @@ export class docs {
   }
 
   static set setCursorWidth([width, isInsertMode]: [string, boolean]) {
-    docs._setCursorWidth(width, isInsertMode)
+    docs._setCursorWidth(width, isInsertMode);
   }
 
   // https://stackoverflow.com/questions/27291021/google-docs-simulate-keyboard/63595176#63595176
@@ -124,7 +124,7 @@ export class docs {
    * Gets the users input
    */
   private static keydown(): boolean {
-    document.addEventListener('keydown', e => {
+    document.addEventListener("keydown", (e) => {
       console.log(`Key down: ${e.key} `);
     });
     return true;

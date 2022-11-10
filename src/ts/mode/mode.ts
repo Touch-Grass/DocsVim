@@ -10,7 +10,7 @@ export class mode extends docs {
      * Switches the mode to the given mode.
      * @param mode {string} - The mode to set the editor to.
      */
-    public switchToMode(mode: 'insert' | 'normal' | 'visual'): void {
+    private switchToMode(mode: 'insert' | 'normal' | 'visual'): void {
         vim.number = 1;
         console.log(mode);
 
@@ -30,7 +30,12 @@ export class mode extends docs {
         }
     }
 
-    protected static getMode(): string {
+    get mode(): string {
         return vim.mode;
+    }
+
+    set mode(mode: string) {
+        console.log('switching', mode);
+        this.switchToMode(mode as 'insert' | 'normal' | 'visual');
     }
 }

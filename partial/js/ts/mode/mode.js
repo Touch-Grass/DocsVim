@@ -22,7 +22,11 @@ export class mode extends docs {
                 break;
         }
     }
-    static getMode() {
+    get mode() {
         return vim.mode;
+    }
+    set mode(mode) {
+        console.log('switching', mode);
+        this.switchToMode(mode);
     }
 }

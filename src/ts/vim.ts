@@ -7,6 +7,3 @@ export class vim extends mode {
     static mode = "insert";
     static number = 1;
 }
-
-export const vi = new vim();
-vi.switchToMode("normal");

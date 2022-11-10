@@ -50,7 +50,7 @@ const bundle = () => {
   );
 };
 
-const watchJs = () => watch(AllFiles, miniBundle);
+const watchJs = () => watch('**.*.ts', miniBundle);
 
 exports.miniBundle = miniBundle;
 exports.bundle = bundle;

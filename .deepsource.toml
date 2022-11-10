@@ -1,7 +1,11 @@
 version = 1
 
+exclude_patterns = ["**/*.js"]
+
 [[analyzers]]
 name = "javascript"
 enabled = true
 
-exclude_patterns = ["**/*.js"]
+[[transformers]]
+name = "prettier"
+enabled = true

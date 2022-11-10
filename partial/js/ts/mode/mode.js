@@ -4,17 +4,15 @@ export class mode extends docs {
     constructor() {
         super();
     }
-    switchToMode(mode) {
+    static _switchToMode(mode) {
         vim.number = 1;
         console.log(mode);
         switch (mode) {
             case 'insert':
-                this.setCursorWidth('9px', true);
                 vim.mode = 'insert';
                 break;
             case 'normal':
                 vim.mode = 'normal';
-                this.setCursorWidth('9px', false);
                 break;
             case 'visual':
                 vim.mode = 'visual';
@@ -22,11 +20,11 @@ export class mode extends docs {
                 break;
         }
     }
-    get mode() {
+    static get mode() {
         return vim.mode;
     }
-    set mode(mode) {
+    static set mode(mode) {
         console.log('switching', mode);
-        this.switchToMode(mode);
+        this._switchToMode(mode);
     }
 }

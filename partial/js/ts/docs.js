@@ -1,11 +1,11 @@
 var _a;
 export class docs {
     constructor() { }
-    name() {
+    get name() {
         return ((document.querySelector('.docs-title-input-label-inner')
             .textContent ?? '').trim() ?? '');
     }
-    pasteText(text) {
+    static pasteText(text) {
         const el = document.querySelectorAll('docs-texteventtarget-iframe')[0].contentDocument.querySelector('[contenteditable=true]');
         const data = new DataTransfer();
         data.setData('text/plain', text);
@@ -16,7 +16,7 @@ export class docs {
         });
         el.dispatchEvent(paste);
     }
-    getUserCursor() {
+    static _getUserCursor() {
         let myCursor = null;
         document.querySelectorAll('.kix-cursor').forEach(El => {
             const caretColor = El.querySelector('.kix-cursor-caret');
@@ -34,14 +34,37 @@ export class docs {
         console.error("Couldn't locate the cursor!");
         return document.querySelector('.kix-cursor');
     }
-    setCursorWidth(width, isInsertMode) {
-        const cursor = this.getUserCursor();
+    get getUserCursor() {
+        return docs._getUserCursor();
+    }
+    static _setCursorWidth(width, isInsertMode) {
+        const cursor = this._getUserCursor();
         if (cursor === null)
-            return;
+            return false;
         const caret = cursor.querySelector('.kix-cursor-caret');
         caret.style.borderLeftWidth = width;
         caret.style.borderRightWidth = width;
         caret.style.borderColor = 'rgba(${isInsertMode ?? 255 : 0},0,0,1)';
+        return true;
+    }
+    static _getCursorWidth() {
+        const cursor = this._getUserCursor();
+        if (cursor === null)
+            return '0px';
+        const caret = cursor.querySelector('.kix-cursor-caret');
+        return caret.style.borderLeftWidth + caret.style.borderRightWidth;
+    }
+    static get getCursorWidth() {
+        return docs._getCursorWidth();
+    }
+    static set setCursorWidth([width, isInsertMode]) {
+        docs._setCursorWidth(width, isInsertMode);
+    }
+    static _textTarget() {
+        return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
+    }
+    static get textTarget() {
+        return this._textTarget();
     }
     static keydown() {
         document.addEventListener('keydown', e => {
@@ -54,8 +77,7 @@ _a = docs;
 docs.id = window.location.href
     .split('/document/d/')[1]
     .split('/')[0];
-docs.texttarget = document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
-docs.keydownInit = e => {
+docs.keydownInit = () => {
     if (!_a.keydown)
         return;
     return _a.keydown();

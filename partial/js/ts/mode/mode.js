@@ -17,6 +17,8 @@ export class mode extends docs {
                 vim.mode = 'visual';
                 this.setCursorWidth = ['', false];
                 break;
+            default:
+                break;
         }
     }
     static get mode() {

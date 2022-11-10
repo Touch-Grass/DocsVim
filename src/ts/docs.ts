@@ -1,7 +1,7 @@
 export class docs {
   private static readonly id = window.location.href
-    .split('/document/d/')[1]
-    .split('/')[0];
+    .split("/document/d/")[1]
+    .split("/")[0];
 
   /**
    * @returns {string} - The document title
@@ -9,9 +9,9 @@ export class docs {
   get name(): string {
     return (
       (
-        (document.querySelector('.docs-title-input-label-inner') as HTMLElement)
-          .textContent ?? ''
-      ).trim() ?? ''
+        (document.querySelector(".docs-title-input-label-inner") as HTMLElement)
+          .textContent ?? ""
+      ).trim() ?? ""
     );
   }
 
@@ -24,13 +24,13 @@ export class docs {
     const el = (
       (
         document.querySelectorAll(
-          'docs-texteventtarget-iframe'
+          "docs-texteventtarget-iframe"
         )[0] as HTMLIFrameElement
       ).contentDocument as Document
-    ).querySelector('[contenteditable=true]') as HTMLElement;
+    ).querySelector("[contenteditable=true]") as HTMLElement;
     const data = new DataTransfer();
-    data.setData('text/plain', text);
-    const paste = new ClipboardEvent('paste', {
+    data.setData("text/plain", text);
+    const paste = new ClipboardEvent("paste", {
       clipboardData: data,
       bubbles: true,
       cancelable: true,
@@ -44,23 +44,22 @@ export class docs {
   private static _getUserCursor(): Element | null {
     let myCursor: Element | null = null;
 
-    document.querySelectorAll('.kix-cursor').forEach(El => {
+    document.querySelectorAll(".kix-cursor").forEach((El) => {
       const caretColor = El.querySelector(
-        '.kix-cursor-caret'
+        ".kix-cursor-caret"
       ) as HTMLElement | null;
 
       if (caretColor === null) return;
 
       const caretBorderColor = caretColor.style.borderLeftColor
-        .replace(/,/g, '')
-        .replace(/\s/g, '')
+        .replace(/,/g, "")
+        .replace(/\s/g, "")
         .toLowerCase();
 
       console.log(caretBorderColor);
 
       const cursorName = (
-        (El.querySelector('.kix-cursor-name'))
-          ?.textContent ?? ''
+        El.querySelector(".kix-cursor-name")?.textContent ?? ""
       ).trim();
 
       if (cursorName.length <= 0) myCursor = El;
@@ -69,7 +68,7 @@ export class docs {
     if (myCursor !== null) return myCursor;
 
     console.error("Couldn't locate the cursor!");
-    return document.querySelector('.kix-cursor');
+    return document.querySelector(".kix-cursor");
   }
 
   get getUserCursor(): Element | null {
@@ -85,17 +84,17 @@ export class docs {
     const cursor = this._getUserCursor();
 
     if (cursor === null) return false;
-    const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
+    const caret = cursor.querySelector(".kix-cursor-caret") as HTMLElement;
     caret.style.borderLeftWidth = width;
     caret.style.borderRightWidth = width;
-    caret.style.borderColor = 'rgba(${isInsertMode ?? 255 : 0},0,0,1)';
+    caret.style.borderColor = "rgba(${isInsertMode ?? 255 : 0},0,0,1)";
     return true;
   }
 
   private static _getCursorWidth(): string {
     const cursor = this._getUserCursor();
-    if (cursor === null) return '0px';
-    const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
+    if (cursor === null) return "0px";
+    const caret = cursor.querySelector(".kix-cursor-caret") as HTMLElement;
     return caret.style.borderLeftWidth + caret.style.borderRightWidth;
   }
 
@@ -104,8 +103,8 @@ export class docs {
   }
 
   static set setCursorWidth([width, isInsertMode]) {
-    if (typeof width !== 'string' || typeof isInsertMode !== 'boolean') return;
-    docs._setCursorWidth(width, isInsertMode)
+    if (typeof width !== "string" || typeof isInsertMode !== "boolean") return;
+    docs._setCursorWidth(width, isInsertMode);
   }
 
   // https://stackoverflow.com/questions/27291021/google-docs-simulate-keyboard/63595176#63595176
@@ -113,16 +112,20 @@ export class docs {
    * Gets the iframe that google docs uses to detects keypresses.
    */
   static get textTarget(): HTMLElement {
-    return ((document.querySelector('.docs-texteventtarget-iframe'
-    ) as HTMLIFrameElement
-    ).contentDocument as Document).activeElement as HTMLElement;
+    return (
+      (
+        document.querySelector(
+          ".docs-texteventtarget-iframe"
+        ) as HTMLIFrameElement
+      ).contentDocument as Document
+    ).activeElement as HTMLElement;
   }
 
   /**
    * Gets the users input
    */
   private static keydown(): boolean {
-    document.addEventListener('keydown', e => {
+    document.addEventListener("keydown", (e) => {
       console.log(`Key down: ${e.key}`);
     });
     return true;
@@ -136,4 +139,4 @@ export class docs {
 
     return this.keydown();
   };
-};
+}

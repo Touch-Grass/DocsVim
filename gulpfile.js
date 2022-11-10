@@ -17,8 +17,12 @@ const JsFiles = [
 ];
 
 const matchExports = new RegExp(/export{[A-Za-z0-9_.,$]*};/gim);
+const matchExportsNonMinified = new RegExp(/export /gim);
 const matchImports = new RegExp(
   /import{[A-Za-z0-9_.,$]*}from"[A-Za-z0-9_./-]*";/gim
+);
+const matchImportsNonMinified = new RegExp(
+  /import {[A-Za-z0-9_.,$ ]*} from "[A-Za-z0-9_./-]*";/gim
 );
 const matchUseStrict = new RegExp(/"use strict";/gim);
 
@@ -39,9 +43,9 @@ const bundle = () => {
   return (
     src(JsFiles)
       .pipe(concat('main.js'))
-      .pipe(replace(matchImports, ''))
+      .pipe(replace(matchImportsNonMinified, ''))
+      .pipe(replace(matchExportsNonMinified, ''))
       .pipe(replace(matchUseStrict, ''))
-      .pipe(replace(matchExports, ''))
       // .pipe(replace(matchConsoleLogs, '')) Todo: turn on to remove console.logs
       .pipe(dest('dist/js'))
   );

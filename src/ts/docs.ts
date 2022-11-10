@@ -88,7 +88,7 @@ export class docs {
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
     caret.style.borderLeftWidth = width;
     caret.style.borderRightWidth = width;
-    caret.style.borderColor = 'rgba(${isInsertMode ?? 255 : 0},0,0,1)';
+    caret.style.borderColor = `rgba(${isInsertMode ? 255 : 0}, 0, 0, 1)`;
     return true;
   }
 
@@ -103,8 +103,7 @@ export class docs {
     return docs._getCursorWidth();
   }
 
-  static set setCursorWidth([width, isInsertMode]) {
-    if (typeof width !== 'string' || typeof isInsertMode !== 'boolean') return;
+  static set setCursorWidth([width, isInsertMode]: [string, boolean]) {
     docs._setCursorWidth(width, isInsertMode)
   }
 
@@ -123,7 +122,7 @@ export class docs {
    */
   private static keydown(): boolean {
     document.addEventListener('keydown', e => {
-      console.log(`Key down: ${e.key}`);
+      console.log(`Key down: ${e.key} `);
     });
     return true;
   }
@@ -131,7 +130,7 @@ export class docs {
   /**
    * Helper function to initialize the keydown event listener.
    */
-  private static keydownInit = () => {
+  private static keydownInit = (): boolean | undefined => {
     if (!this.keydown) return;
 
     return this.keydown();

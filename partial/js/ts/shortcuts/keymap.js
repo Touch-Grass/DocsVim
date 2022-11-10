@@ -97,5 +97,5 @@ export const keys = {
     openbracket: 219,
     backslash: 220,
     closebracket: 221,
-    singlequote: 222
+    singlequote: 222,
 };

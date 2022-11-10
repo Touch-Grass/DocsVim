@@ -1,9 +1,6 @@
 import { docs } from "../docs";
 import { vim } from "../vim";
 export class mode extends docs {
-    constructor() {
-        super();
-    }
     static _switchToMode(mode) {
         vim.number = 1;
         console.log(mode);

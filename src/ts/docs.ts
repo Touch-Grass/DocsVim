@@ -1,5 +1,4 @@
 export class docs {
-  constructor () { }
   private static readonly id = window.location.href
     .split('/document/d/')[1]
     .split('/')[0];

@@ -2,10 +2,6 @@ import { docs } from "../docs";
 import { vim } from "../vim";
 
 export class mode extends docs {
-    constructor () {
-        super();
-    }
-
     /**
      * Switches the mode to the given mode.
      * @param mode {string} - The mode to set the editor to.

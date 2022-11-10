@@ -1,6 +1,5 @@
 var _a;
 export class docs {
-    constructor() { }
     get name() {
         return ((document.querySelector('.docs-title-input-label-inner')
             .textContent ?? '').trim() ?? '');

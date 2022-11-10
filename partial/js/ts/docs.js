@@ -65,7 +65,7 @@ export class docs {
         return document.querySelector(".docs-texteventtarget-iframe").contentDocument.activeElement;
     }
     static keydown() {
-        document.addEventListener('keydown', e => {
+        document.addEventListener("keydown", (e) => {
             console.log(`Key down: ${e.key} `);
         });
         return true;

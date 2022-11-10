@@ -25,19 +25,18 @@ export class mode extends docs {
                 break;
         }
     }
-}
 
     /**
      * Returns the mode that vim is in.
      */
     static get mode(): "insert" | "normal" | "visual" {
-    return vim.mode;
-}
+        return vim.mode;
+    }
 
     /**
      * Sets the mode that vim is in.
      */
     static set mode(mode: "insert" | "normal" | "visual") {
-    this._switchToMode(mode);
-}
+        this._switchToMode(mode);
+    }
 }

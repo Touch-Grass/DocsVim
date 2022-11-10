@@ -19,15 +19,10 @@ export class mode extends docs {
                 break;
         }
     }
-}
-get;
-mode();
-"insert" | "normal" | "visual";
-{
-    return vim.mode;
-}
-set;
-mode(mode, "insert" | "normal" | "visual");
-{
-    this._switchToMode(mode);
+    static get mode() {
+        return vim.mode;
+    }
+    static set mode(mode) {
+        this._switchToMode(mode);
+    }
 }

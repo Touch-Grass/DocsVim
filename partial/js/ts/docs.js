@@ -58,13 +58,12 @@ export class docs {
         return docs._getCursorWidth();
     }
     static set setCursorWidth([width, isInsertMode]) {
+        if (typeof width !== 'string' || typeof isInsertMode !== 'boolean')
+            return;
         docs._setCursorWidth(width, isInsertMode);
     }
-    static _textTarget() {
-        return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
-    }
     static get textTarget() {
-        return this._textTarget();
+        return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
     }
     static keydown() {
         document.addEventListener('keydown', e => {

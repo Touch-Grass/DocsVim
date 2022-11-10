@@ -16,7 +16,7 @@ export class mode extends docs {
                 break;
             case 'visual':
                 vim.mode = 'visual';
-                this.setCursorWidth('2px', false);
+                this.setCursorWidth(['', false]);
                 break;
         }
     }
@@ -24,7 +24,6 @@ export class mode extends docs {
         return vim.mode;
     }
     static set mode(mode) {
-        console.log('switching', mode);
         this._switchToMode(mode);
     }
 }

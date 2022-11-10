@@ -25,17 +25,22 @@ export class mode extends docs {
                 break;
             case 'visual':
                 vim.mode = 'visual';
-                this.setCursorWidth('2px', false);
+                this.setCursorWidth(['', false]);
                 break;
         }
     }
 
+    /**
+     * Returns the mode that vim is in.
+     */
     static get mode(): string {
         return vim.mode;
     }
 
+    /**
+     * Sets the mode that vim is in.
+     */
     static set mode(mode: string) {
-        console.log('switching', mode);
         this._switchToMode(mode as 'insert' | 'normal' | 'visual');
     }
 }

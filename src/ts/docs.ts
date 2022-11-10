@@ -40,7 +40,6 @@ export class docs {
   }
 
   /**
-   * Gets the users cursor element
    * @returns {Element | null} - The users cursor element. If it can't find one it returns null.
    */
   private static _getUserCursor(): Element | null {
@@ -100,14 +99,9 @@ export class docs {
     return docs._getCursorWidth();
   }
 
-  static set setCursorWidth([width, isInsertMode]: [string, boolean]) {
+  static set setCursorWidth([width, isInsertMode]) {
+    if (typeof width !== 'string' || typeof isInsertMode !== 'boolean') return;
     docs._setCursorWidth(width, isInsertMode)
-  }
-
-  private static _textTarget(): HTMLElement {
-    return ((document.querySelector('.docs-texteventtarget-iframe'
-    ) as HTMLIFrameElement
-    ).contentDocument as Document).activeElement as HTMLElement;
   }
 
   // https://stackoverflow.com/questions/27291021/google-docs-simulate-keyboard/63595176#63595176
@@ -115,7 +109,9 @@ export class docs {
    * Gets the iframe that google docs uses to detects keypresses.
    */
   static get textTarget(): HTMLElement {
-    return this._textTarget()
+    return ((document.querySelector('.docs-texteventtarget-iframe'
+    ) as HTMLIFrameElement
+    ).contentDocument as Document).activeElement as HTMLElement;
   }
 
   /**

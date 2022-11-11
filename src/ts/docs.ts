@@ -1,3 +1,5 @@
+import { checkBindings } from "./shortcuts/globalShortcuts";
+
 export class docs {
   private static _listOfCommands: (string | number)[] = [];
   private static _fireRate = 100;
@@ -112,10 +114,9 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${
-      parseInt(caret.style.borderLeftWidth) +
+    return `${parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-    }px`;
+      }px`;
   }
 
   /**
@@ -155,6 +156,7 @@ export class docs {
    */
   private static _keyToArray(key: string | number): (string | number)[] {
     this._listOfCommands.push(key);
+    checkBindings()
 
     return this._listOfCommands;
   }

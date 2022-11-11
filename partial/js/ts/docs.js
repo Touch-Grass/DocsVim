@@ -1,4 +1,5 @@
 var _a;
+import { checkBindings } from "./shortcuts/globalShortcuts";
 export class docs {
     static get keyListenerStatus() {
         return docs._hasEventListnerBeenAdded;
@@ -46,7 +47,6 @@ export class docs {
         });
         if (myCursor !== null)
             return myCursor;
-        console.error("Couldn't locate the cursor!");
         return document.querySelector('.kix-cursor');
     }
     static _setCursorWidth(width, isInsertMode) {
@@ -77,9 +77,8 @@ export class docs {
         return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
     }
     static _keyToArray(key) {
-        console.log("Pushing key to array: ", key);
         this._listOfCommands.push(key);
-        console.log(this._listOfCommands);
+        checkBindings();
         return this._listOfCommands;
     }
     static get keyArray() {
@@ -99,9 +98,6 @@ docs._listOfCommands = [];
 docs._fireRate = 100;
 docs._hasEventListnerBeenAdded = false;
 docs.keydownInit = () => {
-    console.log("Initializing keydown event listener... result is t", docs._hasEventListnerBeenAdded === false
-        ? _a._keydown()
-        : undefined);
     return docs._hasEventListnerBeenAdded === false
         ? _a._keydown()
         : undefined;

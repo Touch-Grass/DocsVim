@@ -1,1 +1,1 @@
-export type vimModeType = "insert" | "visual" | "normal";
+export type vimModeType = 'insert' | 'visual' | 'normal';

@@ -79,7 +79,7 @@ class docs {
     }
     static _keyToArray(key) {
         this._listOfCommands.push(key);
-        checkBindings(vim.mode);
+        checkBindings(vim.Mode);
         return this._listOfCommands;
     }
     static get keyArray() {
@@ -109,33 +109,34 @@ docs.keydownInit = () => {
 class mode extends docs {
     static _switchToMode(mode) {
         vim.number = 1;
+        console.log("switching to mode: ", mode);
         switch (mode) {
             case 'insert':
                 if (mode === 'insert')
                     return;
-                vim.mode = 'insert';
+                vim.Mode = 'insert';
                 this.setCursorWidth = ['9px', true];
                 break;
             case 'normal':
                 if (mode === 'normal')
                     return;
-                vim.mode = 'normal';
+                vim.Mode = 'normal';
                 this.setCursorWidth = ['9px', false];
                 break;
             case 'visual':
                 if (mode === 'visual')
                     return;
-                vim.mode = 'visual';
+                vim.Mode = 'visual';
                 this.setCursorWidth = ['', false];
                 break;
             default:
                 break;
         }
     }
-    static get setMode() {
-        return vim.mode;
+    static get mode() {
+        return vim.Mode;
     }
-    static set setMode(mode) {
+    static set mode(mode) {
         this._switchToMode(mode);
     }
 }
@@ -145,7 +146,7 @@ class mode extends docs {
 
 class vim extends mode {
 }
-vim.mode = 'normal';
+vim.Mode = 'normal';
 vim.number = 1;
 
 
@@ -268,10 +269,13 @@ const checkBindings = (currentMode) => {
     console.log(keyArray, 'keyArray');
     console.log(keyArray.includes('Escape'), 'Escape');
     if (keyArray.includes('Escape')) {
-        if (currentMode === 'normal')
+        if (currentMode === 'normal') {
+            console.log("Already in normal mode");
+            clearArray(keyArray);
             return;
+        }
         console.log('going to normal');
-        mode.setMode = 'normal';
+        mode.mode = 'normal';
         clearArray(keyArray);
     }
     if (currentMode === 'insert') {
@@ -279,7 +283,7 @@ const checkBindings = (currentMode) => {
     if (currentMode === 'normal') {
         if (keyArray.includes('i')) {
             console.log('Going to insert');
-            mode.setMode = 'insert';
+            mode.mode = 'insert';
             clearArray(keyArray);
         }
     }

@@ -79,7 +79,7 @@ export class docs {
     }
     static _keyToArray(key) {
         this._listOfCommands.push(key);
-        checkBindings(vim.mode);
+        checkBindings(vim.Mode);
         return this._listOfCommands;
     }
     static get keyArray() {

@@ -15,9 +15,13 @@ export const checkBindings = (currentMode: string) => {
    * Global shortcuts
    */
   if (keyArray.includes('Escape')) {
-    if (currentMode === 'normal') return;
+    if (currentMode === 'normal') {
+      console.log("Already in normal mode");
+      clearArray(keyArray);
+      return
+    }
     console.log('going to normal');
-    mode.setMode = 'normal';
+    mode.mode = 'normal';
     clearArray(keyArray);
   }
 
@@ -34,7 +38,7 @@ export const checkBindings = (currentMode: string) => {
   if (currentMode === 'normal') {
     if (keyArray.includes('i')) {
       console.log('Going to insert');
-      mode.setMode = 'insert';
+      mode.mode = 'insert';
       clearArray(keyArray);
     }
   }

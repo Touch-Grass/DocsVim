@@ -8,23 +8,24 @@ export class mode extends docs {
    */
   private static _switchToMode(mode: vimModeType): void {
     vim.number = 1;
+    console.log("switching to mode: ", mode);
 
     switch (mode) {
       case 'insert':
         if (mode === 'insert') return;
-        vim.mode = 'insert';
+        vim.Mode = 'insert';
         this.setCursorWidth = ['9px', true];
         break;
 
       case 'normal':
         if (mode === 'normal') return;
-        vim.mode = 'normal';
+        vim.Mode = 'normal';
         this.setCursorWidth = ['9px', false];
         break;
 
       case 'visual':
         if (mode === 'visual') return;
-        vim.mode = 'visual';
+        vim.Mode = 'visual';
         this.setCursorWidth = ['', false];
         break;
 
@@ -36,14 +37,14 @@ export class mode extends docs {
   /**
    * Returns the mode that vim is in.
    */
-  static get setMode(): vimModeType {
-    return vim.mode;
+  static get mode(): vimModeType {
+    return vim.Mode;
   }
 
   /**
    * Sets the mode that vim is in.
    */
-  static set setMode(mode: vimModeType) {
+  static set mode(mode: vimModeType) {
     this._switchToMode(mode);
   }
 }

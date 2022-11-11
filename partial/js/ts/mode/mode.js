@@ -3,33 +3,34 @@ import { vim } from '../vim';
 export class mode extends docs {
     static _switchToMode(mode) {
         vim.number = 1;
+        console.log("switching to mode: ", mode);
         switch (mode) {
             case 'insert':
                 if (mode === 'insert')
                     return;
-                vim.mode = 'insert';
+                vim.Mode = 'insert';
                 this.setCursorWidth = ['9px', true];
                 break;
             case 'normal':
                 if (mode === 'normal')
                     return;
-                vim.mode = 'normal';
+                vim.Mode = 'normal';
                 this.setCursorWidth = ['9px', false];
                 break;
             case 'visual':
                 if (mode === 'visual')
                     return;
-                vim.mode = 'visual';
+                vim.Mode = 'visual';
                 this.setCursorWidth = ['', false];
                 break;
             default:
                 break;
         }
     }
-    static get setMode() {
-        return vim.mode;
+    static get mode() {
+        return vim.Mode;
     }
-    static set setMode(mode) {
+    static set mode(mode) {
         this._switchToMode(mode);
     }
 }

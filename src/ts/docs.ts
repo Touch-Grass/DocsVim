@@ -113,10 +113,9 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${
-      parseInt(caret.style.borderLeftWidth) +
+    return `${parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-    }px`;
+      }px`;
   }
 
   /**
@@ -155,8 +154,16 @@ export class docs {
    * @returns {(string | number)[]} - An array with all prior keys including the current one.
    */
   private static _keyToArray(key: string | number): (string | number)[] {
+    console.log("Pushing key to array: ", key);
     this._listOfCommands.push(key);
     console.log(this._listOfCommands);
+    return this._listOfCommands;
+  }
+
+  /**
+   * @returns {(string | number)[]} - An array all the keys that have been pressed.
+   */
+  static get keyArray(): (string | number)[] {
     return this._listOfCommands;
   }
 
@@ -176,6 +183,10 @@ export class docs {
    * Helper function to initialize the keydown event listener.
    */
   public static keydownInit = (): boolean | undefined => {
+    console.log("Initializing keydown event listener... result is t", docs._hasEventListnerBeenAdded === false
+      ? this._keydown()
+      : undefined
+    );
     return docs._hasEventListnerBeenAdded === false
       ? this._keydown()
       : undefined;

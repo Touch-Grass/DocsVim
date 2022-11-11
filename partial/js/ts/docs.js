@@ -7,7 +7,9 @@ export class docs {
         let timer;
         return (...args) => {
             clearTimeout(timer);
-            timer = setTimeout(() => { func.apply(this, args); }, timeout);
+            timer = setTimeout(() => {
+                func.apply(this, args);
+            }, timeout);
         };
     }
     static get docID() {
@@ -75,8 +77,12 @@ export class docs {
         return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
     }
     static _keyToArray(key) {
+        console.log("Pushing key to array: ", key);
         this._listOfCommands.push(key);
         console.log(this._listOfCommands);
+        return this._listOfCommands;
+    }
+    static get keyArray() {
         return this._listOfCommands;
     }
     static _keydown() {
@@ -93,5 +99,10 @@ docs._listOfCommands = [];
 docs._fireRate = 100;
 docs._hasEventListnerBeenAdded = false;
 docs.keydownInit = () => {
-    return docs._hasEventListnerBeenAdded === false ? _a._keydown() : undefined;
+    console.log("Initializing keydown event listener... result is t", docs._hasEventListnerBeenAdded === false
+        ? _a._keydown()
+        : undefined);
+    return docs._hasEventListnerBeenAdded === false
+        ? _a._keydown()
+        : undefined;
 };

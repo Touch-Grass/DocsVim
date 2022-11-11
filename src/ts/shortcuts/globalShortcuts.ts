@@ -1,15 +1,24 @@
 import { docs } from '../docs';
+import { mode } from '../mode/mode';
 
-if (docs.keyListenerStatus === false) {
-  console.log(docs.keyListenerStatus, 'status');
-  docs.textTarget.addEventListener('keydown', docs.keydownInit);
+console.log(docs.keyListenerStatus);
+
+//Adds a the init shortcut once.
+if (docs.keyListenerStatus === false)
+    docs.keydownInit();
+
+const keyArray = docs.keyArray;
+
+// console.log(keyArray);
+
+if (keyArray.includes('i')) {
+    console.log('i was pressed');
+    mode.mode = 'insert';
+    while (keyArray.length) keyArray.pop();
 }
-//     if (e.key === '73') {
-//         console.log(e.key);
-//         vim.mode = "insert";
-//     }
 
-//     if (e.key === `${keys.esc} `) {
-//         console.log('esc');
-//         vim.mode = "normal";
-//     }
+if (keyArray.includes('Escape')) {
+    console.log('Escape was pressed');
+    mode.mode = 'normal';
+    while (keyArray.length) keyArray.pop();
+}

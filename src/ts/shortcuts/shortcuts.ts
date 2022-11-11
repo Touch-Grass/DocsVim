@@ -15,9 +15,8 @@ export const checkBindings = (currentMode: string) => {
    * Global shortcuts
    */
   if (keyArray.includes('Escape')) {
-
     if (currentMode === 'normal') {
-      fancyLogError("Already in normal mode");
+      fancyLogError('Already in normal mode');
       clearArray(keyArray);
       return;
     }
@@ -25,7 +24,6 @@ export const checkBindings = (currentMode: string) => {
     fancyLogSuccess('going to normal');
     mode.mode = 'normal';
     clearArray(keyArray);
-
   }
 
   /**

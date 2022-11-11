@@ -11,5 +11,8 @@ export const fancyLogError = (text: string): void => {
 };
 
 export const fancyLogSuccess = (text: string): void => {
-  console.log.apply(console, [`%c${text}`, 'font-weight: bold; color: #bada55']);
+  console.log.apply(console, [
+    `%c${text}`,
+    'font-weight: bold; color: #bada55',
+  ]);
 };

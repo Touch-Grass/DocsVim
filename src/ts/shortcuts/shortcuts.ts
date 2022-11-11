@@ -47,14 +47,19 @@ export const checkBindings = (currentMode: string) => {
       clearArray(keyArray);
     }
 
-    let hasInvalidChar = !(keyArray.some(key => keysThatAreUsed.includes(key.toString())));
+    let hasInvalidChar = !keyArray.some((key) =>
+      keysThatAreUsed.includes(key.toString())
+    );
     console.log(hasInvalidChar, 'invalidChar');
-    console.log(keyArray.some(key => keysThatAreUsed.includes(key.toString())), 'some');
+    console.log(
+      keyArray.some((key) => keysThatAreUsed.includes(key.toString())),
+      'some'
+    );
 
     if (hasInvalidChar) {
       console.log(keyArray, 'keyArray');
       clearArray(keyArray);
-      fancyLogError("Not a valid key");
+      fancyLogError('Not a valid key');
       return;
     }
   }
@@ -65,4 +70,4 @@ export const checkBindings = (currentMode: string) => {
   if (currentMode === 'visual') {
     //
   }
-}
+};

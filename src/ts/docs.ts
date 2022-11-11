@@ -85,7 +85,7 @@ export class docs {
 
     if (myCursor !== null) return myCursor;
 
-    console.error("Couldn't locate the cursor!");
+    
     return document.querySelector('.kix-cursor');
   }
 
@@ -155,9 +155,9 @@ export class docs {
    * @returns {(string | number)[]} - An array with all prior keys including the current one.
    */
   private static _keyToArray(key: string | number): (string | number)[] {
-    console.log('Pushing key to array: ', key);
+    
     this._listOfCommands.push(key);
-    console.log(this._listOfCommands);
+    
     return this._listOfCommands;
   }
 
@@ -184,10 +184,7 @@ export class docs {
    * Helper function to initialize the keydown event listener.
    */
   public static keydownInit = (): boolean | undefined => {
-    console.log(
-      'Initializing keydown event listener... result is t',
-      docs._hasEventListnerBeenAdded === false ? this._keydown() : undefined
-    );
+    
     return docs._hasEventListnerBeenAdded === false
       ? this._keydown()
       : undefined;

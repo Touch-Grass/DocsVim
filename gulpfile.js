@@ -22,7 +22,7 @@ const matchImports = new RegExp(
   /import{[A-Za-z0-9_.,$]*}from"[A-Za-z0-9_./-]*";/gim
 );
 const matchImportsNonMinified = new RegExp(
-  /import {[A-Za-z0-9_.,$ ]*} from "[A-Za-z0-9_./-]*";/gim
+  /import {[A-Za-z0-9_.,$ ]*} from ["'][A-Za-z0-9_.\/-]*["'];/gim
 );
 const matchUseStrict = new RegExp(/"use strict";/gim);
 
@@ -51,8 +51,10 @@ const bundle = () => {
   );
 };
 
-const watchJs = () => watch('**.*.ts', miniBundle);
+const watchJs = () => watch('**/*.ts', miniBundle);
+const watchBundle = () => watch('**/*.ts', bundle);
 
 exports.miniBundle = miniBundle;
 exports.bundle = bundle;
 exports.watchJs = watchJs;
+exports.watchBundle = watchBundle;

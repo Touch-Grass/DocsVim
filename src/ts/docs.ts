@@ -97,10 +97,9 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return "0px";
     const caret = cursor.querySelector(".kix-cursor-caret") as HTMLElement;
-    return `${
-      parseInt(caret.style.borderLeftWidth) +
+    return `${parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-    }px`;
+      }px`;
   }
 
   /**
@@ -114,6 +113,7 @@ export class docs {
    * Sets the cursors width
    * @param {[string, boolean]} - The width of the cursor (in px) and if it's in insert mode or not.
    */
+  //skipcq JS-0041
   static set setCursorWidth([width, isInsertMode]: [string, boolean]) {
     docs._setCursorWidth(width, isInsertMode);
   }
@@ -136,7 +136,10 @@ export class docs {
    * Gets the users input
    */
   private static keydown(): boolean {
-    document.addEventListener("keydown", (e) => {
+    // document.addEventListener("keydown", (e) => {
+    //   console.log(`Key down: ${e.key} `);
+    // });
+    docs.textTarget.addEventListener("keydown", (e) => {
       console.log(`Key down: ${e.key} `);
     });
     return true;
@@ -145,8 +148,9 @@ export class docs {
   /**
    * Helper function to initialize the keydown event listener.
    */
-  private static keydownInit = (): boolean | undefined => {
-    if (!this.keydown) return;
+  public static keydownInit = (): boolean | undefined => {
+    console.log("keydownInit");
+    // if (!this.keydown) return;
 
     return this.keydown();
   };

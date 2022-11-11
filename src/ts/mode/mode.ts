@@ -1,25 +1,33 @@
-import { docs } from "../docs";
-import { vim } from "../vim";
+import { docs } from '../docs';
+import { vimModeType } from '../types/types';
+import { vim } from '../vim';
 
 export class mode extends docs {
   /**
-   * Switches the mode to the given mode.
    * @param mode {string} - The mode to set the editor to.
    */
-  private static _switchToMode(mode: "insert" | "normal" | "visual"): void {
+  private static _switchToMode(mode: vimModeType): void {
     vim.number = 1;
     console.log(mode + " mode123");
 
     switch (mode) {
       case "insert":
-        this.setCursorWidth = ["9px", true];
+        if (mode === "insert") return
+        console.log("Setting mode to insert");
         vim.mode = "insert";
+        this.setCursorWidth = ["9px", true];
         break;
+
       case "normal":
+        if (mode === "normal") return
+        console.log("Setting the mode to normal");
         vim.mode = "normal";
         this.setCursorWidth = ["9px", false];
         break;
+
       case "visual":
+        if (mode === "visual") return
+        console.log("Setting the mode to visual");
         vim.mode = "visual";
         this.setCursorWidth = ["", false];
         break;
@@ -27,33 +35,19 @@ export class mode extends docs {
       default:
         break;
     }
-    switch (mode) {
-      case "insert":
-        this.setCursorWidth = ["9px", true];
-        vim.mode = "insert";
-        break;
-      case "normal":
-        vim.mode = "normal";
-        this.setCursorWidth = ["9px", false];
-        break;
-      case "visual":
-        vim.mode = "visual";
-        this.setCursorWidth = ["", false];
-        break;
-    }
   }
 
   /**
    * Returns the mode that vim is in.
    */
-  static get mode(): "insert" | "normal" | "visual" {
+  static get mode(): vimModeType {
     return vim.mode;
   }
 
   /**
    * Sets the mode that vim is in.
    */
-  static set mode(mode: "insert" | "normal" | "visual") {
+  static set mode(mode: vimModeType) {
     this._switchToMode(mode);
   }
 }

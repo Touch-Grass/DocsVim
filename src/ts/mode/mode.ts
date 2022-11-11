@@ -8,7 +8,7 @@ export class mode extends docs {
    */
   private static _switchToMode(mode: vimModeType): void {
     vim.number = 1;
-    console.log("switching to mode: ", mode);
+    console.log('switching to mode: ', mode);
 
     switch (mode) {
       case 'insert':

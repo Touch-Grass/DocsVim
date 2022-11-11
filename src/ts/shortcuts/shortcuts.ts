@@ -16,9 +16,9 @@ export const checkBindings = (currentMode: string) => {
    */
   if (keyArray.includes('Escape')) {
     if (currentMode === 'normal') {
-      console.log("Already in normal mode");
+      console.log('Already in normal mode');
       clearArray(keyArray);
-      return
+      return;
     }
     console.log('going to normal');
     mode.mode = 'normal';

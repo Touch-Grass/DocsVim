@@ -5,3 +5,17 @@
 export const clearArray = <T>(array: T[]): void => {
   while (array.length) array.pop();
 };
+
+export const fancyLogError = (text: string): void => {
+  console.log.apply(console, [
+    `%c${text}`,
+    'background: #222; color: red',
+  ]);
+};
+
+export const fancyLogSuccess = (text: string): void => {
+  console.log.apply(console, [
+    `%c${text}`,
+    'background: #222; color: #bada55',
+  ]);
+}

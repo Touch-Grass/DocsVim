@@ -1,6 +1,6 @@
 import { docs } from '../docs';
 import { mode } from '../mode/mode';
-import { clearArray } from './shortcutHelper';
+import { clearArray, fancyLogError, fancyLogSuccess } from './shortcutHelper';
 
 //Adds a the init shortcut once.
 if (docs.keyListenerStatus === false) docs.keydownInit();
@@ -15,14 +15,17 @@ export const checkBindings = (currentMode: string) => {
    * Global shortcuts
    */
   if (keyArray.includes('Escape')) {
+
     if (currentMode === 'normal') {
-      console.log('Already in normal mode');
+      fancyLogError("Already in normal mode");
       clearArray(keyArray);
       return;
     }
-    console.log('going to normal');
+
+    fancyLogSuccess('going to normal');
     mode.mode = 'normal';
     clearArray(keyArray);
+
   }
 
   /**
@@ -37,9 +40,11 @@ export const checkBindings = (currentMode: string) => {
    */
   if (currentMode === 'normal') {
     if (keyArray.includes('i')) {
-      console.log('Going to insert');
+      fancyLogSuccess('Going to insert');
       mode.mode = 'insert';
+      console.log(mode.mode, 'mode.mode');
       clearArray(keyArray);
+      console.log(mode.mode, 'mode.mode');
     }
   }
 

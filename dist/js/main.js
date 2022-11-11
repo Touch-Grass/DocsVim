@@ -109,23 +109,17 @@ docs.keydownInit = () => {
 class mode extends docs {
     static _switchToMode(mode) {
         vim.number = 1;
-        console.log("switching to mode: ", mode);
+        console.log('switching to mode: ', mode);
         switch (mode) {
             case 'insert':
-                if (mode === 'insert')
-                    return;
                 vim.Mode = 'insert';
                 this.setCursorWidth = ['9px', true];
                 break;
             case 'normal':
-                if (mode === 'normal')
-                    return;
                 vim.Mode = 'normal';
                 this.setCursorWidth = ['9px', false];
                 break;
             case 'visual':
-                if (mode === 'visual')
-                    return;
                 vim.Mode = 'visual';
                 this.setCursorWidth = ['', false];
                 break;
@@ -257,6 +251,18 @@ const clearArray = (array) => {
     while (array.length)
         array.pop();
 };
+const fancyLogError = (text) => {
+    console.log.apply(console, [
+        `%c${text}`,
+        'background: #222; color: red',
+    ]);
+};
+const fancyLogSuccess = (text) => {
+    console.log.apply(console, [
+        `%c${text}`,
+        'background: #222; color: #bada55',
+    ]);
+};
 
 
 
@@ -270,11 +276,11 @@ const checkBindings = (currentMode) => {
     console.log(keyArray.includes('Escape'), 'Escape');
     if (keyArray.includes('Escape')) {
         if (currentMode === 'normal') {
-            console.log("Already in normal mode");
+            fancyLogError("Already in normal mode");
             clearArray(keyArray);
             return;
         }
-        console.log('going to normal');
+        fancyLogSuccess('going to normal');
         mode.mode = 'normal';
         clearArray(keyArray);
     }
@@ -282,9 +288,11 @@ const checkBindings = (currentMode) => {
     }
     if (currentMode === 'normal') {
         if (keyArray.includes('i')) {
-            console.log('Going to insert');
+            fancyLogSuccess('Going to insert');
             mode.mode = 'insert';
+            console.log(mode.mode, 'mode.mode');
             clearArray(keyArray);
+            console.log(mode.mode, 'mode.mode');
         }
     }
     if (currentMode === 'visual') {

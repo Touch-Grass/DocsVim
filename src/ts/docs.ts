@@ -1,4 +1,21 @@
 export class docs {
+
+  private static _listOfCommands: (string | number)[] = [];
+  private static _fireRate = 100;
+  private static _hasEventListnerBeenAdded = false;
+
+  static get keyListenerStatus(): boolean {
+    return docs._hasEventListnerBeenAdded
+  }
+
+  private static _debounce(func: any, timeout = docs._fireRate) {
+    let timer: NodeJS.Timeout;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+  }
+
   /**
    * @returns {string} The documents ID
    */
@@ -21,7 +38,7 @@ export class docs {
   /**
    * @param {string} text - Text that will be pasted into the document.
    */
-  private static pasteText(text: string): void {
+  private static _pasteText(text: string): void {
     /** Element to paste text into */
     const el = (
       (
@@ -57,8 +74,6 @@ export class docs {
         .replace(/,/g, '')
         .replace(/\s/g, '')
         .toLowerCase();
-
-      console.log(caretBorderColor);
 
       const cursorName = (
         El.querySelector('.kix-cursor-name')?.textContent ?? ''
@@ -97,10 +112,9 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${
-      parseInt(caret.style.borderLeftWidth) +
+    return `${parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-    }px`;
+      }px`;
   }
 
   /**
@@ -134,15 +148,25 @@ export class docs {
   }
 
   /**
+   * Converts and EventListner key (string | number) to an array
+   * @param {string | number} key - The key that will be added to the array
+   * @returns {(string | number)[]} - An array with all prior keys including the current one.
+   */
+  private static _keyToArray(key: string | number): (string | number)[] {
+    this._listOfCommands.push(key);
+    console.log(this._listOfCommands);
+    return this._listOfCommands
+  }
+
+  /**
    * Gets the users input
    */
-  private static keydown(): boolean {
-    // document.addEventListener("keydown", (e) => {
-    //   console.log(`Key down: ${e.key} `);
-    // });
+  private static _keydown(): boolean {
     docs.textTarget.addEventListener('keydown', (e) => {
-      console.log(`Key down: ${e.key} `);
+      this._keyToArray(e.key);
+      return;
     });
+    this._hasEventListnerBeenAdded = true;
     return true;
   }
 
@@ -150,9 +174,6 @@ export class docs {
    * Helper function to initialize the keydown event listener.
    */
   public static keydownInit = (): boolean | undefined => {
-    console.log('keydownInit');
-    // if (!this.keydown) return;
-
-    return this.keydown();
+    return docs._hasEventListnerBeenAdded === false ? this._keydown() : undefined;
   };
 }

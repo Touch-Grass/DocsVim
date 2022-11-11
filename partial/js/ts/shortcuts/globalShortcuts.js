@@ -1,3 +1,5 @@
 import { docs } from '../docs';
-console.log(docs.textTarget, 'Text target');
-docs.textTarget.addEventListener('keydown', docs.keydownInit);
+if (docs.keyListenerStatus === false) {
+    console.log(docs.keyListenerStatus, "status");
+    docs.textTarget.addEventListener('keydown', docs.keydownInit);
+}

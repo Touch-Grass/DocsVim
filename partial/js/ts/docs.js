@@ -1,5 +1,15 @@
 var _a;
 export class docs {
+    static get keyListenerStatus() {
+        return docs._hasEventListnerBeenAdded;
+    }
+    static _debounce(func, timeout = docs._fireRate) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        };
+    }
     static get docID() {
         return window.location.href.split('/document/d/')[1].split('/')[0];
     }
@@ -7,7 +17,7 @@ export class docs {
         return ((document.querySelector('.docs-title-input-label-inner')
             .textContent ?? '').trim() ?? '');
     }
-    static pasteText(text) {
+    static _pasteText(text) {
         const el = document.querySelectorAll('docs-texteventtarget-iframe')[0].contentDocument.querySelector('[contenteditable=true]');
         const data = new DataTransfer();
         data.setData('text/plain', text);
@@ -28,7 +38,6 @@ export class docs {
                 .replace(/,/g, '')
                 .replace(/\s/g, '')
                 .toLowerCase();
-            console.log(caretBorderColor);
             const cursorName = (El.querySelector('.kix-cursor-name')?.textContent ?? '').trim();
             if (cursorName.length <= 0)
                 myCursor = El;
@@ -65,15 +74,24 @@ export class docs {
     static get textTarget() {
         return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
     }
-    static keydown() {
+    static _keyToArray(key) {
+        this._listOfCommands.push(key);
+        console.log(this._listOfCommands);
+        return this._listOfCommands;
+    }
+    static _keydown() {
         docs.textTarget.addEventListener('keydown', (e) => {
-            console.log(`Key down: ${e.key} `);
+            this._keyToArray(e.key);
+            return;
         });
+        this._hasEventListnerBeenAdded = true;
         return true;
     }
 }
 _a = docs;
+docs._listOfCommands = [];
+docs._fireRate = 100;
+docs._hasEventListnerBeenAdded = false;
 docs.keydownInit = () => {
-    console.log('keydownInit');
-    return _a.keydown();
+    return docs._hasEventListnerBeenAdded === false ? _a._keydown() : undefined;
 };

@@ -1,5 +1,15 @@
 var _a;
 class docs {
+    static get keyListenerStatus() {
+        return docs._hasEventListnerBeenAdded;
+    }
+    static _debounce(func, timeout = docs._fireRate) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        };
+    }
     static get docID() {
         return window.location.href.split('/document/d/')[1].split('/')[0];
     }
@@ -7,7 +17,7 @@ class docs {
         return ((document.querySelector('.docs-title-input-label-inner')
             .textContent ?? '').trim() ?? '');
     }
-    static pasteText(text) {
+    static _pasteText(text) {
         const el = document.querySelectorAll('docs-texteventtarget-iframe')[0].contentDocument.querySelector('[contenteditable=true]');
         const data = new DataTransfer();
         data.setData('text/plain', text);
@@ -28,7 +38,6 @@ class docs {
                 .replace(/,/g, '')
                 .replace(/\s/g, '')
                 .toLowerCase();
-            console.log(caretBorderColor);
             const cursorName = (El.querySelector('.kix-cursor-name')?.textContent ?? '').trim();
             if (cursorName.length <= 0)
                 myCursor = El;
@@ -65,17 +74,26 @@ class docs {
     static get textTarget() {
         return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
     }
-    static keydown() {
+    static _keyToArray(key) {
+        this._listOfCommands.push(key);
+        console.log(this._listOfCommands);
+        return this._listOfCommands;
+    }
+    static _keydown() {
         docs.textTarget.addEventListener('keydown', (e) => {
-            console.log(`Key down: ${e.key} `);
+            this._keyToArray(e.key);
+            return;
         });
+        this._hasEventListnerBeenAdded = true;
         return true;
     }
 }
 _a = docs;
+docs._listOfCommands = [];
+docs._fireRate = 100;
+docs._hasEventListnerBeenAdded = false;
 docs.keydownInit = () => {
-    console.log('keydownInit');
-    return _a.keydown();
+    return docs._hasEventListnerBeenAdded === false ? _a._keydown() : undefined;
 };
 
 
@@ -83,26 +101,22 @@ docs.keydownInit = () => {
 class mode extends docs {
     static _switchToMode(mode) {
         vim.number = 1;
-        console.log(mode + ' mode123');
         switch (mode) {
             case 'insert':
                 if (mode === 'insert')
                     return;
-                console.log('Setting mode to insert');
                 vim.mode = 'insert';
                 this.setCursorWidth = ['9px', true];
                 break;
             case 'normal':
                 if (mode === 'normal')
                     return;
-                console.log('Setting the mode to normal');
                 vim.mode = 'normal';
                 this.setCursorWidth = ['9px', false];
                 break;
             case 'visual':
                 if (mode === 'visual')
                     return;
-                console.log('Setting the mode to visual');
                 vim.mode = 'visual';
                 this.setCursorWidth = ['', false];
                 break;
@@ -118,7 +132,7 @@ class mode extends docs {
     }
 }
 
-{};
+
 
 
 class vim extends mode {
@@ -126,9 +140,13 @@ class vim extends mode {
 vim.mode = 'normal';
 vim.number = 1;
 
+{};
 
-console.log(docs.textTarget, 'Text target');
-docs.textTarget.addEventListener('keydown', docs.keydownInit);
+
+if (docs.keyListenerStatus === false) {
+    console.log(docs.keyListenerStatus, "status");
+    docs.textTarget.addEventListener('keydown', docs.keydownInit);
+}
 
 
 
@@ -233,5 +251,3 @@ const keys = {
     closebracket: 221,
     singlequote: 222,
 };
-
-{};

@@ -3,14 +3,8 @@ export const clearArray = (array) => {
         array.pop();
 };
 export const fancyLogError = (text) => {
-    console.log.apply(console, [
-        `%c${text}`,
-        'background: #222; color: red',
-    ]);
+    console.log.apply(console, [`%c${text}`, 'font-weight: bold; color: red']);
 };
 export const fancyLogSuccess = (text) => {
-    console.log.apply(console, [
-        `%c${text}`,
-        'background: #222; color: #bada55',
-    ]);
+    console.log.apply(console, [`%c${text}`, 'font-weight: bold; color: #bada55']);
 };

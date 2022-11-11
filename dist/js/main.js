@@ -57,7 +57,7 @@ class docs {
         const caret = cursor.querySelector('.kix-cursor-caret');
         caret.style.borderLeftWidth = width;
         caret.style.borderRightWidth = width;
-        caret.style.borderColor = `rgba(${isInsertMode ? 255 : 0}, 0, 0, 1)`;
+        caret.style.borderColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, 1)`;
         return true;
     }
     static _getCursorWidth() {
@@ -113,7 +113,7 @@ class mode extends docs {
         switch (mode) {
             case 'insert':
                 vim.Mode = 'insert';
-                this.setCursorWidth = ['9px', true];
+                this.setCursorWidth = ['2px', true];
                 break;
             case 'normal':
                 vim.Mode = 'normal';
@@ -121,7 +121,7 @@ class mode extends docs {
                 break;
             case 'visual':
                 vim.Mode = 'visual';
-                this.setCursorWidth = ['', false];
+                this.setCursorWidth = ['2px', false];
                 break;
             default:
                 break;
@@ -140,7 +140,7 @@ class mode extends docs {
 
 class vim extends mode {
 }
-vim.Mode = 'normal';
+vim.Mode = 'insert';
 vim.number = 1;
 
 
@@ -252,17 +252,12 @@ const clearArray = (array) => {
         array.pop();
 };
 const fancyLogError = (text) => {
-    console.log.apply(console, [
-        `%c${text}`,
-        'background: #222; color: red',
-    ]);
+    console.log.apply(console, [`%c${text}`, 'font-weight: bold; color: red']);
 };
 const fancyLogSuccess = (text) => {
-    console.log.apply(console, [
-        `%c${text}`,
-        'background: #222; color: #bada55',
-    ]);
+    console.log.apply(console, [`%c${text}`, 'font-weight: bold; color: #bada55']);
 };
+
 
 
 
@@ -270,13 +265,10 @@ const fancyLogSuccess = (text) => {
 if (docs.keyListenerStatus === false)
     docs.keydownInit();
 const checkBindings = (currentMode) => {
-    console.log(currentMode);
     const keyArray = docs.keyArray;
-    console.log(keyArray, 'keyArray');
-    console.log(keyArray.includes('Escape'), 'Escape');
     if (keyArray.includes('Escape')) {
         if (currentMode === 'normal') {
-            fancyLogError("Already in normal mode");
+            fancyLogError('Already in normal mode');
             clearArray(keyArray);
             return;
         }
@@ -290,13 +282,74 @@ const checkBindings = (currentMode) => {
         if (keyArray.includes('i')) {
             fancyLogSuccess('Going to insert');
             mode.mode = 'insert';
-            console.log(mode.mode, 'mode.mode');
             clearArray(keyArray);
-            console.log(mode.mode, 'mode.mode');
+        }
+        if (keyArray.includes('v')) {
+            fancyLogSuccess('Going to visual');
+            mode.mode = 'visual';
+            clearArray(keyArray);
+        }
+        let hasInvalidChar = !(keyArray.some(key => keysThatAreUsed.includes(key.toString())));
+        console.log(hasInvalidChar, 'invalidChar');
+        console.log(keyArray.some(key => keysThatAreUsed.includes(key.toString())), 'some');
+        if (hasInvalidChar) {
+            console.log(keyArray, 'keyArray');
+            clearArray(keyArray);
+            fancyLogError("Not a valid key");
+            return;
         }
     }
     if (currentMode === 'visual') {
     }
 };
+
+const keysThatAreUsed = [
+    'i',
+    'I',
+    'a',
+    'A',
+    'o',
+    'O',
+    'v',
+    'V',
+    'Escape',
+    'h',
+    'j',
+    'k',
+    'l',
+    'w',
+    'W',
+    'e',
+    'E',
+    'b',
+    'B',
+    '0',
+    '$',
+    'gg',
+    'G',
+    'H',
+    'M',
+    'L',
+    'f',
+    'F',
+    't',
+    'T',
+    'r',
+    'R',
+    'x',
+    'X',
+    's',
+    'S',
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'Backspace',
+    'Space',
+    'd',
+    'D',
+    'c',
+    'C',
+];
 
 {};

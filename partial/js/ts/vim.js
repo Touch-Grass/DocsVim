@@ -1,5 +1,5 @@
 import { mode } from './mode/mode';
 export class vim extends mode {
 }
-vim.Mode = 'normal';
+vim.Mode = 'insert';
 vim.number = 1;

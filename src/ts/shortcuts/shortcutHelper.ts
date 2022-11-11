@@ -7,9 +7,9 @@ export const clearArray = <T>(array: T[]): void => {
 };
 
 export const fancyLogError = (text: string): void => {
-  console.log.apply(console, [`%c${text}`, 'background: #222; color: red']);
+  console.log.apply(console, [`%c${text}`, 'font-weight: bold; color: red']);
 };
 
 export const fancyLogSuccess = (text: string): void => {
-  console.log.apply(console, [`%c${text}`, 'background: #222; color: #bada55']);
+  console.log.apply(console, [`%c${text}`, 'font-weight: bold; color: #bada55']);
 };

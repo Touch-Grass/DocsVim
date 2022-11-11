@@ -7,7 +7,7 @@ export class mode extends docs {
         switch (mode) {
             case 'insert':
                 vim.Mode = 'insert';
-                this.setCursorWidth = ['9px', true];
+                this.setCursorWidth = ['2px', true];
                 break;
             case 'normal':
                 vim.Mode = 'normal';
@@ -15,7 +15,7 @@ export class mode extends docs {
                 break;
             case 'visual':
                 vim.Mode = 'visual';
-                this.setCursorWidth = ['', false];
+                this.setCursorWidth = ['2px', false];
                 break;
             default:
                 break;

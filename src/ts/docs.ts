@@ -1,18 +1,19 @@
 export class docs {
-
   private static _listOfCommands: (string | number)[] = [];
   private static _fireRate = 100;
   private static _hasEventListnerBeenAdded = false;
 
   static get keyListenerStatus(): boolean {
-    return docs._hasEventListnerBeenAdded
+    return docs._hasEventListnerBeenAdded;
   }
 
   private static _debounce(func: any, timeout = docs._fireRate) {
     let timer: NodeJS.Timeout;
     return (...args) => {
       clearTimeout(timer);
-      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+      timer = setTimeout(() => {
+        func.apply(this, args);
+      }, timeout);
     };
   }
 
@@ -112,9 +113,10 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${parseInt(caret.style.borderLeftWidth) +
+    return `${
+      parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-      }px`;
+    }px`;
   }
 
   /**
@@ -155,7 +157,7 @@ export class docs {
   private static _keyToArray(key: string | number): (string | number)[] {
     this._listOfCommands.push(key);
     console.log(this._listOfCommands);
-    return this._listOfCommands
+    return this._listOfCommands;
   }
 
   /**
@@ -174,6 +176,8 @@ export class docs {
    * Helper function to initialize the keydown event listener.
    */
   public static keydownInit = (): boolean | undefined => {
-    return docs._hasEventListnerBeenAdded === false ? this._keydown() : undefined;
+    return docs._hasEventListnerBeenAdded === false
+      ? this._keydown()
+      : undefined;
   };
 }

@@ -26,10 +26,10 @@ export class mode extends docs {
                 break;
         }
     }
-    static get mode() {
+    static get setMode() {
         return vim.mode;
     }
-    static set mode(mode) {
+    static set setMode(mode) {
         this._switchToMode(mode);
     }
 }

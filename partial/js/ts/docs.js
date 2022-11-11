@@ -1,5 +1,6 @@
 var _a;
-import { checkBindings } from "./shortcuts/globalShortcuts";
+import { checkBindings } from './shortcuts/shortcuts';
+import { vim } from './vim';
 export class docs {
     static get keyListenerStatus() {
         return docs._hasEventListnerBeenAdded;
@@ -78,7 +79,7 @@ export class docs {
     }
     static _keyToArray(key) {
         this._listOfCommands.push(key);
-        checkBindings();
+        checkBindings(vim.mode);
         return this._listOfCommands;
     }
     static get keyArray() {

@@ -85,7 +85,6 @@ export class docs {
 
     if (myCursor !== null) return myCursor;
 
-    
     return document.querySelector('.kix-cursor');
   }
 
@@ -155,9 +154,8 @@ export class docs {
    * @returns {(string | number)[]} - An array with all prior keys including the current one.
    */
   private static _keyToArray(key: string | number): (string | number)[] {
-    
     this._listOfCommands.push(key);
-    
+
     return this._listOfCommands;
   }
 
@@ -184,7 +182,6 @@ export class docs {
    * Helper function to initialize the keydown event listener.
    */
   public static keydownInit = (): boolean | undefined => {
-    
     return docs._hasEventListnerBeenAdded === false
       ? this._keydown()
       : undefined;

@@ -98,9 +98,11 @@ export class docs {
 
     if (cursor === null) return false;
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    caret.style.borderLeftWidth = width;
-    caret.style.borderRightWidth = width;
-    caret.style.borderColor = `rgba(${isInsertMode ? 255 : 0}, 0, 0, 1)`;
+    caret.style.borderWidth = '15px';
+    // caret.style.borderRightWidth = width;
+    caret.style.borderColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, 0.5)`;
+    // caret.style.backgroundBlendMode = 'difference';
+    caret.style.mixBlendMode = 'difference';
     return true;
   }
 
@@ -112,10 +114,9 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${
-      parseInt(caret.style.borderLeftWidth) +
+    return `${parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-    }px`;
+      }px`;
   }
 
   /**
@@ -129,7 +130,6 @@ export class docs {
    * Sets the cursors width
    * @param {[string, boolean]} - The width of the cursor (in px) and if it's in insert mode or not.
    */
-  //skipcq JS-0041
   static set setCursorWidth([width, isInsertMode]: [string, boolean]) {
     docs._setCursorWidth(width, isInsertMode);
   }
@@ -189,7 +189,54 @@ export class docs {
    * Helper function to initialize the keydown event listener.
    * @returns {boolean} - If the event listener has been added or not.
    */
-  public static keydownInit = (): boolean => {
+  public static keydownInit(): boolean {
     return docs._hasEventListnerBeenAdded === false ? this._keydown() : false;
   };
+
+  /**
+   * https://stackoverflow.com/questions/5525071/how-to-wait-until-an-element-exists
+   * @param selector - The selector of the element that you want to select.
+   * @returns {Promise<HTMLElement>} - The element you selected once it's loaded.
+   */
+  private static _waitForElement(selector: string): Promise<HTMLElement> {
+    return new Promise(resolve => {
+      if (document.querySelector(selector)) return resolve(document.querySelector(selector) as HTMLElement);
+
+      const observer = new MutationObserver(mutations => {
+        if (document.querySelector(selector)) {
+          resolve(document.querySelector(selector) as HTMLElement);
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
+  }
+
+  public static async test(): Promise<void> {
+    const barItem = await this._waitForElement('.updating-navigation-item-list');
+    const bar = await this._waitForElement('.navigation-widget-content');
+    barItem.style.backgroundColor = 'red';
+    const statusBar = document.createElement('div');
+    statusBar.style.backgroundColor = 'red';
+    statusBar.style.width = '100px';
+    statusBar.style.height = '100px';
+    statusBar.style.position = 'absolute';
+    statusBar.style.bottom = '0';
+    statusBar.style.left = '0';
+    statusBar.style.zIndex = '100000000000000';
+    statusBar.style.display = 'flex';
+    statusBar.style.justifyContent = 'center';
+    statusBar.style.alignItems = 'center';
+    statusBar.style.fontSize = '20px';
+    statusBar.style.color = 'black';
+    statusBar.style.fontWeight = 'bold';
+    statusBar.innerHTML = 'HELLO WORLD';
+    statusBar.style.marginTop = 'auto';
+
+    bar.append(statusBar);
+  }
 }

@@ -1,4 +1,3 @@
-var _a;
 
 
 class docs {
@@ -19,13 +18,13 @@ class docs {
         const paste = new ClipboardEvent('paste', {
             clipboardData: data,
             bubbles: true,
-            cancelable: true,
+            cancelable: true
         });
         el.dispatchEvent(paste);
     }
     static get getUserCursor() {
         let myCursor = null;
-        document.querySelectorAll('.kix-cursor').forEach((El) => {
+        document.querySelectorAll('.kix-cursor').forEach(El => {
             const caretColor = El.querySelector('.kix-cursor-caret');
             if (caretColor === null)
                 return;
@@ -46,9 +45,9 @@ class docs {
         if (cursor === null)
             return false;
         const caret = cursor.querySelector('.kix-cursor-caret');
-        caret.style.borderLeftWidth = width;
-        caret.style.borderRightWidth = width;
-        caret.style.borderColor = `rgba(${isInsertMode ? 255 : 0}, 0, 0, 1)`;
+        caret.style.borderWidth = '15px';
+        caret.style.borderColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, 0.5)`;
+        caret.style.mixBlendMode = 'difference';
         return true;
     }
     static _getCursorWidth() {
@@ -81,22 +80,58 @@ class docs {
         return this._listOfCommands;
     }
     static _keydown() {
-        docs.textTarget.addEventListener('keydown', (e) => {
+        docs.textTarget.addEventListener('keydown', e => {
             this._keyToArray(e);
             return;
         });
         this._hasEventListnerBeenAdded = true;
         return true;
     }
+    static keydownInit() {
+        return docs._hasEventListnerBeenAdded === false ? this._keydown() : false;
+    }
+    ;
+    static _waitForElement(selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector))
+                return resolve(document.querySelector(selector));
+            const observer = new MutationObserver(mutations => {
+                if (document.querySelector(selector)) {
+                    resolve(document.querySelector(selector));
+                    observer.disconnect();
+                }
+            });
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    }
+    static async test() {
+        const barItem = await this._waitForElement('.updating-navigation-item-list');
+        const bar = await this._waitForElement('.navigation-widget-content');
+        barItem.style.backgroundColor = 'red';
+        const statusBar = document.createElement('div');
+        statusBar.style.backgroundColor = 'red';
+        statusBar.style.width = '100px';
+        statusBar.style.height = '100px';
+        statusBar.style.position = 'absolute';
+        statusBar.style.bottom = '0';
+        statusBar.style.left = '0';
+        statusBar.style.zIndex = '100000000000000';
+        statusBar.style.display = 'flex';
+        statusBar.style.justifyContent = 'center';
+        statusBar.style.alignItems = 'center';
+        statusBar.style.fontSize = '20px';
+        statusBar.style.color = 'black';
+        statusBar.style.fontWeight = 'bold';
+        statusBar.innerHTML = 'HELLO WORLD';
+        statusBar.style.marginTop = 'auto';
+        bar.append(statusBar);
+    }
 }
-_a = docs;
 docs._listOfCommands = [];
 docs._hasEventListnerBeenAdded = false;
-docs.keydownInit = () => {
-    return docs._hasEventListnerBeenAdded === false
-        ? _a._keydown()
-        : false;
-};
 
 
 
@@ -136,8 +171,6 @@ class vim extends mode {
 }
 vim.Mode = 'insert';
 vim.number = 1;
-
-{};
 
 
 
@@ -265,7 +298,7 @@ if (docs.keyListenerStatus === false)
     docs.keydownInit();
 const checkBindings = (currentMode) => {
     const keyArray = docs.keyArray;
-    const hasInvalidChar = (keyArray.some((key) => !keysThatAreUsed.includes(key.toString())));
+    const hasInvalidChar = keyArray.some(key => !keysThatAreUsed.includes(key.toString()));
     if (keyArray.includes('Escape')) {
         if (currentMode === 'normal') {
             fancyLogError('Already in normal mode');
@@ -347,3 +380,10 @@ const keysThatAreUsed = [
     'c',
     'C',
 ];
+
+{};
+
+
+setTimeout(() => {
+    docs.test();
+}, 1000);

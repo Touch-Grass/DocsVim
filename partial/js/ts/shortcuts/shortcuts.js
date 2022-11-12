@@ -6,7 +6,7 @@ if (docs.keyListenerStatus === false)
     docs.keydownInit();
 export const checkBindings = (currentMode) => {
     const keyArray = docs.keyArray;
-    const hasInvalidChar = (keyArray.some((key) => !keysThatAreUsed.includes(key.toString())));
+    const hasInvalidChar = keyArray.some(key => !keysThatAreUsed.includes(key.toString()));
     if (keyArray.includes('Escape')) {
         if (currentMode === 'normal') {
             fancyLogError('Already in normal mode');

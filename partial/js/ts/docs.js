@@ -90,7 +90,6 @@ export class docs {
     static keydownInit() {
         return docs._hasEventListnerBeenAdded === false ? this._keydown() : false;
     }
-    ;
     static _waitForElement(selector) {
         return new Promise(resolve => {
             if (document.querySelector(selector))
@@ -108,26 +107,26 @@ export class docs {
         });
     }
     static async test() {
-        const barItem = await this._waitForElement('.updating-navigation-item-list');
         const bar = await this._waitForElement('.navigation-widget-content');
-        barItem.style.backgroundColor = 'red';
-        const statusBar = document.createElement('div');
-        statusBar.style.backgroundColor = 'red';
-        statusBar.style.width = '100px';
-        statusBar.style.height = '100px';
-        statusBar.style.position = 'absolute';
-        statusBar.style.bottom = '0';
-        statusBar.style.left = '0';
-        statusBar.style.zIndex = '100000000000000';
-        statusBar.style.display = 'flex';
-        statusBar.style.justifyContent = 'center';
-        statusBar.style.alignItems = 'center';
-        statusBar.style.fontSize = '20px';
-        statusBar.style.color = 'black';
-        statusBar.style.fontWeight = 'bold';
-        statusBar.innerHTML = 'HELLO WORLD';
-        statusBar.style.marginTop = 'auto';
-        bar.append(statusBar);
+        const statusline = document.createElement('div');
+        statusline.classList.add('vim_statusbar');
+        const style = document.createElement('style');
+        style.textContent = `
+      .vim_statusbar {
+        background-color: red;
+        width: 100%;
+        height: 50px;
+        margin-top: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        color: black;
+        font-weight: bold;
+    `;
+        statusline.innerHTML = 'HELLO WORLD';
+        bar.append(statusline);
+        bar.append(style);
     }
 }
 docs._listOfCommands = [];

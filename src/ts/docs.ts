@@ -2,23 +2,18 @@ import { mode } from './mode/mode';
 import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
 
+/**
+ * The main class for google docs. This class is used to add event listeners to the document and do other things related to the actual document.
+ */
 export class docs {
   private static _listOfCommands: (string | number)[] = [];
-  private static _fireRate = 100;
   private static _hasEventListnerBeenAdded = false;
 
+  /**
+   * @returns If the keyboard event listner has been added, it will return true, else false
+   */
   static get keyListenerStatus(): boolean {
     return docs._hasEventListnerBeenAdded;
-  }
-
-  private static _debounce(func: any, timeout = docs._fireRate) {
-    let timer: NodeJS.Timeout;
-    return (...args) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        func.apply(this, args);
-      }, timeout);
-    };
   }
 
   /**
@@ -69,6 +64,7 @@ export class docs {
     let myCursor: Element | null = null;
 
     document.querySelectorAll('.kix-cursor').forEach((El) => {
+      //skipcq JS-0349
       const caretColor = El.querySelector(
         '.kix-cursor-caret'
       ) as HTMLElement | null;
@@ -116,10 +112,9 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${
-      parseInt(caret.style.borderLeftWidth) +
+    return `${parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-    }px`;
+      }px`;
   }
 
   /**
@@ -160,6 +155,7 @@ export class docs {
   private static _keyToArray(
     keyboardEvent: KeyboardEvent
   ): (string | number)[] {
+    // If the mode is not normal then we don't want the keys that you press to be added to the doc.
     if (vim.Mode === 'normal') {
       keyboardEvent.preventDefault();
       keyboardEvent.stopImmediatePropagation();
@@ -190,10 +186,11 @@ export class docs {
 
   /**
    * Helper function to initialize the keydown event listener.
+   * @returns {boolean} - If the event listener has been added or not.
    */
-  public static keydownInit = (): boolean | undefined => {
+  public static keydownInit = (): boolean => {
     return docs._hasEventListnerBeenAdded === false
       ? this._keydown()
-      : undefined;
+      : false;
   };
 }

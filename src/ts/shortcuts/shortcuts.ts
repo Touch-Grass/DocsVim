@@ -6,6 +6,9 @@ import { keysThatAreUsed } from './usedKeys';
 //Adds a the init shortcut once.
 if (docs.keyListenerStatus === false) docs.keydownInit();
 
+/**
+ * Main function that handles all the shortcuts.
+ */
 export const checkBindings = (currentMode: string) => {
   const keyArray = docs.keyArray;
   const hasInvalidChar = (keyArray.some((key) => !keysThatAreUsed.includes(key.toString())))

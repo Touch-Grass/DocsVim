@@ -5,15 +5,6 @@ class docs {
     static get keyListenerStatus() {
         return docs._hasEventListnerBeenAdded;
     }
-    static _debounce(func, timeout = docs._fireRate) {
-        let timer;
-        return (...args) => {
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                func.apply(this, args);
-            }, timeout);
-        };
-    }
     static get docID() {
         return window.location.href.split('/document/d/')[1].split('/')[0];
     }
@@ -100,12 +91,11 @@ class docs {
 }
 _a = docs;
 docs._listOfCommands = [];
-docs._fireRate = 100;
 docs._hasEventListnerBeenAdded = false;
 docs.keydownInit = () => {
     return docs._hasEventListnerBeenAdded === false
         ? _a._keydown()
-        : undefined;
+        : false;
 };
 
 
@@ -146,6 +136,8 @@ class vim extends mode {
 }
 vim.Mode = 'insert';
 vim.number = 1;
+
+{};
 
 
 
@@ -355,5 +347,3 @@ const keysThatAreUsed = [
     'c',
     'C',
 ];
-
-{};

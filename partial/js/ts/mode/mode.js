@@ -1,21 +1,22 @@
 import { docs } from '../docs';
+import { statusline } from '../statusline';
 import { vim } from '../vim';
 export class mode extends docs {
     static _switchToMode(mode) {
         vim.number = 1;
-        this._updateStatusbar(mode);
+        statusline.updateStatusbar(mode);
         console.log('switching to mode: ', mode);
         switch (mode) {
             case 'insert':
-                vim.Mode = 'insert';
+                vim.mode = 'insert';
                 this.setCursorWidth = ['2px', true];
                 break;
             case 'normal':
-                vim.Mode = 'normal';
+                vim.mode = 'normal';
                 this.setCursorWidth = ['15px', false];
                 break;
             case 'visual':
-                vim.Mode = 'visual';
+                vim.mode = 'visual';
                 this.setCursorWidth = ['2px', false];
                 break;
             default:
@@ -23,9 +24,10 @@ export class mode extends docs {
         }
     }
     static get mode() {
-        return vim.Mode;
+        return vim.mode;
     }
     static set mode(mode) {
+        console.log("In the setter", mode);
         this._switchToMode(mode);
     }
 }

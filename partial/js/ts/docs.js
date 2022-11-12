@@ -68,12 +68,12 @@ export class docs {
         return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
     }
     static _keyToArray(keyboardEvent) {
-        if (vim.Mode === 'normal' || vim.Mode === 'visual') {
+        if (vim.mode === 'normal' || vim.mode === 'visual') {
             keyboardEvent.preventDefault();
             keyboardEvent.stopImmediatePropagation();
         }
         this._listOfCommands.push(keyboardEvent.key);
-        checkBindings(vim.Mode);
+        checkBindings(vim.mode);
         return this._listOfCommands;
     }
     static get keyArray() {
@@ -90,48 +90,6 @@ export class docs {
     static keydownInit() {
         return docs._hasEventListnerBeenAdded === false ? this._keydown() : false;
     }
-    static _waitForElement(selector) {
-        return new Promise(resolve => {
-            if (document.querySelector(selector))
-                return resolve(document.querySelector(selector));
-            const observer = new MutationObserver(mutations => {
-                if (document.querySelector(selector)) {
-                    resolve(document.querySelector(selector));
-                    observer.disconnect();
-                }
-            });
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        });
-    }
-    static async initStatusLine() {
-        const bar = await this._waitForElement('.navigation-widget-content');
-        docs._statusline.classList.add('vim_statusbar');
-        const style = document.createElement('style');
-        style.textContent = `
-      .vim_statusbar {
-        background-color: transparent;
-        width: 100%;
-        height: 50px;
-        position: absolute;
-        bottom: 7px;
-        left: 7px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-end;
-        font-size: 13px;
-        color: black;
-        font-weight: bold;
-    `;
-        document.body.append(docs._statusline);
-        document.body.append(style);
-        this._updateStatusbar(vim.Mode);
-    }
-    static _updateStatusbar(mode) {
-        docs._statusline.innerHTML = `-- ${mode} --`;
-    }
 }
 docs._listOfCommands = [];
 docs._hasEventListnerBeenAdded = false;
@@ -140,9 +98,8 @@ docs.pressKey = (keyCode, ctrlKey, shiftKey) => {
     const data = {
         keyCode,
         ctrlKey,
-        shiftKey,
+        shiftKey
     };
     let key_event = new KeyboardEvent('keypress', data);
     el.dispatchEvent(key_event);
 };
-docs._statusline = document.createElement('div');

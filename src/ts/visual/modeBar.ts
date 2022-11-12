@@ -1,5 +1,6 @@
 import { docs } from '../docs';
+import { statusline } from '../statusline';
 
 setTimeout(() => {
-  docs.initStatusLine();
+  statusline.initStatusLine();
 }, 1000);

@@ -1,4 +1,3 @@
-import { mode } from './mode/mode';
 import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
 
@@ -134,10 +133,9 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${
-      parseInt(caret.style.borderLeftWidth) +
+    return `${parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-    }px`;
+      }px`;
   }
 
   /**
@@ -178,12 +176,12 @@ export class docs {
     keyboardEvent: KeyboardEvent
   ): (string | number)[] {
     // If the mode is not normal then we don't want the keys that you press to be added to the doc.
-    if (vim.Mode === 'normal' || vim.Mode === 'visual') {
+    if (vim.mode === 'normal' || vim.mode === 'visual') {
       keyboardEvent.preventDefault();
       keyboardEvent.stopImmediatePropagation();
     }
     this._listOfCommands.push(keyboardEvent.key);
-    checkBindings(vim.Mode);
+    checkBindings(vim.mode);
     return this._listOfCommands;
   }
 
@@ -219,52 +217,52 @@ export class docs {
    * @param selector - The selector of the element that you want to select.
    * @returns {Promise<HTMLElement>} - The element you selected once it's loaded.
    */
-  private static _waitForElement(selector: string): Promise<HTMLElement> {
-    return new Promise(resolve => {
-      if (document.querySelector(selector))
-        return resolve(document.querySelector(selector) as HTMLElement);
+  // private static _waitForElement(selector: string): Promise<HTMLElement> {
+  //   return new Promise(resolve => {
+  //     if (document.querySelector(selector))
+  //       return resolve(document.querySelector(selector) as HTMLElement);
 
-      const observer = new MutationObserver(mutations => {
-        if (document.querySelector(selector)) {
-          resolve(document.querySelector(selector) as HTMLElement);
-          observer.disconnect();
-        }
-      });
+  //     const observer = new MutationObserver(mutations => {
+  //       if (document.querySelector(selector)) {
+  //         resolve(document.querySelector(selector) as HTMLElement);
+  //         observer.disconnect();
+  //       }
+  //     });
 
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-    });
-  }
+  //     observer.observe(document.body, {
+  //       childList: true,
+  //       subtree: true
+  //     });
+  //   });
+  // }
 
-  private static readonly _statusline = document.createElement('div');
+  // private static readonly _statusline = document.createElement('div');
 
-  public static async initStatusLine(): Promise<void> {
-    const bar = await this._waitForElement('.navigation-widget-content');
-    docs._statusline.classList.add('vim_statusbar');
-    const style = document.createElement('style');
-    style.textContent = `
-      .vim_statusbar {
-        background-color: transparent;
-        width: 100%;
-        height: 50px;
-        position: absolute;
-        bottom: 7px;
-        left: 7px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-end;
-        font-size: 13px;
-        color: black;
-        font-weight: bold;
-    `;
-    document.body.append(docs._statusline);
-    document.body.append(style);
-    this._updateStatusbar(vim.Mode);
-  }
+  // public static async initStatusLine(): Promise<void> {
+  //   const bar = await this._waitForElement('.navigation-widget-content');
+  //   docs._statusline.classList.add('vim_statusbar');
+  //   const style = document.createElement('style');
+  //   style.textContent = `
+  //     .vim_statusbar {
+  //       background-color: transparent;
+  //       width: 100%;
+  //       height: 50px;
+  //       position: absolute;
+  //       bottom: 7px;
+  //       left: 7px;
+  //       display: flex;
+  //       justify-content: flex-start;
+  //       align-items: flex-end;
+  //       font-size: 13px;
+  //       color: black;
+  //       font-weight: bold;
+  //   `;
+  //   document.body.append(docs._statusline);
+  //   document.body.append(style);
+  //   this._updateStatusbar(vim.Mode);
+  // }
 
-  protected static _updateStatusbar(mode: string): void {
-    docs._statusline.innerHTML = `-- ${mode} --`;
-  }
+  // protected static _updateStatusbar(mode: string): void {
+  //   docs._statusline.innerHTML = `-- ${mode} --`;
+  // }
 }

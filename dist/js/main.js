@@ -68,12 +68,12 @@ class docs {
         return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
     }
     static _keyToArray(keyboardEvent) {
-        if (vim.Mode === 'normal' || vim.Mode === 'visual') {
+        if (vim.mode === 'normal' || vim.mode === 'visual') {
             keyboardEvent.preventDefault();
             keyboardEvent.stopImmediatePropagation();
         }
         this._listOfCommands.push(keyboardEvent.key);
-        checkBindings(vim.Mode);
+        checkBindings(vim.mode);
         return this._listOfCommands;
     }
     static get keyArray() {
@@ -90,6 +90,59 @@ class docs {
     static keydownInit() {
         return docs._hasEventListnerBeenAdded === false ? this._keydown() : false;
     }
+}
+docs._listOfCommands = [];
+docs._hasEventListnerBeenAdded = false;
+docs.pressKey = (keyCode, ctrlKey, shiftKey) => {
+    const el = document.querySelectorAll('.docs-texteventtarget-iframe')[0].contentDocument;
+    const data = {
+        keyCode,
+        ctrlKey,
+        shiftKey
+    };
+    let key_event = new KeyboardEvent('keypress', data);
+    el.dispatchEvent(key_event);
+};
+
+
+
+
+class mode extends docs {
+    static _switchToMode(mode) {
+        vim.number = 1;
+        statusline.updateStatusbar(mode);
+        console.log('switching to mode: ', mode);
+        switch (mode) {
+            case 'insert':
+                vim.mode = 'insert';
+                this.setCursorWidth = ['2px', true];
+                break;
+            case 'normal':
+                vim.mode = 'normal';
+                this.setCursorWidth = ['15px', false];
+                break;
+            case 'visual':
+                vim.mode = 'visual';
+                this.setCursorWidth = ['2px', false];
+                break;
+            default:
+                break;
+        }
+    }
+    static get mode() {
+        return vim.mode;
+    }
+    static set mode(mode) {
+        console.log("In the setter", mode);
+        this._switchToMode(mode);
+    }
+}
+
+
+
+
+
+class statusline extends docs {
     static _waitForElement(selector) {
         return new Promise(resolve => {
             if (document.querySelector(selector))
@@ -108,84 +161,50 @@ class docs {
     }
     static async initStatusLine() {
         const bar = await this._waitForElement('.navigation-widget-content');
-        docs._statusline.classList.add('vim_statusbar');
+        this._statusline.classList.add('vim_statusbar');
         const style = document.createElement('style');
         style.textContent = `
-      .vim_statusbar {
-        background-color: transparent;
-        width: 100%;
-        height: 50px;
-        position: absolute;
-        bottom: 7px;
-        left: 7px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-end;
-        font-size: 13px;
-        color: black;
-        font-weight: bold;
-    `;
-        document.body.append(docs._statusline);
+        .vim_statusbar {
+            background-color: transparent;
+            width: 100%;
+            height: 50px;
+            position: absolute;
+            bottom: 7px;
+            left: 7px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-end;
+            font-size: 13px;
+            color: black;
+            font-weight: bold;
+        `;
+        document.body.append(this._statusline);
         document.body.append(style);
-        this._updateStatusbar(vim.Mode);
+        this.updateStatusbar(vim.mode);
     }
-    static _updateStatusbar(mode) {
-        docs._statusline.innerHTML = `-- ${mode} --`;
-    }
-}
-docs._listOfCommands = [];
-docs._hasEventListnerBeenAdded = false;
-docs.pressKey = (keyCode, ctrlKey, shiftKey) => {
-    const el = document.querySelectorAll('.docs-texteventtarget-iframe')[0].contentDocument;
-    const data = {
-        keyCode,
-        ctrlKey,
-        shiftKey,
-    };
-    let key_event = new KeyboardEvent('keypress', data);
-    el.dispatchEvent(key_event);
-};
-docs._statusline = document.createElement('div');
-
-
-
-class mode extends docs {
-    static _switchToMode(mode) {
-        vim.number = 1;
-        this._updateStatusbar(mode);
-        console.log('switching to mode: ', mode);
-        switch (mode) {
-            case 'insert':
-                vim.Mode = 'insert';
-                this.setCursorWidth = ['2px', true];
-                break;
-            case 'normal':
-                vim.Mode = 'normal';
-                this.setCursorWidth = ['15px', false];
-                break;
-            case 'visual':
-                vim.Mode = 'visual';
-                this.setCursorWidth = ['2px', false];
-                break;
-            default:
-                break;
-        }
-    }
-    static get mode() {
-        return vim.Mode;
-    }
-    static set mode(mode) {
-        this._switchToMode(mode);
+    static updateStatusbar(mode) {
+        this._statusline.innerHTML = `-- ${mode} --`;
     }
 }
-
-
+statusline._statusline = document.createElement('div');
 
 
 class vim extends mode {
+    static get mode() {
+        return this._mode;
+    }
+    static set mode(mode) {
+        this._mode = mode;
+    }
+    static get number() {
+        return this._number;
+    }
+    static set number(number) {
+        this._number = number;
+    }
 }
-vim.Mode = 'insert';
-vim.number = 1;
+vim._mode = 'insert';
+vim._number = 1;
 
 
 
@@ -423,5 +442,5 @@ const keysThatAreUsed = [
 
 
 setTimeout(() => {
-    docs.initStatusLine();
+    statusline.initStatusLine();
 }, 1000);

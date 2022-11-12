@@ -77,8 +77,12 @@ class docs {
     static get textTarget() {
         return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
     }
-    static _keyToArray(key) {
-        this._listOfCommands.push(key);
+    static _keyToArray(keyboardEvent) {
+        if (vim.Mode === 'normal') {
+            keyboardEvent.preventDefault();
+            keyboardEvent.stopImmediatePropagation();
+        }
+        this._listOfCommands.push(keyboardEvent.key);
         checkBindings(vim.Mode);
         return this._listOfCommands;
     }
@@ -87,7 +91,7 @@ class docs {
     }
     static _keydown() {
         docs.textTarget.addEventListener('keydown', (e) => {
-            this._keyToArray(e.key);
+            this._keyToArray(e);
             return;
         });
         this._hasEventListnerBeenAdded = true;

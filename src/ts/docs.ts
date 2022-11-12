@@ -1,3 +1,4 @@
+import { mode } from './mode/mode';
 import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
 
@@ -152,11 +153,15 @@ export class docs {
 
   /**
    * Converts and EventListner key (string | number) to an array
-   * @param {string | number} key - The key that will be added to the array
+   * @param {KeyboardEvent} keyboardEvent - The key that will be added to the array
    * @returns {(string | number)[]} - An array with all prior keys including the current one.
    */
-  private static _keyToArray(key: string | number): (string | number)[] {
-    this._listOfCommands.push(key);
+  private static _keyToArray(keyboardEvent: KeyboardEvent): (string | number)[] {
+    if (vim.Mode === 'normal') {
+      keyboardEvent.preventDefault();
+      keyboardEvent.stopImmediatePropagation();
+    }
+    this._listOfCommands.push(keyboardEvent.key);
     checkBindings(vim.Mode);
     return this._listOfCommands;
   }
@@ -173,7 +178,7 @@ export class docs {
    */
   private static _keydown(): boolean {
     docs.textTarget.addEventListener('keydown', (e) => {
-      this._keyToArray(e.key);
+      this._keyToArray(e);
       return;
     });
     this._hasEventListnerBeenAdded = true;

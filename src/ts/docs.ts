@@ -57,13 +57,21 @@ export class docs {
     el.dispatchEvent(paste);
   }
 
-  public static pressKey = (keyCode: number, ctrlKey?: boolean, shiftKey?: boolean) => {
-    const el = (document.querySelectorAll('.docs-texteventtarget-iframe')[0] as HTMLIFrameElement).contentDocument as Document;
+  public static pressKey = (
+    keyCode: number,
+    ctrlKey?: boolean,
+    shiftKey?: boolean
+  ) => {
+    const el = (
+      document.querySelectorAll(
+        '.docs-texteventtarget-iframe'
+      )[0] as HTMLIFrameElement
+    ).contentDocument as Document;
 
     const data = {
       keyCode,
       ctrlKey,
-      shiftKey,
+      shiftKey
     };
 
     let key_event = new KeyboardEvent('keypress', data);
@@ -126,9 +134,10 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${parseInt(caret.style.borderLeftWidth) +
+    return `${
+      parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-      }px`;
+    }px`;
   }
 
   /**
@@ -252,11 +261,10 @@ export class docs {
     `;
     document.body.append(docs._statusline);
     document.body.append(style);
-    this._updateStatusbar(vim.Mode)
+    this._updateStatusbar(vim.Mode);
   }
 
   protected static _updateStatusbar(mode: string): void {
     docs._statusline.innerHTML = `-- ${mode} --`;
   }
-
 }

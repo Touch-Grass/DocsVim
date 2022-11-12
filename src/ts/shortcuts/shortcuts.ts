@@ -60,7 +60,11 @@ export const checkBindings = (currentMode: string) => {
     if (keyArray.includes('w')) {
       fancyLogSuccess("Jumping to the next word's start");
       // docs.pressKey(keys['uparrow']);
-      const el = (document.querySelectorAll('.docs-texteventtarget-iframe')[0] as HTMLIFrameElement).contentDocument as Document;
+      const el = (
+        document.querySelectorAll(
+          '.docs-texteventtarget-iframe'
+        )[0] as HTMLIFrameElement
+      ).contentDocument as Document;
       let key_event = new KeyboardEvent('keypress', { code: 'ArrowRight' });
 
       el.dispatchEvent(key_event);

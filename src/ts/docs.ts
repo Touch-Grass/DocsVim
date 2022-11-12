@@ -114,9 +114,10 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${parseInt(caret.style.borderLeftWidth) +
+    return `${
+      parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-      }px`;
+    }px`;
   }
 
   /**
@@ -191,7 +192,7 @@ export class docs {
    */
   public static keydownInit(): boolean {
     return docs._hasEventListnerBeenAdded === false ? this._keydown() : false;
-  };
+  }
 
   /**
    * https://stackoverflow.com/questions/5525071/how-to-wait-until-an-element-exists
@@ -200,7 +201,8 @@ export class docs {
    */
   private static _waitForElement(selector: string): Promise<HTMLElement> {
     return new Promise(resolve => {
-      if (document.querySelector(selector)) return resolve(document.querySelector(selector) as HTMLElement);
+      if (document.querySelector(selector))
+        return resolve(document.querySelector(selector) as HTMLElement);
 
       const observer = new MutationObserver(mutations => {
         if (document.querySelector(selector)) {
@@ -217,7 +219,9 @@ export class docs {
   }
 
   public static async test(): Promise<void> {
-    const barItem = await this._waitForElement('.updating-navigation-item-list');
+    const barItem = await this._waitForElement(
+      '.updating-navigation-item-list'
+    );
     const bar = await this._waitForElement('.navigation-widget-content');
     barItem.style.backgroundColor = 'red';
     const statusBar = document.createElement('div');

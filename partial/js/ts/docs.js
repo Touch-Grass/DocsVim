@@ -57,7 +57,7 @@ export class docs {
         const caret = cursor.querySelector('.kix-cursor-caret');
         caret.style.borderLeftWidth = width;
         caret.style.borderRightWidth = width;
-        caret.style.borderColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, 1)`;
+        caret.style.borderColor = `rgba(${isInsertMode ? 255 : 0}, 0, 0, 1)`;
         return true;
     }
     static _getCursorWidth() {

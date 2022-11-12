@@ -57,7 +57,7 @@ class docs {
         const caret = cursor.querySelector('.kix-cursor-caret');
         caret.style.borderLeftWidth = width;
         caret.style.borderRightWidth = width;
-        caret.style.borderColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, 1)`;
+        caret.style.borderColor = `rgba(${isInsertMode ? 255 : 0}, 0, 0, 1)`;
         return true;
     }
     static _getCursorWidth() {
@@ -255,7 +255,10 @@ const fancyLogError = (text) => {
     console.log.apply(console, [`%c${text}`, 'font-weight: bold; color: red']);
 };
 const fancyLogSuccess = (text) => {
-    console.log.apply(console, [`%c${text}`, 'font-weight: bold; color: #bada55']);
+    console.log.apply(console, [
+        `%c${text}`,
+        'font-weight: bold; color: #bada55',
+    ]);
 };
 
 
@@ -266,6 +269,7 @@ if (docs.keyListenerStatus === false)
     docs.keydownInit();
 const checkBindings = (currentMode) => {
     const keyArray = docs.keyArray;
+    const hasInvalidChar = (keyArray.some((key) => !keysThatAreUsed.includes(key.toString())));
     if (keyArray.includes('Escape')) {
         if (currentMode === 'normal') {
             fancyLogError('Already in normal mode');
@@ -289,13 +293,9 @@ const checkBindings = (currentMode) => {
             mode.mode = 'visual';
             clearArray(keyArray);
         }
-        let hasInvalidChar = !(keyArray.some(key => keysThatAreUsed.includes(key.toString())));
-        console.log(hasInvalidChar, 'invalidChar');
-        console.log(keyArray.some(key => keysThatAreUsed.includes(key.toString())), 'some');
         if (hasInvalidChar) {
-            console.log(keyArray, 'keyArray');
             clearArray(keyArray);
-            fancyLogError("Not a valid key");
+            fancyLogError('Not a valid key');
             return;
         }
     }

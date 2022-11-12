@@ -6,6 +6,7 @@ if (docs.keyListenerStatus === false)
     docs.keydownInit();
 export const checkBindings = (currentMode) => {
     const keyArray = docs.keyArray;
+    const hasInvalidChar = (keyArray.some((key) => !keysThatAreUsed.includes(key.toString())));
     if (keyArray.includes('Escape')) {
         if (currentMode === 'normal') {
             fancyLogError('Already in normal mode');
@@ -29,13 +30,9 @@ export const checkBindings = (currentMode) => {
             mode.mode = 'visual';
             clearArray(keyArray);
         }
-        let hasInvalidChar = !(keyArray.some(key => keysThatAreUsed.includes(key.toString())));
-        console.log(hasInvalidChar, 'invalidChar');
-        console.log(keyArray.some(key => keysThatAreUsed.includes(key.toString())), 'some');
         if (hasInvalidChar) {
-            console.log(keyArray, 'keyArray');
             clearArray(keyArray);
-            fancyLogError("Not a valid key");
+            fancyLogError('Not a valid key');
             return;
         }
     }

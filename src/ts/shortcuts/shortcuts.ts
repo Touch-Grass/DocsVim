@@ -8,6 +8,7 @@ if (docs.keyListenerStatus === false) docs.keydownInit();
 
 export const checkBindings = (currentMode: string) => {
   const keyArray = docs.keyArray;
+  const hasInvalidChar = (keyArray.some((key) => !keysThatAreUsed.includes(key.toString())))
 
   /**
    * Global shortcuts
@@ -47,17 +48,8 @@ export const checkBindings = (currentMode: string) => {
       clearArray(keyArray);
     }
 
-    let hasInvalidChar = !keyArray.some((key) =>
-      keysThatAreUsed.includes(key.toString())
-    );
-    console.log(hasInvalidChar, 'invalidChar');
-    console.log(
-      keyArray.some((key) => keysThatAreUsed.includes(key.toString())),
-      'some'
-    );
 
     if (hasInvalidChar) {
-      console.log(keyArray, 'keyArray');
       clearArray(keyArray);
       fancyLogError('Not a valid key');
       return;

@@ -52,7 +52,7 @@ export class docs {
     const paste = new ClipboardEvent('paste', {
       clipboardData: data,
       bubbles: true,
-      cancelable: true,
+      cancelable: true
     });
     el.dispatchEvent(paste);
   }
@@ -63,7 +63,7 @@ export class docs {
   static get getUserCursor(): Element | null {
     let myCursor: Element | null = null;
 
-    document.querySelectorAll('.kix-cursor').forEach((El) => {
+    document.querySelectorAll('.kix-cursor').forEach(El => {
       //skipcq JS-0349
       const caretColor = El.querySelector(
         '.kix-cursor-caret'
@@ -112,9 +112,10 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${parseInt(caret.style.borderLeftWidth) +
+    return `${
+      parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-      }px`;
+    }px`;
   }
 
   /**
@@ -176,7 +177,7 @@ export class docs {
    * Gets the users input
    */
   private static _keydown(): boolean {
-    docs.textTarget.addEventListener('keydown', (e) => {
+    docs.textTarget.addEventListener('keydown', e => {
       this._keyToArray(e);
       return;
     });
@@ -189,8 +190,6 @@ export class docs {
    * @returns {boolean} - If the event listener has been added or not.
    */
   public static keydownInit = (): boolean => {
-    return docs._hasEventListnerBeenAdded === false
-      ? this._keydown()
-      : false;
+    return docs._hasEventListnerBeenAdded === false ? this._keydown() : false;
   };
 }

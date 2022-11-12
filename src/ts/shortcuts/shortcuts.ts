@@ -11,7 +11,9 @@ if (docs.keyListenerStatus === false) docs.keydownInit();
  */
 export const checkBindings = (currentMode: string) => {
   const keyArray = docs.keyArray;
-  const hasInvalidChar = (keyArray.some((key) => !keysThatAreUsed.includes(key.toString())))
+  const hasInvalidChar = keyArray.some(
+    key => !keysThatAreUsed.includes(key.toString())
+  );
 
   /**
    * Global shortcuts
@@ -50,7 +52,6 @@ export const checkBindings = (currentMode: string) => {
       mode.mode = 'visual';
       clearArray(keyArray);
     }
-
 
     if (hasInvalidChar) {
       clearArray(keyArray);

@@ -45,7 +45,7 @@ class docs {
         if (cursor === null)
             return false;
         const caret = cursor.querySelector('.kix-cursor-caret');
-        caret.style.borderWidth = '15px';
+        caret.style.borderWidth = width;
         caret.style.borderColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, 0.5)`;
         caret.style.mixBlendMode = 'difference';
         return true;
@@ -68,7 +68,7 @@ class docs {
         return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
     }
     static _keyToArray(keyboardEvent) {
-        if (vim.Mode === 'normal') {
+        if (vim.Mode === 'normal' || vim.Mode === 'visual') {
             keyboardEvent.preventDefault();
             keyboardEvent.stopImmediatePropagation();
         }
@@ -106,37 +106,53 @@ class docs {
             });
         });
     }
-    static async test() {
+    static async initStatusLine() {
         const bar = await this._waitForElement('.navigation-widget-content');
-        const statusline = document.createElement('div');
-        statusline.classList.add('vim_statusbar');
+        docs._statusline.classList.add('vim_statusbar');
         const style = document.createElement('style');
         style.textContent = `
       .vim_statusbar {
-        background-color: red;
+        background-color: transparent;
         width: 100%;
         height: 50px;
-        margin-top: auto;
+        position: absolute;
+        bottom: 7px;
+        left: 7px;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 20px;
+        justify-content: flex-start;
+        align-items: flex-end;
+        font-size: 13px;
         color: black;
         font-weight: bold;
     `;
-        statusline.innerHTML = 'HELLO WORLD';
-        bar.append(statusline);
-        bar.append(style);
+        document.body.append(docs._statusline);
+        document.body.append(style);
+        this._updateStatusbar(vim.Mode);
+    }
+    static _updateStatusbar(mode) {
+        docs._statusline.innerHTML = `-- ${mode} --`;
     }
 }
 docs._listOfCommands = [];
 docs._hasEventListnerBeenAdded = false;
+docs.pressKey = (keyCode, ctrlKey, shiftKey) => {
+    const el = document.querySelectorAll('.docs-texteventtarget-iframe')[0].contentDocument;
+    const data = {
+        keyCode,
+        ctrlKey,
+        shiftKey,
+    };
+    let key_event = new KeyboardEvent('keypress', data);
+    el.dispatchEvent(key_event);
+};
+docs._statusline = document.createElement('div');
 
 
 
 class mode extends docs {
     static _switchToMode(mode) {
         vim.number = 1;
+        this._updateStatusbar(mode);
         console.log('switching to mode: ', mode);
         switch (mode) {
             case 'insert':
@@ -145,7 +161,7 @@ class mode extends docs {
                 break;
             case 'normal':
                 vim.Mode = 'normal';
-                this.setCursorWidth = ['9px', false];
+                this.setCursorWidth = ['15px', false];
                 break;
             case 'visual':
                 vim.Mode = 'visual';
@@ -293,6 +309,7 @@ const fancyLogSuccess = (text) => {
 
 
 
+
 if (docs.keyListenerStatus === false)
     docs.keydownInit();
 const checkBindings = (currentMode) => {
@@ -309,6 +326,10 @@ const checkBindings = (currentMode) => {
         clearArray(keyArray);
     }
     if (currentMode === 'insert') {
+        if (keyArray.includes('i')) {
+            fancyLogError('Already in insert mode');
+            clearArray(keyArray);
+        }
     }
     if (currentMode === 'normal') {
         if (keyArray.includes('i')) {
@@ -321,6 +342,15 @@ const checkBindings = (currentMode) => {
             mode.mode = 'visual';
             clearArray(keyArray);
         }
+        if (keyArray.includes('w')) {
+            fancyLogSuccess("Jumping to the next word's start");
+            const el = document.querySelectorAll('.docs-texteventtarget-iframe')[0].contentDocument;
+            let key_event = new KeyboardEvent('keypress', { code: 'ArrowRight' });
+            el.dispatchEvent(key_event);
+            console.log(keys['uparrow'], "up arrow's key code");
+            console.log(docs.pressKey(keys['uparrow']));
+            clearArray(keyArray);
+        }
         if (hasInvalidChar) {
             clearArray(keyArray);
             fancyLogError('Not a valid key');
@@ -328,6 +358,15 @@ const checkBindings = (currentMode) => {
         }
     }
     if (currentMode === 'visual') {
+        if (keyArray.includes('v')) {
+            fancyLogError('Already in visual mode');
+            clearArray(keyArray);
+        }
+        if (keyArray.includes('i')) {
+            fancyLogSuccess('Going to insert');
+            mode.mode = 'insert';
+            clearArray(keyArray);
+        }
     }
 };
 
@@ -384,5 +423,5 @@ const keysThatAreUsed = [
 
 
 setTimeout(() => {
-    docs.test();
+    docs.initStatusLine();
 }, 1000);

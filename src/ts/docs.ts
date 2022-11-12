@@ -57,6 +57,20 @@ export class docs {
     el.dispatchEvent(paste);
   }
 
+  public static pressKey = (keyCode: number, ctrlKey?: boolean, shiftKey?: boolean) => {
+    const el = (document.querySelectorAll('.docs-texteventtarget-iframe')[0] as HTMLIFrameElement).contentDocument as Document;
+
+    const data = {
+      keyCode,
+      ctrlKey,
+      shiftKey,
+    };
+
+    let key_event = new KeyboardEvent('keypress', data);
+
+    el.dispatchEvent(key_event);
+  };
+
   /**
    * @returns {Element | null} - The users cursor element. If it can't find one it returns null.
    */
@@ -98,10 +112,8 @@ export class docs {
 
     if (cursor === null) return false;
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    caret.style.borderWidth = '15px';
-    // caret.style.borderRightWidth = width;
+    caret.style.borderWidth = width;
     caret.style.borderColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, 0.5)`;
-    // caret.style.backgroundBlendMode = 'difference';
     caret.style.mixBlendMode = 'difference';
     return true;
   }
@@ -114,10 +126,9 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${
-      parseInt(caret.style.borderLeftWidth) +
+    return `${parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-    }px`;
+      }px`;
   }
 
   /**
@@ -158,7 +169,7 @@ export class docs {
     keyboardEvent: KeyboardEvent
   ): (string | number)[] {
     // If the mode is not normal then we don't want the keys that you press to be added to the doc.
-    if (vim.Mode === 'normal') {
+    if (vim.Mode === 'normal' || vim.Mode === 'visual') {
       keyboardEvent.preventDefault();
       keyboardEvent.stopImmediatePropagation();
     }
@@ -218,26 +229,34 @@ export class docs {
     });
   }
 
-  public static async test(): Promise<void> {
+  private static readonly _statusline = document.createElement('div');
+
+  public static async initStatusLine(): Promise<void> {
     const bar = await this._waitForElement('.navigation-widget-content');
-    const statusline = document.createElement('div');
-    statusline.classList.add('vim_statusbar');
+    docs._statusline.classList.add('vim_statusbar');
     const style = document.createElement('style');
     style.textContent = `
       .vim_statusbar {
-        background-color: red;
+        background-color: transparent;
         width: 100%;
         height: 50px;
-        margin-top: auto;
+        position: absolute;
+        bottom: 7px;
+        left: 7px;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 20px;
+        justify-content: flex-start;
+        align-items: flex-end;
+        font-size: 13px;
         color: black;
         font-weight: bold;
     `;
-    statusline.innerHTML = 'HELLO WORLD';
-    bar.append(statusline);
-    bar.append(style);
+    document.body.append(docs._statusline);
+    document.body.append(style);
+    this._updateStatusbar(vim.Mode)
   }
+
+  protected static _updateStatusbar(mode: string): void {
+    docs._statusline.innerHTML = `-- ${mode} --`;
+  }
+
 }

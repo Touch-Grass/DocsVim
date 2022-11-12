@@ -1,5 +1,5 @@
 import { docs } from '../docs';
 
 setTimeout(() => {
-  docs.test();
+  docs.initStatusLine();
 }, 1000);

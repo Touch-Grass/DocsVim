@@ -3,6 +3,7 @@ import { vim } from '../vim';
 export class mode extends docs {
     static _switchToMode(mode) {
         vim.number = 1;
+        this._updateStatusbar(mode);
         console.log('switching to mode: ', mode);
         switch (mode) {
             case 'insert':
@@ -11,7 +12,7 @@ export class mode extends docs {
                 break;
             case 'normal':
                 vim.Mode = 'normal';
-                this.setCursorWidth = ['9px', false];
+                this.setCursorWidth = ['15px', false];
                 break;
             case 'visual':
                 vim.Mode = 'visual';

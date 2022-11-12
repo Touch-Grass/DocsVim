@@ -7,9 +7,13 @@ export class mode extends docs {
    * @param mode {string} - The mode to set the editor to.
    */
   private static _switchToMode(mode: vimModeType): void {
+    // The number before a method. Ex: 5dd will delete 5 lines.
     vim.number = 1;
+    // Updates the statusbar to display the current mode ect.
+    this._updateStatusbar(mode);
     console.log('switching to mode: ', mode);
 
+    // Handles the cursor and vim Mode login when switching modes.
     switch (mode) {
       case 'insert':
         vim.Mode = 'insert';
@@ -18,7 +22,7 @@ export class mode extends docs {
 
       case 'normal':
         vim.Mode = 'normal';
-        this.setCursorWidth = ['9px', false];
+        this.setCursorWidth = ['15px', false];
         break;
 
       case 'visual':

@@ -11,7 +11,7 @@ export class mode extends docs {
     // The number before a method. Ex: 5dd will delete 5 lines.
     vim.number = 1;
     // Updates the statusbar to display the current mode ect.
-    statusline.updateStatusbar(mode)
+    statusline.updateStatusbar(mode);
     console.log('switching to mode: ', mode);
 
     // Handles the cursor and vim Mode login when switching modes.
@@ -47,7 +47,7 @@ export class mode extends docs {
    * Sets the mode that vim is in.
    */
   static set mode(mode: vimModeType) {
-    console.log("In the setter", mode);
+    console.log('In the setter', mode);
     this._switchToMode(mode);
   }
 }

@@ -116,9 +116,10 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${parseInt(caret.style.borderLeftWidth) +
+    return `${
+      parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-      }px`;
+    }px`;
   }
 
   /**
@@ -156,7 +157,9 @@ export class docs {
    * @param {KeyboardEvent} keyboardEvent - The key that will be added to the array
    * @returns {(string | number)[]} - An array with all prior keys including the current one.
    */
-  private static _keyToArray(keyboardEvent: KeyboardEvent): (string | number)[] {
+  private static _keyToArray(
+    keyboardEvent: KeyboardEvent
+  ): (string | number)[] {
     if (vim.Mode === 'normal') {
       keyboardEvent.preventDefault();
       keyboardEvent.stopImmediatePropagation();

@@ -1,5 +1,5 @@
-import { docs } from "./docs";
-import { vim } from "./vim";
+import { docs } from './docs';
+import { vim } from './vim';
 export class statusline extends docs {
     static _waitForElement(selector) {
         return new Promise(resolve => {

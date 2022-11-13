@@ -27,7 +27,7 @@ export class mode extends docs {
         return vim.mode;
     }
     static set mode(mode) {
-        console.log("In the setter", mode);
+        console.log('In the setter', mode);
         this._switchToMode(mode);
     }
 }

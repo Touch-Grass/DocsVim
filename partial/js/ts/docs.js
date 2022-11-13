@@ -94,12 +94,14 @@ export class docs {
 docs._listOfCommands = [];
 docs._hasEventListnerBeenAdded = false;
 docs.pressKey = (keyCode, ctrlKey, shiftKey) => {
-    const el = document.querySelectorAll('.docs-texteventtarget-iframe')[0].contentDocument;
+    const element = document.getElementsByClassName('docs-texteventtarget-iframe')[0].contentDocument;
+    if (element === null)
+        return;
     const data = {
-        keyCode,
-        ctrlKey,
-        shiftKey
+        keyCode: keyCode,
+        ctrlKey: ctrlKey ?? false,
+        shiftKey: shiftKey ?? false
     };
-    let key_event = new KeyboardEvent('keypress', data);
-    el.dispatchEvent(key_event);
+    const key_event = new KeyboardEvent('keydown', data);
+    element.dispatchEvent(key_event);
 };

@@ -95,8 +95,6 @@ export const checkBindings = (currentMode: string) => {
       docs.pressKey(39);
     }
 
-
-
     if (hasInvalidChar) {
       clearArray(keyArray);
       fancyLogError('Not a valid key');

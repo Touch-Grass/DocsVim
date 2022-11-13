@@ -94,14 +94,16 @@ class docs {
 docs._listOfCommands = [];
 docs._hasEventListnerBeenAdded = false;
 docs.pressKey = (keyCode, ctrlKey, shiftKey) => {
-    const el = document.querySelectorAll('.docs-texteventtarget-iframe')[0].contentDocument;
+    const element = document.getElementsByClassName('docs-texteventtarget-iframe')[0].contentDocument;
+    if (element === null)
+        return;
     const data = {
-        keyCode,
-        ctrlKey,
-        shiftKey
+        keyCode: keyCode,
+        ctrlKey: ctrlKey ?? false,
+        shiftKey: shiftKey ?? false
     };
-    let key_event = new KeyboardEvent('keypress', data);
-    el.dispatchEvent(key_event);
+    const key_event = new KeyboardEvent('keydown', data);
+    element.dispatchEvent(key_event);
 };
 
 
@@ -328,7 +330,6 @@ const fancyLogSuccess = (text) => {
 
 
 
-
 if (docs.keyListenerStatus === false)
     docs.keydownInit();
 const checkBindings = (currentMode) => {
@@ -345,13 +346,13 @@ const checkBindings = (currentMode) => {
         clearArray(keyArray);
     }
     if (currentMode === 'insert') {
-        if (keyArray.includes('i')) {
+        if (keyArray.includes('i' || 'a')) {
             fancyLogError('Already in insert mode');
             clearArray(keyArray);
         }
     }
     if (currentMode === 'normal') {
-        if (keyArray.includes('i')) {
+        if (keyArray.includes('i' || 'a')) {
             fancyLogSuccess('Going to insert');
             mode.mode = 'insert';
             clearArray(keyArray);
@@ -361,14 +362,13 @@ const checkBindings = (currentMode) => {
             mode.mode = 'visual';
             clearArray(keyArray);
         }
-        if (keyArray.includes('w')) {
-            fancyLogSuccess("Jumping to the next word's start");
-            const el = document.querySelectorAll('.docs-texteventtarget-iframe')[0].contentDocument;
-            let key_event = new KeyboardEvent('keypress', { code: 'ArrowRight' });
-            el.dispatchEvent(key_event);
-            console.log(keys['uparrow'], "up arrow's key code");
-            console.log(docs.pressKey(keys['uparrow']));
-            clearArray(keyArray);
+        if (keyArray.includes("w")) {
+            fancyLogSuccess("Moving to the right");
+            docs.pressKey(39, true);
+        }
+        if (keyArray.includes("l")) {
+            fancyLogSuccess("Moving to the right");
+            docs.pressKey(39);
         }
         if (hasInvalidChar) {
             clearArray(keyArray);

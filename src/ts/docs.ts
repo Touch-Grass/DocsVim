@@ -56,26 +56,30 @@ export class docs {
     el.dispatchEvent(paste);
   }
 
+  /**
+   * Simulates a key press
+   * @param keyCode {number} - The key code of the key that was pressed. (Has to be keycode for arrowKeys to work.)
+   * @param ctrlKey {boolean} - If the ctrl key was pressed.
+   * @param shiftKey {boolean} - If the shift key was pressed.
+   */
   public static pressKey = (
     keyCode: number,
     ctrlKey?: boolean,
     shiftKey?: boolean
   ) => {
-    const el = (
-      document.querySelectorAll(
-        '.docs-texteventtarget-iframe'
-      )[0] as HTMLIFrameElement
-    ).contentDocument as Document;
+    const element = (document.getElementsByClassName('docs-texteventtarget-iframe')[0] as HTMLIFrameElement).contentDocument as Document;
+
+    if (element === null) return;
 
     const data = {
-      keyCode,
-      ctrlKey,
-      shiftKey
+      keyCode: keyCode,
+      ctrlKey: ctrlKey ?? false,
+      shiftKey: shiftKey ?? false
     };
 
-    let key_event = new KeyboardEvent('keypress', data);
+    const key_event = new KeyboardEvent('keydown', data);
 
-    el.dispatchEvent(key_event);
+    element.dispatchEvent(key_event);
   };
 
   /**
@@ -133,10 +137,9 @@ export class docs {
     const cursor = this.getUserCursor;
     if (cursor === null) return '0px';
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
-    return `${
-      parseInt(caret.style.borderLeftWidth) +
+    return `${parseInt(caret.style.borderLeftWidth) +
       parseInt(caret.style.borderRightWidth)
-    }px`;
+      }px`;
   }
 
   /**

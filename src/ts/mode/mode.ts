@@ -36,9 +36,9 @@ export class mode extends docs {
     }
   }
 
-  // /**
-  //  * Returns the mode that vim is in.
-  //  */
+  /**
+   * Returns the mode that vim is in.
+   */
   static get mode(): vimModeType {
     return vim.mode;
   }

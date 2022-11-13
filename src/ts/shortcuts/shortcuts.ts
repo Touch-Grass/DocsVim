@@ -84,14 +84,13 @@ export const checkBindings = (currentMode: string) => {
     //   clearArray(keyArray);
     // }
 
-    if (keyArray.includes("w")) {
-      fancyLogSuccess("Moving to the right");
+    if (keyArray.includes('w')) {
+      fancyLogSuccess('Moving to the right');
       docs.pressKey(39, true);
     }
 
-
-    if (keyArray.includes("l")) {
-      fancyLogSuccess("Moving to the right");
+    if (keyArray.includes('l')) {
+      fancyLogSuccess('Moving to the right');
       docs.pressKey(39);
     }
 

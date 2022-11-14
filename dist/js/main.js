@@ -97,7 +97,7 @@ const keys = {
     openbracket: 219,
     backslash: 220,
     closebracket: 221,
-    singlequote: 222,
+    singlequote: 222
 };
 
 var _a;
@@ -253,7 +253,7 @@ class mode extends docs {
                 break;
             case 'visual':
                 vim.mode = 'visual';
-                this.setCursorWidth = ['2px', false];
+                this.setCursorWidth = ['15px', false];
                 break;
             default:
                 break;
@@ -429,10 +429,18 @@ const functionMap = {
 
 
 const motionsCommandMap = {
-    diw: () => docs
-        .pressKey(keys['ArrowLeft'], true)
+    diw: () => {
+        docs
+            .pressKey(keys['ArrowLeft'], true, false)
+            ?.pressKey(keys['ArrowRight'], true, true)
+            ?.pressKey(keys['delete'], false, false);
+    },
+    ciw: () => docs
+        .pressKey(keys['ArrowLeft'], true, false)
         ?.pressKey(keys['ArrowRight'], true, true)
         ?.pressKey(keys['delete'], false, false)
+        ?.switchToInsertMode(),
+    gg: () => docs.pressKey(keys['Home'], false, true)
 };
 
 const clearArray = (array) => {
@@ -467,37 +475,37 @@ const checkBindings = (currentMode) => {
                     if (keyArray.includes(key) &&
                         (key === 'Escape' ? true : mode.isInMotion === false)) {
                         v[1]();
-                        clearArray(keyArray);
+                        console.log('Clearing the array', mode.isInMotion);
+                        if (mode.isInMotion === false)
+                            clearArray(keyArray);
                     }
                 }
             }
         }
         for (const [key, value] of Object.entries(motionsCommandMap)) {
             if (mode.isInMotion === true) {
-                console.log("I'm in motion", key, value);
+                console.log("I'm in motion", keyArray, value);
                 if (keyArray.join('').replace(/,/g, '') === key) {
                     console.log('I am in motion and I have a match');
                     value();
                     clearArray(keyArray);
+                    mode.isInMotion = false;
                 }
             }
         }
     };
     initShortcuts();
     if (currentMode === 'normal') {
-        if (keyArray.includes('d')) {
-            if (keyArray.includes('v')) {
-                fancyLogSuccess('Starting visual mode');
-                mode.mode = 'visual';
-            }
-            if (hasInvalidChar) {
-                fancyLogError('Not a valid key');
-                clearArray(keyArray);
-                return;
-            }
+        if (keyArray.includes('v')) {
+            fancyLogSuccess('Starting visual mode');
+            mode.mode = 'visual';
+        }
+        if (hasInvalidChar) {
+            fancyLogError('Not a valid key');
+            clearArray(keyArray);
+            return;
         }
     }
-    ;
 };
 
 const keysThatAreUsed = [
@@ -543,11 +551,15 @@ const keysThatAreUsed = [
     'ArrowRight',
     'Backspace',
     'Space',
+    '$',
+    '0',
+    '^',
     'd',
     'D',
     'c',
-    'C',
+    'C'
 ];
+
 
 
 
@@ -607,22 +619,38 @@ const commandMap = {
         visual: () => docs.pressKey(keys['delete'], false, false)
     },
     u: {
-        normal: () => docs.pressKey(keys['z'], true),
-        visual: () => docs.pressKey(keys['z'], true)
+        normal: () => docs.pressKey(keys['z'], true)?.switchToInsertMode(),
+        visual: () => docs.pressKey(keys['z'], true)?.switchToInsertMode()
     },
     d: {
-        i: {
-            w: {
-                normal: () => docs.pressKey(keys['delete'], true, true),
-                visual: () => docs.pressKey(keys['delete'], true, true)
-            }
-        },
-        a: {
-            w: {
-                normal: () => docs.pressKey(keys['delete'], true, true),
-                visual: () => docs.pressKey(keys['delete'], true, true)
-            }
+        normal: () => (mode.isInMotion = true),
+        visual: () => {
+            docs.pressKey(keys['delete'], false, false);
+            docs.switchToNormalMode();
         }
+    },
+    c: {
+        normal: () => (mode.isInMotion = true),
+        visual: () => {
+            docs.pressKey(keys['delete'], false, false);
+            docs.switchToInsertMode();
+        }
+    },
+    $: {
+        normal: () => docs.pressKey(keys['End']),
+        visual: () => docs.pressKey(keys['End'])
+    },
+    0: {
+        normal: () => docs.pressKey(keys['Home']),
+        visual: () => docs.pressKey(keys['Home'])
+    },
+    '^': {
+        normal: () => docs.pressKey(keys['Home']),
+        visual: () => docs.pressKey(keys['Home'])
+    },
+    g: {
+        normal: () => (mode.isInMotion = true),
+        visual: () => (mode.isInMotion = true)
     }
 };
 

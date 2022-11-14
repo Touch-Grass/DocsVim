@@ -17,7 +17,7 @@ export class mode extends docs {
                 break;
             case 'visual':
                 vim.mode = 'visual';
-                this.setCursorWidth = ['2px', false];
+                this.setCursorWidth = ['15px', false];
                 break;
             default:
                 break;

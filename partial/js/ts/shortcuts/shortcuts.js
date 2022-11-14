@@ -16,18 +16,21 @@ export const checkBindings = (currentMode) => {
                     if (keyArray.includes(key) &&
                         (key === 'Escape' ? true : mode.isInMotion === false)) {
                         v[1]();
-                        clearArray(keyArray);
+                        console.log('Clearing the array', mode.isInMotion);
+                        if (mode.isInMotion === false)
+                            clearArray(keyArray);
                     }
                 }
             }
         }
         for (const [key, value] of Object.entries(motionsCommandMap)) {
             if (mode.isInMotion === true) {
-                console.log("I'm in motion", key, value);
+                console.log("I'm in motion", keyArray, value);
                 if (keyArray.join('').replace(/,/g, '') === key) {
                     console.log('I am in motion and I have a match');
                     value();
                     clearArray(keyArray);
+                    mode.isInMotion = false;
                 }
             }
         }

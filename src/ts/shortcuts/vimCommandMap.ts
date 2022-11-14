@@ -1,4 +1,5 @@
 import { docs } from '../docs';
+import { mode } from '../mode/mode';
 import { keys } from './keymap';
 
 export const commandMap = {
@@ -61,22 +62,38 @@ export const commandMap = {
     visual: () => docs.pressKey(keys['delete'], false, false)
   },
   u: {
-    normal: () => docs.pressKey(keys['z'], true),
-    visual: () => docs.pressKey(keys['z'], true)
+    normal: () => docs.pressKey(keys['z'], true)?.switchToInsertMode(),
+    visual: () => docs.pressKey(keys['z'], true)?.switchToInsertMode()
   },
 
   d: {
-    i: {
-      w: {
-        normal: () => docs.pressKey(keys['delete'], true, true),
-        visual: () => docs.pressKey(keys['delete'], true, true)
-      }
-    },
-    a: {
-      w: {
-        normal: () => docs.pressKey(keys['delete'], true, true),
-        visual: () => docs.pressKey(keys['delete'], true, true)
-      }
+    normal: () => (mode.isInMotion = true),
+    visual: () => {
+      docs.pressKey(keys['delete'], false, false);
+      docs.switchToNormalMode();
     }
+  },
+  c: {
+    normal: () => (mode.isInMotion = true),
+    visual: () => {
+      docs.pressKey(keys['delete'], false, false);
+      docs.switchToInsertMode();
+    }
+  },
+  $: {
+    normal: () => docs.pressKey(keys['End']),
+    visual: () => docs.pressKey(keys['End'])
+  },
+  0: {
+    normal: () => docs.pressKey(keys['Home']),
+    visual: () => docs.pressKey(keys['Home'])
+  },
+  '^': {
+    normal: () => docs.pressKey(keys['Home']),
+    visual: () => docs.pressKey(keys['Home'])
+  },
+  g: {
+    normal: () => (mode.isInMotion = true),
+    visual: () => (mode.isInMotion = true)
   }
 };

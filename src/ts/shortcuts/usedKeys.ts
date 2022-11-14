@@ -48,10 +48,15 @@ export const keysThatAreUsed = [
   'ArrowRight',
   'Backspace',
   'Space',
+  '$',
+  '0',
+  '^',
+  'Home',
+  'End',
 
   // Keys that trigger deletions
   'd',
   'D',
   'c',
-  'C',
+  'C'
 ];

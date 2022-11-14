@@ -41,8 +41,13 @@ export const keysThatAreUsed = [
     'ArrowRight',
     'Backspace',
     'Space',
+    '$',
+    '0',
+    '^',
+    'Home',
+    'End',
     'd',
     'D',
     'c',
-    'C',
+    'C'
 ];

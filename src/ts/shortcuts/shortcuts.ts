@@ -28,7 +28,8 @@ export const checkBindings = (currentMode: string) => {
             (key === 'Escape' ? true : mode.isInMotion === false)
           ) {
             v[1]();
-            clearArray(keyArray);
+            console.log('Clearing the array', mode.isInMotion);
+            if (mode.isInMotion === false) clearArray(keyArray);
           }
         }
       }
@@ -37,22 +38,19 @@ export const checkBindings = (currentMode: string) => {
     for (const [key, value] of Object.entries(motionsCommandMap)) {
       // if (v[0] === currentMode && mode.isInMotion === true) {
       if (mode.isInMotion === true) {
-        console.log("I'm in motion", key, value);
+        console.log("I'm in motion", keyArray, value);
 
         if (keyArray.join('').replace(/,/g, '') === key) {
           console.log('I am in motion and I have a match');
           value();
           clearArray(keyArray);
+          mode.isInMotion = false;
         }
       }
-      // if (keyArray.includes(key)) {
-      //   v[1]();
-      //   clearArray(keyArray);
-      // }
     }
-    // }
   };
 
+  // Calls every key press.
   initShortcuts();
 
   /**

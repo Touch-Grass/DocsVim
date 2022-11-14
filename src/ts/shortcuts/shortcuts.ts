@@ -1,8 +1,9 @@
 import { docs } from '../docs';
 import { mode } from '../mode/mode';
-import { keys } from './keymap';
+import { commandMap } from './vimCommandMap';
 import { clearArray, fancyLogError, fancyLogSuccess } from './shortcutHelper';
 import { keysThatAreUsed } from './usedKeys';
+import { motionsCommandMap } from './motionsCommandMap';
 
 //Adds a the init shortcut once.
 if (docs.keyListenerStatus === false) docs.keydownInit();
@@ -16,104 +17,62 @@ export const checkBindings = (currentMode: string) => {
     key => !keysThatAreUsed.includes(key.toString())
   );
 
-  /**
-   * Global shortcuts
-   */
-  if (keyArray.includes('Escape')) {
-    if (currentMode === 'normal') {
-      fancyLogError('Already in normal mode');
-      clearArray(keyArray);
-      return;
+  const initShortcuts = () => {
+    // Loops through nested functionMap object.
+    for (const [key, value] of Object.entries(commandMap)) {
+      for (const v of Object.entries(value)) {
+        if (v[0] === currentMode) {
+          // If key is Escape, it can escape out of a motion.
+          if (
+            keyArray.includes(key) &&
+            (key === 'Escape' ? true : mode.isInMotion === false)
+          ) {
+            v[1]();
+            clearArray(keyArray);
+          }
+        }
+      }
     }
 
-    fancyLogSuccess('going to normal');
-    mode.mode = 'normal';
-    clearArray(keyArray);
-  }
+    for (const [key, value] of Object.entries(motionsCommandMap)) {
+      // if (v[0] === currentMode && mode.isInMotion === true) {
+      if (mode.isInMotion === true) {
+        console.log("I'm in motion", key, value);
 
-  /**
-   * Insert mode shortcuts
-   */
-  if (currentMode === 'insert') {
-    if (keyArray.includes('i' || 'a')) {
-      fancyLogError('Already in insert mode');
-      clearArray(keyArray);
+        if (keyArray.join('').replace(/,/g, '') === key) {
+          console.log('I am in motion and I have a match');
+          value();
+          clearArray(keyArray);
+        }
+      }
+      // if (keyArray.includes(key)) {
+      //   v[1]();
+      //   clearArray(keyArray);
+      // }
     }
-  }
+    // }
+  };
+
+  initShortcuts();
 
   /**
    * Normal mode shortcuts
    */
   if (currentMode === 'normal') {
-    if (keyArray.includes('i' || 'a')) {
-      fancyLogSuccess('Going to insert');
-      mode.mode = 'insert';
-      clearArray(keyArray);
-    }
-
-    if (keyArray.includes('v')) {
-      fancyLogSuccess('Going to visual');
-      mode.mode = 'visual';
-      clearArray(keyArray);
-    }
-
-    // if (keyArray.includes('w')) {
-    //   fancyLogSuccess("Jumping to the next word's start");
-    //   // docs.pressKey(keys['uparrow']);
-    //   const el = (
-    //     document.querySelectorAll(
-    //       '.docs-texteventtarget-iframe'
-    //     )[0] as HTMLIFrameElement
-    //   ).contentDocument as Document;
-    //   const key_event = new KeyboardEvent('keypress', {
-    //     "key": "ArrowUp",
-    //     "keyCode": 38,
-    //     "which": 38,
-    //     "code": "ArrowUp",
-    //     "location": 0,
-    //     "altKey": false,
-    //     "ctrlKey": false,
-    //     "metaKey": false,
-    //     "shiftKey": false,
-    //     "repeat": false
-    //   });
-    //   el.dispatchEvent(key_event);
-
-    //   console.log(keys['uparrow'], "up arrow's key code");
-    //   console.log(docs.pressKey(keys['uparrow']));
-    //   clearArray(keyArray);
+    // if (keyArray.includes('d')) {
+    //   fancyLogSuccess('Starting delete motion');
+    //   mode.isInMotion = true;
     // }
 
-    if (keyArray.includes('w')) {
-      fancyLogSuccess('Moving to the right');
-      docs.pressKey(39, true);
-    }
-
-    if (keyArray.includes('l')) {
-      fancyLogSuccess('Moving to the right');
-      docs.pressKey(39);
+    if (keyArray.includes('v')) {
+      fancyLogSuccess('Starting visual mode');
+      mode.mode = 'visual';
     }
 
     if (hasInvalidChar) {
-      clearArray(keyArray);
       fancyLogError('Not a valid key');
+      clearArray(keyArray);
       return;
-    }
-  }
-
-  /**
-   * Visual mode shortcuts
-   */
-  if (currentMode === 'visual') {
-    if (keyArray.includes('v')) {
-      fancyLogError('Already in visual mode');
-      clearArray(keyArray);
-    }
-
-    if (keyArray.includes('i')) {
-      fancyLogSuccess('Going to insert');
-      mode.mode = 'insert';
-      clearArray(keyArray);
     }
   }
 };

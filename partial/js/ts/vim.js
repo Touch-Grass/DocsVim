@@ -12,6 +12,13 @@ export class vim extends mode {
     static set number(number) {
         this._number = number;
     }
+    static get isInMotion() {
+        return this._isInMotion;
+    }
+    static set isInMotion(isInMotion) {
+        this._isInMotion = isInMotion;
+    }
 }
 vim._mode = 'insert';
 vim._number = 1;
+vim._isInMotion = false;

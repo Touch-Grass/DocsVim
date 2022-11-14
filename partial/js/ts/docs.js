@@ -1,3 +1,5 @@
+var _a;
+import { mode } from './mode/mode';
 import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
 export class docs {
@@ -46,7 +48,8 @@ export class docs {
             return false;
         const caret = cursor.querySelector('.kix-cursor-caret');
         caret.style.borderWidth = width;
-        caret.style.borderColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, 0.5)`;
+        caret.style.borderColor = `rgba(
+      ${isInsertMode ? 0 : 255}, 0, 0, ${isInsertMode ? 1 : 0.5})`;
         caret.style.mixBlendMode = 'difference';
         return true;
     }
@@ -90,10 +93,32 @@ export class docs {
     static keydownInit() {
         return docs._hasEventListnerBeenAdded === false ? this._keydown() : false;
     }
+    static switchToNormalMode() {
+        mode.mode = 'normal';
+        this._listOfCommands = [];
+        return this;
+    }
+    static switchToInsertMode() {
+        mode.mode = 'insert';
+        this._listOfCommands = [];
+        return this;
+    }
+    static switchToVisualMode() {
+        mode.mode = 'visual';
+        this._listOfCommands = [];
+        return this;
+    }
+    static get isInMotion() {
+        return mode.isInMotion;
+    }
+    static set isInMotion(isInMotion) {
+        mode.isInMotion = isInMotion;
+    }
 }
+_a = docs;
 docs._listOfCommands = [];
 docs._hasEventListnerBeenAdded = false;
-docs.pressKey = (keyCode, ctrlKey, shiftKey) => {
+docs.pressKey = (keyCode, ctrlKey, shiftKey = mode.mode === 'visual') => {
     const element = document.getElementsByClassName('docs-texteventtarget-iframe')[0].contentDocument;
     if (element === null)
         return;
@@ -104,4 +129,5 @@ docs.pressKey = (keyCode, ctrlKey, shiftKey) => {
     };
     const key_event = new KeyboardEvent('keydown', data);
     element.dispatchEvent(key_event);
+    return _a;
 };

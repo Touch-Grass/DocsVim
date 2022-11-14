@@ -1,3 +1,4 @@
+import { mode } from './mode/mode';
 import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
 
@@ -65,7 +66,7 @@ export class docs {
   public static pressKey = (
     keyCode: number,
     ctrlKey?: boolean,
-    shiftKey?: boolean
+    shiftKey = mode.mode === 'visual'
   ) => {
     const element = (
       document.getElementsByClassName(
@@ -84,6 +85,7 @@ export class docs {
     const key_event = new KeyboardEvent('keydown', data);
 
     element.dispatchEvent(key_event);
+    return this;
   };
 
   /**
@@ -128,7 +130,8 @@ export class docs {
     if (cursor === null) return false;
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
     caret.style.borderWidth = width;
-    caret.style.borderColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, 0.5)`;
+    caret.style.borderColor = `rgba(
+      ${isInsertMode ? 0 : 255}, 0, 0, ${isInsertMode ? 1 : 0.5})`;
     caret.style.mixBlendMode = 'difference';
     return true;
   }
@@ -221,57 +224,40 @@ export class docs {
     return docs._hasEventListnerBeenAdded === false ? this._keydown() : false;
   }
 
+  public static switchToNormalMode() {
+    mode.mode = 'normal';
+    this._listOfCommands = [];
+
+    return this;
+  }
+
+  public static switchToInsertMode() {
+    mode.mode = 'insert';
+    this._listOfCommands = [];
+
+    return this;
+  }
+
+  public static switchToVisualMode() {
+    mode.mode = 'visual';
+    this._listOfCommands = [];
+
+    return this;
+  }
+
   /**
-   * https://stackoverflow.com/questions/5525071/how-to-wait-until-an-element-exists
-   * @param selector - The selector of the element that you want to select.
-   * @returns {Promise<HTMLElement>} - The element you selected once it's loaded.
+   * Gets wheater the user is in insert mode or not.
+   * @returns {boolean} - If the user is in insert mode or not.
    */
-  // private static _waitForElement(selector: string): Promise<HTMLElement> {
-  //   return new Promise(resolve => {
-  //     if (document.querySelector(selector))
-  //       return resolve(document.querySelector(selector) as HTMLElement);
+  static get isInMotion(): boolean {
+    return mode.isInMotion;
+  }
 
-  //     const observer = new MutationObserver(mutations => {
-  //       if (document.querySelector(selector)) {
-  //         resolve(document.querySelector(selector) as HTMLElement);
-  //         observer.disconnect();
-  //       }
-  //     });
-
-  //     observer.observe(document.body, {
-  //       childList: true,
-  //       subtree: true
-  //     });
-  //   });
-  // }
-
-  // private static readonly _statusline = document.createElement('div');
-
-  // public static async initStatusLine(): Promise<void> {
-  //   const bar = await this._waitForElement('.navigation-widget-content');
-  //   docs._statusline.classList.add('vim_statusbar');
-  //   const style = document.createElement('style');
-  //   style.textContent = `
-  //     .vim_statusbar {
-  //       background-color: transparent;
-  //       width: 100%;
-  //       height: 50px;
-  //       position: absolute;
-  //       bottom: 7px;
-  //       left: 7px;
-  //       display: flex;
-  //       justify-content: flex-start;
-  //       align-items: flex-end;
-  //       font-size: 13px;
-  //       color: black;
-  //       font-weight: bold;
-  //   `;
-  //   document.body.append(docs._statusline);
-  //   document.body.append(style);
-  //   this._updateStatusbar(vim.Mode);
-  // }
-
-  // protected static _updateStatusbar(mode: string): void {
-  //   docs._statusline.innerHTML = `-- ${mode} --`;
-  // }
+  /**
+   * Sets wheater the user is in insert mode or not.
+   * @param {boolean} isInMotion - If the user is in insert mode or not.
+   */
+  static set isInMotion(isInMotion: boolean) {
+    mode.isInMotion = isInMotion;
+  }
 }

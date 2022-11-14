@@ -1,62 +1,47 @@
 import { docs } from '../docs';
 import { mode } from '../mode/mode';
+import { commandMap } from './vimCommandMap';
 import { clearArray, fancyLogError, fancyLogSuccess } from './shortcutHelper';
 import { keysThatAreUsed } from './usedKeys';
+import { motionsCommandMap } from './motionsCommandMap';
 if (docs.keyListenerStatus === false)
     docs.keydownInit();
 export const checkBindings = (currentMode) => {
     const keyArray = docs.keyArray;
     const hasInvalidChar = keyArray.some(key => !keysThatAreUsed.includes(key.toString()));
-    if (keyArray.includes('Escape')) {
-        if (currentMode === 'normal') {
-            fancyLogError('Already in normal mode');
-            clearArray(keyArray);
-            return;
+    const initShortcuts = () => {
+        for (const [key, value] of Object.entries(commandMap)) {
+            for (const v of Object.entries(value)) {
+                if (v[0] === currentMode) {
+                    if (keyArray.includes(key) &&
+                        (key === 'Escape' ? true : mode.isInMotion === false)) {
+                        v[1]();
+                        clearArray(keyArray);
+                    }
+                }
+            }
         }
-        fancyLogSuccess('going to normal');
-        mode.mode = 'normal';
-        clearArray(keyArray);
-    }
-    if (currentMode === 'insert') {
-        if (keyArray.includes('i' || 'a')) {
-            fancyLogError('Already in insert mode');
-            clearArray(keyArray);
+        for (const [key, value] of Object.entries(motionsCommandMap)) {
+            if (mode.isInMotion === true) {
+                console.log("I'm in motion", key, value);
+                if (keyArray.join('').replace(/,/g, '') === key) {
+                    console.log('I am in motion and I have a match');
+                    value();
+                    clearArray(keyArray);
+                }
+            }
         }
-    }
+    };
+    initShortcuts();
     if (currentMode === 'normal') {
-        if (keyArray.includes('i' || 'a')) {
-            fancyLogSuccess('Going to insert');
-            mode.mode = 'insert';
-            clearArray(keyArray);
-        }
         if (keyArray.includes('v')) {
-            fancyLogSuccess('Going to visual');
+            fancyLogSuccess('Starting visual mode');
             mode.mode = 'visual';
-            clearArray(keyArray);
-        }
-        if (keyArray.includes("w")) {
-            fancyLogSuccess("Moving to the right");
-            docs.pressKey(39, true);
-        }
-        if (keyArray.includes("l")) {
-            fancyLogSuccess("Moving to the right");
-            docs.pressKey(39);
         }
         if (hasInvalidChar) {
-            clearArray(keyArray);
             fancyLogError('Not a valid key');
+            clearArray(keyArray);
             return;
-        }
-    }
-    if (currentMode === 'visual') {
-        if (keyArray.includes('v')) {
-            fancyLogError('Already in visual mode');
-            clearArray(keyArray);
-        }
-        if (keyArray.includes('i')) {
-            fancyLogSuccess('Going to insert');
-            mode.mode = 'insert';
-            clearArray(keyArray);
         }
     }
 };

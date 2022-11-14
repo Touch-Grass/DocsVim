@@ -30,4 +30,22 @@ export class mode extends docs {
         console.log('In the setter', mode);
         this._switchToMode(mode);
     }
+    static get isInMotion() {
+        return vim.isInMotion;
+    }
+    static set isInMotion(isInMotion) {
+        vim.isInMotion = isInMotion;
+    }
+    static switchToNormalMode() {
+        this.mode = 'normal';
+        return this;
+    }
+    static switchToInsertMode() {
+        this.mode = 'insert';
+        return this;
+    }
+    static switchToVisualMode() {
+        this.mode = 'visual';
+        return this;
+    }
 }

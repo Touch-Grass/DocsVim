@@ -28,6 +28,9 @@ export class statusline extends docs {
 
   private static readonly _statusline = document.createElement('div');
 
+  /**
+   * Initializes the statusline, and adds it to the DOM.
+   */
   public static async initStatusLine(): Promise<void> {
     const bar = await this._waitForElement('.navigation-widget-content');
     this._statusline.classList.add('vim_statusbar');
@@ -52,6 +55,10 @@ export class statusline extends docs {
     this.updateStatusbar(vim.mode);
   }
 
+  /**
+   * Updates the statusline with the current mode.
+   * @param mode Mode that the statusline will display
+   */
   public static updateStatusbar(mode: string): void {
     this._statusline.innerHTML = `-- ${mode} --`;
   }

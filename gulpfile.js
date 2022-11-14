@@ -11,9 +11,10 @@ const gulpIgnore = require('gulp-ignore');
 
 // Order of the files that they get concatenated in
 const JsFiles = [
+  'partial/js/ts/shortcuts/keymap.js',
   'partial/js/ts/docs.js',
   'partial/js/ts/mode/mode.js',
-  'partial/js/**/*.js',
+  'partial/js/**/*.js'
 ];
 
 const matchExports = new RegExp(/export{[A-Za-z0-9_.,$]*};/gim);

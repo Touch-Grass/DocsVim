@@ -50,4 +50,46 @@ export class mode extends docs {
     console.log('In the setter', mode);
     this._switchToMode(mode);
   }
+
+  /**
+   * If you are currently in a motion such as diw or daw.
+   */
+  static get isInMotion(): boolean {
+    return vim.isInMotion;
+  }
+
+  /**
+   * Sets if you are in a motion or not.
+   * @param isInMotion {boolean} - If you are in a motion or not.
+   */
+  static set isInMotion(isInMotion: boolean) {
+    vim.isInMotion = isInMotion;
+  }
+
+  /**
+   * Switches the mode to insert
+   */
+  public static switchToNormalMode() {
+    this.mode = 'normal';
+
+    return this;
+  }
+
+  /**
+   * Switches the mode to insert
+   */
+  public static switchToInsertMode() {
+    this.mode = 'insert';
+
+    return this;
+  }
+
+  /**
+   * Switches the mode to visual
+   */
+  public static switchToVisualMode() {
+    this.mode = 'visual';
+
+    return this;
+  }
 }

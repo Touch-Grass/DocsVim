@@ -1,4 +1,4 @@
 import { docs } from '../docs';
-import { statusline } from '../statusline';
+import { statusLine } from '../statusLine';
 
-statusline.initStatusLine();
+statusLine.initStatusLine();

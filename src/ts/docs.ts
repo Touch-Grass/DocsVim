@@ -3,17 +3,17 @@ import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
 
 /**
- * The main class for google docs. This class is used to add event listeners to the document and do other things related to the actual document.
+ * The main class for Google Docs. This class is used to add event listeners to the document and do other things related to the actual document.
  */
 export class docs {
   private static _listOfCommands: (string | number)[] = [];
-  private static _hasEventListnerBeenAdded = false;
+  private static _hasEventListenerBeenAdded = false;
 
   /**
-   * @returns If the keyboard event listner has been added, it will return true, else false
+   * @returns If the keyboard event listener has been added, it will return true, else false
    */
   static get keyListenerStatus(): boolean {
-    return docs._hasEventListnerBeenAdded;
+    return docs._hasEventListenerBeenAdded;
   }
 
   /**
@@ -36,25 +36,86 @@ export class docs {
   }
 
   /**
-   * @param {string} text - Text that will be pasted into the document.
+   * @returns {Element | null} - The users cursor element. If it can't find one it returns null.
    */
-  private static _pasteText(text: string): void {
-    /** Element to paste text into */
-    const el = (
-      (
-        document.querySelectorAll(
-          'docs-texteventtarget-iframe'
-        )[0] as HTMLIFrameElement
-      ).contentDocument as Document
-    ).querySelector('[contenteditable=true]') as HTMLElement;
-    const data = new DataTransfer();
-    data.setData('text/plain', text);
-    const paste = new ClipboardEvent('paste', {
-      clipboardData: data,
-      bubbles: true,
-      cancelable: true
+  static get getUserCursor(): Element | null {
+    let myCursor: Element | null = null;
+
+    document.querySelectorAll('.kix-cursor').forEach(El => {
+      //skipcq JS-0349
+      const caretColor = El.querySelector(
+        '.kix-cursor-caret'
+      ) as HTMLElement | null;
+
+      if (caretColor === null) return;
+
+      const caretBorderColor = caretColor.style.borderLeftColor
+        .replace(/,/g, '')
+        .replace(/\s/g, '')
+        .toLowerCase();
+
+      const cursorName = (
+        El.querySelector('.kix-cursor-name')?.textContent ?? ''
+      ).trim();
+
+      if (cursorName.length <= 0) myCursor = El;
     });
-    el.dispatchEvent(paste);
+
+    if (myCursor !== null) return myCursor;
+
+    return document.querySelector('.kix-cursor');
+  }
+
+  /**
+   * Gets the cursor width
+   */
+  static get getCursorWidth(): string {
+    return docs._getCursorWidth();
+  }
+
+  /**
+   * Sets the cursors width
+   * @param {[string, boolean]} - The width of the cursor (in px) and if it's in insert mode or not.
+   */
+  static set setCursorWidth([width, isInsertMode]: [string, boolean]) {
+    docs._setCursorWidth(width, isInsertMode);
+  }
+
+  // https://stackoverflow.com/questions/27291021/google-docs-simulate-keyboard/63595176#63595176
+  /**
+   * Gets the iframe that Google Docs uses to detect key-presses.
+   */
+  static get textTarget(): HTMLElement {
+    return (
+      (
+        document.querySelector(
+          '.docs-texteventtarget-iframe'
+        ) as HTMLIFrameElement
+      ).contentDocument as Document
+    ).activeElement as HTMLElement;
+  }
+
+  /**
+   * @returns {(string | number)[]} - An array all the keys that have been pressed.
+   */
+  static get keyArray(): (string | number)[] {
+    return this._listOfCommands;
+  }
+
+  /**
+   * Gets whether the user is in insert mode or not.
+   * @returns {boolean} - If the user is in insert mode or not.
+   */
+  static get isInMotion(): boolean {
+    return mode.isInMotion;
+  }
+
+  /**
+   * Sets whether the user is in insert mode or not.
+   * @param {boolean} isInMotion - If the user is in insert mode or not.
+   */
+  static set isInMotion(isInMotion: boolean) {
+    mode.isInMotion = isInMotion;
   }
 
   /**
@@ -89,38 +150,45 @@ export class docs {
   };
 
   /**
-   * @returns {Element | null} - The users cursor element. If it can't find one it returns null.
+   * Helper function to initialize the keydown event listener.
+   * @returns {boolean} - If the event listener has been added or not.
    */
-  static get getUserCursor(): Element | null {
-    let myCursor: Element | null = null;
-
-    document.querySelectorAll('.kix-cursor').forEach(El => {
-      //skipcq JS-0349
-      const caretColor = El.querySelector(
-        '.kix-cursor-caret'
-      ) as HTMLElement | null;
-
-      if (caretColor === null) return;
-
-      const caretBorderColor = caretColor.style.borderLeftColor
-        .replace(/,/g, '')
-        .replace(/\s/g, '')
-        .toLowerCase();
-
-      const cursorName = (
-        El.querySelector('.kix-cursor-name')?.textContent ?? ''
-      ).trim();
-
-      if (cursorName.length <= 0) myCursor = El;
-    });
-
-    if (myCursor !== null) return myCursor;
-
-    return document.querySelector('.kix-cursor');
+  public static keydownInit(): boolean {
+    return !docs._hasEventListenerBeenAdded ? this._keydown() : false;
   }
 
   /**
-   * Sets the cursors width.
+   * Switches the current mode to normal
+   */
+  public static switchToNormalMode() {
+    mode.mode = 'normal';
+    this._listOfCommands = [];
+
+    return this;
+  }
+
+  /**
+   * Switches the current mode to insert
+   */
+  public static switchToInsertMode() {
+    mode.mode = 'insert';
+    this._listOfCommands = [];
+
+    return this;
+  }
+
+  /**
+   * Switches the current mode to visual
+   */
+  public static switchToVisualMode() {
+    mode.mode = 'visual';
+    this._listOfCommands = [];
+
+    return this;
+  }
+
+  /**
+   * Sets the cursor's width.
    * @param width {string} - The width of the cursor.
    * @param isInsertMode If the cursor is in insert mode or not.
    */
@@ -151,36 +219,7 @@ export class docs {
   }
 
   /**
-   * Gets the cursor width
-   */
-  static get getCursorWidth(): string {
-    return docs._getCursorWidth();
-  }
-
-  /**
-   * Sets the cursors width
-   * @param {[string, boolean]} - The width of the cursor (in px) and if it's in insert mode or not.
-   */
-  static set setCursorWidth([width, isInsertMode]: [string, boolean]) {
-    docs._setCursorWidth(width, isInsertMode);
-  }
-
-  // https://stackoverflow.com/questions/27291021/google-docs-simulate-keyboard/63595176#63595176
-  /**
-   * Gets the iframe that google docs uses to detects keypresses.
-   */
-  static get textTarget(): HTMLElement {
-    return (
-      (
-        document.querySelector(
-          '.docs-texteventtarget-iframe'
-        ) as HTMLIFrameElement
-      ).contentDocument as Document
-    ).activeElement as HTMLElement;
-  }
-
-  /**
-   * Converts and EventListner key (string | number) to an array
+   * Converts and EventListener key (string | number) to an array
    * @param {KeyboardEvent} keyboardEvent - The key that will be added to the array
    * @returns {(string | number)[]} - An array with all prior keys including the current one.
    */
@@ -198,13 +237,6 @@ export class docs {
   }
 
   /**
-   * @returns {(string | number)[]} - An array all the keys that have been pressed.
-   */
-  static get keyArray(): (string | number)[] {
-    return this._listOfCommands;
-  }
-
-  /**
    * Gets the users input
    */
   private static _keydown(): boolean {
@@ -212,52 +244,29 @@ export class docs {
       this._keyToArray(e);
       return;
     });
-    this._hasEventListnerBeenAdded = true;
+    this._hasEventListenerBeenAdded = true;
     return true;
   }
 
   /**
-   * Helper function to initialize the keydown event listener.
-   * @returns {boolean} - If the event listener has been added or not.
+   * @param {string} text - Text that will be pasted into the document.
    */
-  public static keydownInit(): boolean {
-    return docs._hasEventListnerBeenAdded === false ? this._keydown() : false;
-  }
-
-  public static switchToNormalMode() {
-    mode.mode = 'normal';
-    this._listOfCommands = [];
-
-    return this;
-  }
-
-  public static switchToInsertMode() {
-    mode.mode = 'insert';
-    this._listOfCommands = [];
-
-    return this;
-  }
-
-  public static switchToVisualMode() {
-    mode.mode = 'visual';
-    this._listOfCommands = [];
-
-    return this;
-  }
-
-  /**
-   * Gets wheater the user is in insert mode or not.
-   * @returns {boolean} - If the user is in insert mode or not.
-   */
-  static get isInMotion(): boolean {
-    return mode.isInMotion;
-  }
-
-  /**
-   * Sets wheater the user is in insert mode or not.
-   * @param {boolean} isInMotion - If the user is in insert mode or not.
-   */
-  static set isInMotion(isInMotion: boolean) {
-    mode.isInMotion = isInMotion;
+  private _pasteText(text: string): void {
+    /** Element to paste text into */
+    const el = (
+      (
+        document.querySelectorAll(
+          'docs-texteventtarget-iframe'
+        )[0] as HTMLIFrameElement
+      ).contentDocument as Document
+    ).querySelector('[contenteditable=true]') as HTMLElement;
+    const data = new DataTransfer();
+    data.setData('text/plain', text);
+    const paste = new ClipboardEvent('paste', {
+      clipboardData: data,
+      bubbles: true,
+      cancelable: true
+    });
+    el.dispatchEvent(paste);
   }
 }

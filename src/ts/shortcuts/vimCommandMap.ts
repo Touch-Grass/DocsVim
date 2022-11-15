@@ -57,6 +57,9 @@ export const commandMap = {
   v: {
     normal: () => docs.pressKey(keys['shift'])?.switchToVisualMode()
   },
+  V: {
+    normal: () => docs.pressKey(keys['home'])?.pressKey(keys['shift'])?.pressKey(keys['end'], false, true)?.switchToVisualMode()
+  },
   x: {
     normal: () => docs.pressKey(keys['delete'], false, false),
     visual: () => docs.pressKey(keys['delete'], false, false)

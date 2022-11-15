@@ -1,10 +1,10 @@
 import { docs } from '../docs';
-import { statusline } from '../statusline';
+import { statusLine } from '../statusLine';
 import { vim } from '../vim';
 export class mode extends docs {
     static _switchToMode(mode) {
         vim.number = 1;
-        statusline.updateStatusbar(mode);
+        statusLine.updateStatusbar(mode);
         console.log('switching to mode: ', mode);
         switch (mode) {
             case 'insert':

@@ -4,7 +4,7 @@ import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
 export class docs {
     static get keyListenerStatus() {
-        return docs._hasEventListnerBeenAdded;
+        return docs._hasEventListenerBeenAdded;
     }
     static get docID() {
         return window.location.href.split('/document/d/')[1].split('/')[0];
@@ -12,17 +12,6 @@ export class docs {
     static get docName() {
         return ((document.querySelector('.docs-title-input-label-inner')
             .textContent ?? '').trim() ?? '');
-    }
-    static _pasteText(text) {
-        const el = document.querySelectorAll('docs-texteventtarget-iframe')[0].contentDocument.querySelector('[contenteditable=true]');
-        const data = new DataTransfer();
-        data.setData('text/plain', text);
-        const paste = new ClipboardEvent('paste', {
-            clipboardData: data,
-            bubbles: true,
-            cancelable: true
-        });
-        el.dispatchEvent(paste);
     }
     static get getUserCursor() {
         let myCursor = null;
@@ -41,6 +30,42 @@ export class docs {
         if (myCursor !== null)
             return myCursor;
         return document.querySelector('.kix-cursor');
+    }
+    static get getCursorWidth() {
+        return docs._getCursorWidth();
+    }
+    static set setCursorWidth([width, isInsertMode]) {
+        docs._setCursorWidth(width, isInsertMode);
+    }
+    static get textTarget() {
+        return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
+    }
+    static get keyArray() {
+        return this._listOfCommands;
+    }
+    static get isInMotion() {
+        return mode.isInMotion;
+    }
+    static set isInMotion(isInMotion) {
+        mode.isInMotion = isInMotion;
+    }
+    static keydownInit() {
+        return !docs._hasEventListenerBeenAdded ? this._keydown() : false;
+    }
+    static switchToNormalMode() {
+        mode.mode = 'normal';
+        this._listOfCommands = [];
+        return this;
+    }
+    static switchToInsertMode() {
+        mode.mode = 'insert';
+        this._listOfCommands = [];
+        return this;
+    }
+    static switchToVisualMode() {
+        mode.mode = 'visual';
+        this._listOfCommands = [];
+        return this;
     }
     static _setCursorWidth(width, isInsertMode) {
         const cursor = this.getUserCursor;
@@ -61,15 +86,6 @@ export class docs {
         return `${parseInt(caret.style.borderLeftWidth) +
             parseInt(caret.style.borderRightWidth)}px`;
     }
-    static get getCursorWidth() {
-        return docs._getCursorWidth();
-    }
-    static set setCursorWidth([width, isInsertMode]) {
-        docs._setCursorWidth(width, isInsertMode);
-    }
-    static get textTarget() {
-        return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
-    }
     static _keyToArray(keyboardEvent) {
         if (vim.mode === 'normal' || vim.mode === 'visual') {
             keyboardEvent.preventDefault();
@@ -79,45 +95,29 @@ export class docs {
         checkBindings(vim.mode);
         return this._listOfCommands;
     }
-    static get keyArray() {
-        return this._listOfCommands;
-    }
     static _keydown() {
         docs.textTarget.addEventListener('keydown', e => {
             this._keyToArray(e);
             return;
         });
-        this._hasEventListnerBeenAdded = true;
+        this._hasEventListenerBeenAdded = true;
         return true;
     }
-    static keydownInit() {
-        return docs._hasEventListnerBeenAdded === false ? this._keydown() : false;
-    }
-    static switchToNormalMode() {
-        mode.mode = 'normal';
-        this._listOfCommands = [];
-        return this;
-    }
-    static switchToInsertMode() {
-        mode.mode = 'insert';
-        this._listOfCommands = [];
-        return this;
-    }
-    static switchToVisualMode() {
-        mode.mode = 'visual';
-        this._listOfCommands = [];
-        return this;
-    }
-    static get isInMotion() {
-        return mode.isInMotion;
-    }
-    static set isInMotion(isInMotion) {
-        mode.isInMotion = isInMotion;
+    _pasteText(text) {
+        const el = document.querySelectorAll('docs-texteventtarget-iframe')[0].contentDocument.querySelector('[contenteditable=true]');
+        const data = new DataTransfer();
+        data.setData('text/plain', text);
+        const paste = new ClipboardEvent('paste', {
+            clipboardData: data,
+            bubbles: true,
+            cancelable: true
+        });
+        el.dispatchEvent(paste);
     }
 }
 _a = docs;
 docs._listOfCommands = [];
-docs._hasEventListnerBeenAdded = false;
+docs._hasEventListenerBeenAdded = false;
 docs.pressKey = (keyCode, ctrlKey, shiftKey = mode.mode === 'visual') => {
     const element = document.getElementsByClassName('docs-texteventtarget-iframe')[0].contentDocument;
     if (element === null)

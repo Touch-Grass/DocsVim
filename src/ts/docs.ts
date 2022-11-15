@@ -10,7 +10,7 @@ export class docs {
   private static _hasEventListenerBeenAdded = false;
 
   /**
-   * @returns If the keyboard event listener has been added, it will return true, else false
+   * @returns {boolean} If the keyboard event listener has been added, it will return true, else false
    */
   static get keyListenerStatus(): boolean {
     return docs._hasEventListenerBeenAdded;
@@ -186,6 +186,7 @@ export class docs {
 
     return this;
   }
+
 
   /**
    * Sets the cursor's width.

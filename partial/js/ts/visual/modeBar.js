@@ -1,2 +1,2 @@
-import { statusline } from '../statusline';
-statusline.initStatusLine();
+import { statusLine } from '../statusLine';
+statusLine.initStatusLine();

@@ -1,6 +1,9 @@
 import { docs } from './docs';
 import { vim } from './vim';
 
+/**
+ * This class handles the statusbar and updating it.
+ */
 export class statusLine extends docs {
   private static readonly _statusLine = document.createElement('div');
 
@@ -8,7 +11,6 @@ export class statusLine extends docs {
    * Initializes the statusline, and adds it to the DOM.
    */
   public static async initStatusLine(): Promise<void> {
-    const bar = await this._waitForElement('.navigation-widget-content');
     this._statusLine.classList.add('vim_statusbar');
     const style = document.createElement('style');
     style.textContent = `

@@ -8,6 +8,6 @@ export const fancyLogError = (text) => {
 export const fancyLogSuccess = (text) => {
     console.log.apply(console, [
         `%c${text}`,
-        'font-weight: bold; color: #bada55',
+        'font-weight: bold; color: #bada55'
     ]);
 };

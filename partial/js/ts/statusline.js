@@ -1,25 +1,8 @@
 import { docs } from './docs';
 import { vim } from './vim';
-export class statusline extends docs {
-    static _waitForElement(selector) {
-        return new Promise(resolve => {
-            if (document.querySelector(selector))
-                return resolve(document.querySelector(selector));
-            const observer = new MutationObserver(mutations => {
-                if (document.querySelector(selector)) {
-                    resolve(document.querySelector(selector));
-                    observer.disconnect();
-                }
-            });
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        });
-    }
+export class statusLine extends docs {
     static async initStatusLine() {
-        const bar = await this._waitForElement('.navigation-widget-content');
-        this._statusline.classList.add('vim_statusbar');
+        this._statusLine.classList.add('vim_statusbar');
         const style = document.createElement('style');
         style.textContent = `
         .vim_statusbar {
@@ -36,12 +19,28 @@ export class statusline extends docs {
             color: black;
             font-weight: bold;
         `;
-        document.body.append(this._statusline);
+        document.body.append(this._statusLine);
         document.body.append(style);
         this.updateStatusbar(vim.mode);
     }
     static updateStatusbar(mode) {
-        this._statusline.innerHTML = `-- ${mode} --`;
+        this._statusLine.innerHTML = `-- ${mode} --`;
+    }
+    static _waitForElement(selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector))
+                return resolve(document.querySelector(selector));
+            const observer = new MutationObserver(mutations => {
+                if (document.querySelector(selector)) {
+                    resolve(document.querySelector(selector));
+                    observer.disconnect();
+                }
+            });
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
     }
 }
-statusline._statusline = document.createElement('div');
+statusLine._statusLine = document.createElement('div');

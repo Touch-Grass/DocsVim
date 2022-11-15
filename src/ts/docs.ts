@@ -187,7 +187,6 @@ export class docs {
     return this;
   }
 
-
   /**
    * Sets the cursor's width.
    * @param width {string} - The width of the cursor.

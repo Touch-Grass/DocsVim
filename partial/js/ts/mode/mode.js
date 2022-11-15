@@ -13,11 +13,11 @@ export class mode extends docs {
                 break;
             case 'normal':
                 vim.mode = 'normal';
-                this.setCursorWidth = ['15px', false];
+                this.setCursorWidth = ['7px', false];
                 break;
             case 'visual':
                 vim.mode = 'visual';
-                this.setCursorWidth = ['15px', false];
+                this.setCursorWidth = ['7px', false];
                 break;
             default:
                 break;

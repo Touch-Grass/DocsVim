@@ -71,23 +71,27 @@ export const commandMap = {
         normal: () => (mode.isInMotion = true),
         visual: () => {
             docs.pressKey(keys['delete'], false, false);
-            docs.switchToInsertMode();
+            docs.switchToNormalMode();
         }
     },
     $: {
-        normal: () => docs.pressKey(keys['End']),
-        visual: () => docs.pressKey(keys['End'])
+        normal: () => docs.pressKey(keys['end']),
+        visual: () => docs.pressKey(keys['end'])
     },
     0: {
-        normal: () => docs.pressKey(keys['Home']),
-        visual: () => docs.pressKey(keys['Home'])
+        normal: () => docs.pressKey(keys['home']),
+        visual: () => docs.pressKey(keys['home'])
     },
     '^': {
-        normal: () => docs.pressKey(keys['Home']),
-        visual: () => docs.pressKey(keys['Home'])
+        normal: () => docs.pressKey(keys['home']),
+        visual: () => docs.pressKey(keys['home'])
     },
     g: {
         normal: () => (mode.isInMotion = true),
         visual: () => (mode.isInMotion = true)
+    },
+    G: {
+        normal: () => docs.pressKey(keys['end'], true),
+        visual: () => docs.pressKey(keys['end'], true)
     }
 };

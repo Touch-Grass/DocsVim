@@ -20,7 +20,7 @@ export const keysThatAreUsed = [
     'B',
     '0',
     '$',
-    'gg',
+    'g',
     'G',
     'H',
     'M',

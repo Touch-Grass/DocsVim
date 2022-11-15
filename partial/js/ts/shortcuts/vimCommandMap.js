@@ -20,13 +20,9 @@ export const commandMap = {
     },
     w: {
         normal: () => docs
-            .pressKey(keys['ArrowRight'], true)
-            ?.pressKey(keys['ArrowRight'], true)
-            ?.pressKey(keys['ArrowLeft'], true),
+            .pressKey(keys['ArrowRight'], true),
         visual: () => docs
             .pressKey(keys['ArrowRight'], true)
-            ?.pressKey(keys['ArrowRight'], true)
-            ?.pressKey(keys['ArrowLeft'], true)
     },
     e: {
         normal: () => docs.pressKey(keys['ArrowRight'], true),
@@ -46,7 +42,7 @@ export const commandMap = {
     },
     Escape: {
         normal: () => (docs.switchToNormalMode().isInMotion = false),
-        visual: () => (docs.switchToNormalMode().isInMotion = false),
+        visual: () => docs.switchToInsertMode().pressKey(keys['ArrowLeft']).isInMotion = false,
         insert: () => (docs.switchToNormalMode().isInMotion = false)
     },
     v: {
@@ -60,22 +56,19 @@ export const commandMap = {
         visual: () => docs.pressKey(keys['delete'], false, false)
     },
     u: {
-        normal: () => docs.pressKey(keys['z'], true)?.switchToInsertMode(),
-        visual: () => docs.pressKey(keys['z'], true)?.switchToInsertMode()
+        normal: () => docs.pressKey(keys['z'], true)?.switchToNormalMode().pressKey(keys['ArrowRight']),
+        visual: () => docs.pressKey(keys['z'], true)?.switchToNormalMode().pressKey(keys['ArrowRight'])
     },
     d: {
         normal: () => (mode.isInMotion = true),
-        visual: () => {
-            docs.pressKey(keys['delete'], false, false);
-            docs.switchToNormalMode();
-        }
+        visual: () => docs.pressKey(keys['delete'], false, false)?.switchToNormalMode()
+    },
+    D: {
+        normal: () => docs.pressKey(keys['home'])?.pressKey(keys['shift'])?.pressKey(keys['end'], false, true)?.pressKey(keys['delete'])?.pressKey(keys['delete'])
     },
     c: {
         normal: () => (mode.isInMotion = true),
-        visual: () => {
-            docs.pressKey(keys['delete'], false, false);
-            docs.switchToNormalMode();
-        }
+        visual: () => docs.pressKey(keys['delete'], false, false)?.switchToInsertMode()
     },
     $: {
         normal: () => docs.pressKey(keys['end']),
@@ -96,5 +89,11 @@ export const commandMap = {
     G: {
         normal: () => docs.pressKey(keys['end'], true),
         visual: () => docs.pressKey(keys['end'], true)
+    },
+    o: {
+        normal: () => docs.pressKey(keys['end'])?.pressKey(keys['enter'])?.switchToInsertMode()
+    },
+    O: {
+        normal: () => docs.pressKey(keys['end'])?.pressKey(keys['ArrowUp'])?.pressKey(keys['enter'])?.switchToInsertMode()
     }
 };

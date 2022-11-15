@@ -127,7 +127,7 @@ export class docs {
   public static pressKey = (
     keyCode: number,
     ctrlKey?: boolean,
-    shiftKey = mode.mode === 'visual'
+    shiftKey: boolean = mode.mode === 'visual'
   ) => {
     const element = (
       document.getElementsByClassName(

@@ -4,7 +4,7 @@ import { commandMap } from './vimCommandMap';
 import { clearArray, fancyLogError, fancyLogSuccess } from './shortcutHelper';
 import { keysThatAreUsed } from './usedKeys';
 import { motionsCommandMap } from './motionsCommandMap';
-if (docs.keyListenerStatus === false)
+if (!docs.keyListenerStatus)
     docs.keydownInit();
 export const checkBindings = (currentMode) => {
     const keyArray = docs.keyArray;
@@ -14,20 +14,21 @@ export const checkBindings = (currentMode) => {
             for (const v of Object.entries(value)) {
                 if (v[0] === currentMode) {
                     if (keyArray.includes(key) &&
-                        (key === 'Escape' ? true : mode.isInMotion === false)) {
-                        for (let i = 0; i < (isNaN(mode.number) ? 1 : mode.number); i++) {
+                        (key === 'Escape' ? true : !mode.isInMotion)) {
+                        const modeNumber = isNaN(mode.number) ? 1 : mode.number >= 100 ? mode.number : 1;
+                        for (let i = 0; i < modeNumber; i++) {
                             v[1]();
                         }
                         console.log('Clearing the array', mode.isInMotion);
-                        if (mode.isInMotion === false)
+                        if (!mode.isInMotion)
                             clearArray(keyArray);
                     }
                 }
             }
         }
         for (const [key, value] of Object.entries(motionsCommandMap)) {
-            if (mode.isInMotion === true) {
-                console.log("I'm in motion", keyArray, value);
+            if (mode.isInMotion) {
+                console.log('I\'m in motion', keyArray, value);
                 if (keyArray.join('').replace(/,/g, '') === key) {
                     console.log('I am in motion and I have a match');
                     value();

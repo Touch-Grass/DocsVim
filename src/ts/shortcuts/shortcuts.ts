@@ -5,8 +5,8 @@ import { clearArray, fancyLogError, fancyLogSuccess } from './shortcutHelper';
 import { keysThatAreUsed } from './usedKeys';
 import { motionsCommandMap } from './motionsCommandMap';
 
-//Adds a the init shortcut once.
-if (docs.keyListenerStatus === false) docs.keydownInit();
+//Adds the init shortcut once.
+if (!docs.keyListenerStatus) docs.keydownInit();
 
 /**
  * Main function that handles all the shortcuts.
@@ -25,22 +25,22 @@ export const checkBindings = (currentMode: string) => {
           // If key is Escape, it can escape out of a motion.
           if (
             keyArray.includes(key) &&
-            (key === 'Escape' ? true : mode.isInMotion === false)
+            (key === 'Escape' ? true : !mode.isInMotion)
           ) {
-            for (let i = 0; i < (isNaN(mode.number) ? 1 : mode.number); i++) {
+            const modeNumber = isNaN(mode.number) ? 1 : mode.number >= 100 ? mode.number : 1;
+            for (let i = 0; i < modeNumber; i++) {
               v[1]();
             }
             console.log('Clearing the array', mode.isInMotion);
-            if (mode.isInMotion === false) clearArray(keyArray);
+            if (!mode.isInMotion) clearArray(keyArray);
           }
         }
       }
     }
 
     for (const [key, value] of Object.entries(motionsCommandMap)) {
-      // if (v[0] === currentMode && mode.isInMotion === true) {
-      if (mode.isInMotion === true) {
-        console.log("I'm in motion", keyArray, value);
+      if (mode.isInMotion) {
+        console.log('I\'m in motion', keyArray, value);
 
         if (keyArray.join('').replace(/,/g, '') === key) {
           console.log('I am in motion and I have a match');

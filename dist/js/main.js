@@ -266,6 +266,12 @@ class mode extends docs {
         console.log('In the setter', mode);
         this._switchToMode(mode);
     }
+    static get number() {
+        return vim.number;
+    }
+    static set number(number) {
+        vim.number = number;
+    }
     static get isInMotion() {
         return vim.isInMotion;
     }
@@ -440,7 +446,12 @@ const motionsCommandMap = {
         ?.pressKey(keys['delete'], false, false)
         ?.switchToInsertMode(),
     gg: () => docs.pressKey(keys['home'], true, false),
-    dd: () => docs.pressKey(keys['home'])?.pressKey(keys['shift'])?.pressKey(keys['end'], false, true)?.pressKey(keys['delete'])?.pressKey(keys['delete'])
+    dd: () => docs
+        .pressKey(keys['home'])
+        ?.pressKey(keys['shift'])
+        ?.pressKey(keys['end'], false, true)
+        ?.pressKey(keys['delete'])
+        ?.pressKey(keys['delete'])
 };
 
 const clearArray = (array) => {
@@ -467,45 +478,59 @@ if (docs.keyListenerStatus === false)
     docs.keydownInit();
 const checkBindings = (currentMode) => {
     const keyArray = docs.keyArray;
-    const hasInvalidChar = keyArray.some(key => !keysThatAreUsed.includes(key.toString()));
-    const initShortcuts = () => {
-        for (const [key, value] of Object.entries(commandMap)) {
-            for (const v of Object.entries(value)) {
-                if (v[0] === currentMode) {
-                    if (keyArray.includes(key) &&
-                        (key === 'Escape' ? true : mode.isInMotion === false)) {
-                        v[1]();
-                        console.log('Clearing the array', mode.isInMotion);
-                        if (mode.isInMotion === false)
-                            clearArray(keyArray);
+    keyArray.map(() => {
+        const hasInvalidChar = keyArray.some(key => !keysThatAreUsed.includes(key.toString()));
+        const initShortcuts = () => {
+            for (const [key, value] of Object.entries(commandMap)) {
+                for (const v of Object.entries(value)) {
+                    if (v[0] === currentMode) {
+                        if (keyArray.includes(key) &&
+                            (key === 'Escape' ? true : mode.isInMotion === false)) {
+                            for (let i = 0; i < (isNaN(mode.number) ? 1 : mode.number); i++) {
+                                v[1]();
+                            }
+                            console.log('Clearing the array', mode.isInMotion);
+                            if (mode.isInMotion === false)
+                                clearArray(keyArray);
+                        }
                     }
                 }
             }
-        }
-        for (const [key, value] of Object.entries(motionsCommandMap)) {
-            if (mode.isInMotion === true) {
-                console.log("I'm in motion", keyArray, value);
-                if (keyArray.join('').replace(/,/g, '') === key) {
-                    console.log('I am in motion and I have a match');
-                    value();
-                    clearArray(keyArray);
-                    mode.isInMotion = false;
+            for (const [key, value] of Object.entries(motionsCommandMap)) {
+                if (mode.isInMotion === true) {
+                    console.log("I'm in motion", keyArray, value);
+                    if (keyArray.join('').replace(/,/g, '') === key) {
+                        console.log('I am in motion and I have a match');
+                        value();
+                        clearArray(keyArray);
+                        mode.isInMotion = false;
+                    }
                 }
             }
+            let num = '';
+            for (let i = 0; i < keyArray.length; i++) {
+                if (keyArray[i].toString().match(/[0-9]/g)) {
+                    console.log('I have a number');
+                    num += parseInt(keyArray[i].toString());
+                    console.log('Number is now', num);
+                }
+            }
+            mode.number = parseInt(num);
+            console.log(isNaN(mode.number) ? 1 : mode.number, 'mode.number');
+        };
+        initShortcuts();
+        if (currentMode === 'normal') {
+            if (keyArray.includes('v')) {
+                fancyLogSuccess('Starting visual mode');
+                mode.mode = 'visual';
+            }
+            if (hasInvalidChar) {
+                fancyLogError('Not a valid key');
+                clearArray(keyArray);
+                return;
+            }
         }
-    };
-    initShortcuts();
-    if (currentMode === 'normal') {
-        if (keyArray.includes('v')) {
-            fancyLogSuccess('Starting visual mode');
-            mode.mode = 'visual';
-        }
-        if (hasInvalidChar) {
-            fancyLogError('Not a valid key');
-            clearArray(keyArray);
-            return;
-        }
-    }
+    });
 };
 
 const keysThatAreUsed = [
@@ -553,6 +578,15 @@ const keysThatAreUsed = [
     'Space',
     '$',
     '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
     '^',
     'Home',
     'End',
@@ -583,10 +617,8 @@ const commandMap = {
         visual: () => docs.pressKey(keys['ArrowLeft'])
     },
     w: {
-        normal: () => docs
-            .pressKey(keys['ArrowRight'], true),
-        visual: () => docs
-            .pressKey(keys['ArrowRight'], true)
+        normal: () => docs.pressKey(keys['ArrowRight'], true),
+        visual: () => docs.pressKey(keys['ArrowRight'], true)
     },
     e: {
         normal: () => docs.pressKey(keys['ArrowRight'], true),
@@ -606,29 +638,44 @@ const commandMap = {
     },
     Escape: {
         normal: () => (docs.switchToNormalMode().isInMotion = false),
-        visual: () => docs.switchToInsertMode().pressKey(keys['ArrowLeft']).isInMotion = false,
+        visual: () => (docs.switchToInsertMode().pressKey(keys['ArrowLeft']).isInMotion = false),
         insert: () => (docs.switchToNormalMode().isInMotion = false)
     },
     v: {
         normal: () => docs.pressKey(keys['shift'])?.switchToVisualMode()
     },
     V: {
-        normal: () => docs.pressKey(keys['home'])?.pressKey(keys['shift'])?.pressKey(keys['end'], false, true)?.switchToVisualMode()
+        normal: () => docs
+            .pressKey(keys['home'])
+            ?.pressKey(keys['shift'])
+            ?.pressKey(keys['end'], false, true)
+            ?.switchToVisualMode()
     },
     x: {
         normal: () => docs.pressKey(keys['delete'], false, false),
         visual: () => docs.pressKey(keys['delete'], false, false)
     },
     u: {
-        normal: () => docs.pressKey(keys['z'], true)?.switchToNormalMode().pressKey(keys['ArrowRight']),
-        visual: () => docs.pressKey(keys['z'], true)?.switchToNormalMode().pressKey(keys['ArrowRight'])
+        normal: () => docs
+            .pressKey(keys['z'], true)
+            ?.switchToNormalMode()
+            .pressKey(keys['ArrowRight']),
+        visual: () => docs
+            .pressKey(keys['z'], true)
+            ?.switchToNormalMode()
+            .pressKey(keys['ArrowRight'])
     },
     d: {
         normal: () => (mode.isInMotion = true),
         visual: () => docs.pressKey(keys['delete'], false, false)?.switchToNormalMode()
     },
     D: {
-        normal: () => docs.pressKey(keys['home'])?.pressKey(keys['shift'])?.pressKey(keys['end'], false, true)?.pressKey(keys['delete'])?.pressKey(keys['delete'])
+        normal: () => docs
+            .pressKey(keys['home'])
+            ?.pressKey(keys['shift'])
+            ?.pressKey(keys['end'], false, true)
+            ?.pressKey(keys['delete'])
+            ?.pressKey(keys['delete'])
     },
     c: {
         normal: () => (mode.isInMotion = true),
@@ -658,7 +705,11 @@ const commandMap = {
         normal: () => docs.pressKey(keys['end'])?.pressKey(keys['enter'])?.switchToInsertMode()
     },
     O: {
-        normal: () => docs.pressKey(keys['end'])?.pressKey(keys['ArrowUp'])?.pressKey(keys['enter'])?.switchToInsertMode()
+        normal: () => docs
+            .pressKey(keys['end'])
+            ?.pressKey(keys['ArrowUp'])
+            ?.pressKey(keys['enter'])
+            ?.switchToInsertMode()
     }
 };
 

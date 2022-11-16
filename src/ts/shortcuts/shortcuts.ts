@@ -27,7 +27,9 @@ export const checkBindings = (currentMode: string) => {
             keyArray.includes(key) &&
             (key === 'Escape' ? true : mode.isInMotion === false)
           ) {
-            v[1]();
+            for (let i = 0; i < (isNaN(mode.number) ? 1 : mode.number); i++) {
+              v[1]();
+            }
             console.log('Clearing the array', mode.isInMotion);
             if (mode.isInMotion === false) clearArray(keyArray);
           }
@@ -48,11 +50,21 @@ export const checkBindings = (currentMode: string) => {
         }
       }
     }
+
+    let num = '';
+    for (let i = 0; i < keyArray.length; i++) {
+      if (keyArray[i].toString().match(/[0-9]/g)) {
+        console.log('I have a number');
+        num += parseInt(keyArray[i].toString());
+        console.log('Number is now', num);
+      }
+    }
+    mode.number = parseInt(num);
+    console.log(isNaN(mode.number) ? 1 : mode.number, 'mode.number');
   };
 
   // Calls every key press.
   initShortcuts();
-
   /**
    * Normal mode shortcuts
    */

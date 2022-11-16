@@ -30,6 +30,12 @@ export class mode extends docs {
         console.log('In the setter', mode);
         this._switchToMode(mode);
     }
+    static get number() {
+        return vim.number;
+    }
+    static set number(number) {
+        vim.number = number;
+    }
     static get isInMotion() {
         return vim.isInMotion;
     }

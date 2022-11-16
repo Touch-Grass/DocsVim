@@ -51,6 +51,14 @@ export class mode extends docs {
     this._switchToMode(mode);
   }
 
+  static get number(): number {
+    return vim.number;
+  }
+
+  static set number(number: number) {
+    vim.number = number;
+  }
+
   /**
    * If you are currently in a motion such as diw or daw.
    */

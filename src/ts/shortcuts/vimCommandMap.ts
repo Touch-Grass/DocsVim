@@ -116,7 +116,10 @@ export const commandMap = {
   },
   o: {
     normal: () =>
-      docs.pressKey(keys['end'])?.pressKey(keys['enter'])?.switchToMode('insert')
+      docs
+        .pressKey(keys['end'])
+        ?.pressKey(keys['enter'])
+        ?.switchToMode('insert')
   },
   O: {
     normal: () =>

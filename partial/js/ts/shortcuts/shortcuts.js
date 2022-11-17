@@ -1,7 +1,7 @@
 import { docs } from '../docs';
 import { mode } from '../mode/mode';
 import { commandMap } from './vimCommandMap';
-import { clearArray, fancyLogError, fancyLogSuccess } from './shortcutHelper';
+import { clearArray, fancyLogError } from './shortcutHelper';
 import { keysThatAreUsed } from './usedKeys';
 import { motionsCommandMap } from './motionsCommandMap';
 if (!docs.keyListenerStatus)
@@ -10,20 +10,18 @@ export const checkBindings = (currentMode) => {
     const keyArray = docs.keyArray;
     const hasInvalidChar = keyArray.some(key => !keysThatAreUsed.includes(key.toString()));
     const initShortcuts = () => {
+        const modeNumber = isNaN(mode.number)
+            ? 1
+            : mode.number < 50
+                ? mode.number
+                : 1;
         for (const [key, value] of Object.entries(commandMap)) {
             for (const v of Object.entries(value)) {
                 if (v[0] === currentMode) {
                     if (keyArray.includes(key) &&
                         (key === 'Escape' ? true : !mode.isInMotion)) {
-                        const modeNumber = isNaN(mode.number)
-                            ? 1
-                            : mode.number < 50
-                                ? mode.number
-                                : 1;
-                        for (let i = 0; i < modeNumber; i++) {
+                        for (let i = 0; i < modeNumber; i++)
                             v[1]();
-                        }
-                        console.log('Clearing the array', mode.isInMotion);
                         if (!mode.isInMotion)
                             clearArray(keyArray);
                     }
@@ -32,9 +30,9 @@ export const checkBindings = (currentMode) => {
         }
         for (const [key, value] of Object.entries(motionsCommandMap)) {
             if (mode.isInMotion) {
-                if (keyArray.join('').replace(/,/g, '') === key) {
-                    console.log('I am in motion and I have a match');
-                    value();
+                if (keyArray.join('').replace(/,/g, '').includes(key)) {
+                    for (let i = 0; i < modeNumber; i++)
+                        value();
                     clearArray(keyArray);
                     mode.isInMotion = false;
                 }
@@ -53,10 +51,6 @@ export const checkBindings = (currentMode) => {
     };
     initShortcuts();
     if (currentMode === 'normal') {
-        if (keyArray.includes('v')) {
-            fancyLogSuccess('Starting visual mode');
-            mode.mode = 'visual';
-        }
         if (hasInvalidChar) {
             fancyLogError('Not a valid key');
             clearArray(keyArray);

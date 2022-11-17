@@ -1,7 +1,7 @@
 import { docs } from '../docs';
 import { mode } from '../mode/mode';
 import { commandMap } from './vimCommandMap';
-import { clearArray, fancyLogError, fancyLogSuccess } from './shortcutHelper';
+import { clearArray, fancyLogError } from './shortcutHelper';
 import { keysThatAreUsed } from './usedKeys';
 import { motionsCommandMap } from './motionsCommandMap';
 
@@ -18,6 +18,11 @@ export const checkBindings = (currentMode: string) => {
   );
 
   const initShortcuts = () => {
+    const modeNumber = isNaN(mode.number)
+      ? 1
+      : mode.number < 50
+        ? mode.number
+        : 1;
     // Loops through nested functionMap object.
     for (const [key, value] of Object.entries(commandMap)) {
       for (const v of Object.entries(value)) {
@@ -27,15 +32,7 @@ export const checkBindings = (currentMode: string) => {
             keyArray.includes(key) &&
             (key === 'Escape' ? true : !mode.isInMotion)
           ) {
-            const modeNumber = isNaN(mode.number)
-              ? 1
-              : mode.number < 50
-              ? mode.number
-              : 1;
-            for (let i = 0; i < modeNumber; i++) {
-              v[1]();
-            }
-            console.log('Clearing the array', mode.isInMotion);
+            for (let i = 0; i < modeNumber; i++) v[1]();
             if (!mode.isInMotion) clearArray(keyArray);
           }
         }
@@ -44,9 +41,8 @@ export const checkBindings = (currentMode: string) => {
 
     for (const [key, value] of Object.entries(motionsCommandMap)) {
       if (mode.isInMotion) {
-        if (keyArray.join('').replace(/,/g, '') === key) {
-          console.log('I am in motion and I have a match');
-          value();
+        if (keyArray.join('').replace(/,/g, '').includes(key)) {
+          for (let i = 0; i < modeNumber; i++) value();
           clearArray(keyArray);
           mode.isInMotion = false;
         }
@@ -65,22 +61,11 @@ export const checkBindings = (currentMode: string) => {
     console.log(isNaN(mode.number) ? 1 : mode.number, 'mode.number');
   };
 
-  // Calls every key press.
   initShortcuts();
   /**
    * Normal mode shortcuts
    */
   if (currentMode === 'normal') {
-    // if (keyArray.includes('d')) {
-    //   fancyLogSuccess('Starting delete motion');
-    //   mode.isInMotion = true;
-    // }
-
-    if (keyArray.includes('v')) {
-      fancyLogSuccess('Starting visual mode');
-      mode.mode = 'visual';
-    }
-
     if (hasInvalidChar) {
       fancyLogError('Not a valid key');
       clearArray(keyArray);

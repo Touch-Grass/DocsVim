@@ -199,7 +199,9 @@ export class docs {
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
 
     caret.style.borderWidth = width;
-    const cursorColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, ${isInsertMode ? 1 : 0.5})`;
+    const cursorColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, ${
+      isInsertMode ? 1 : 0.5
+    })`;
     caret.style.setProperty('border-color', cursorColor, 'important');
     caret.style.mixBlendMode = 'difference';
     return true;

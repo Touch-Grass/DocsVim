@@ -29,7 +29,7 @@ export const checkBindings = (currentMode: string) => {
           ) {
             const modeNumber = isNaN(mode.number)
               ? 1
-              : mode.number >= 100
+              : mode.number < 50
               ? mode.number
               : 1;
             for (let i = 0; i < modeNumber; i++) {
@@ -44,8 +44,6 @@ export const checkBindings = (currentMode: string) => {
 
     for (const [key, value] of Object.entries(motionsCommandMap)) {
       if (mode.isInMotion) {
-        console.log("I'm in motion", keyArray, value);
-
         if (keyArray.join('').replace(/,/g, '') === key) {
           console.log('I am in motion and I have a match');
           value();

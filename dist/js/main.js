@@ -485,9 +485,12 @@ const checkBindings = (currentMode) => {
                 if (v[0] === currentMode) {
                     if (keyArray.includes(key) &&
                         (key === 'Escape' ? true : !mode.isInMotion)) {
-                        const modeNumber = isNaN(mode.number) ? 1 : mode.number >= 100 ? mode.number : 1;
+                        const modeNumber = isNaN(mode.number)
+                            ? 1
+                            : mode.number < 50
+                                ? mode.number
+                                : 1;
                         for (let i = 0; i < modeNumber; i++) {
-                            console.log('running: ', key);
                             v[1]();
                         }
                         console.log('Clearing the array', mode.isInMotion);
@@ -499,7 +502,6 @@ const checkBindings = (currentMode) => {
         }
         for (const [key, value] of Object.entries(motionsCommandMap)) {
             if (mode.isInMotion) {
-                console.log('I\'m in motion', keyArray, value);
                 if (keyArray.join('').replace(/,/g, '') === key) {
                     console.log('I am in motion and I have a match');
                     value();

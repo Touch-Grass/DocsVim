@@ -21,8 +21,8 @@ export const checkBindings = (currentMode: string) => {
     const modeNumber = isNaN(mode.number)
       ? 1
       : mode.number < 50
-        ? mode.number
-        : 1;
+      ? mode.number
+      : 1;
     // Loops through nested functionMap object.
     for (const [key, value] of Object.entries(commandMap)) {
       for (const v of Object.entries(value)) {

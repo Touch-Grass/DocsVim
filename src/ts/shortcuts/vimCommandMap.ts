@@ -30,27 +30,26 @@ export const commandMap = {
 
   b: {
     normal: () => docs.pressKey(keys['ArrowLeft'], true),
-
     visual: () => docs.pressKey(keys['ArrowLeft'], true)
   },
   i: {
-    normal: () => docs.switchToInsertMode(),
-    visual: () => docs.switchToInsertMode()
+    normal: () => docs.switchToMode('insert'),
+    visual: () => docs.switchToMode('insert')
   },
   a: {
-    normal: () => docs.pressKey(keys['ArrowRight'])?.switchToInsertMode(),
-    visual: () => docs.pressKey(keys['ArrowRight'])?.switchToInsertMode()
+    normal: () => docs.pressKey(keys['ArrowRight'])?.switchToMode('insert'),
+    visual: () => docs.pressKey(keys['ArrowRight'])?.switchToMode('insert')
   },
   Escape: {
-    normal: () => (docs.switchToNormalMode().isInMotion = false),
+    normal: () => (docs.switchToMode('normal').isInMotion = false),
     visual: () =>
       ((
-        docs.switchToInsertMode().pressKey(keys['ArrowLeft']) as typeof docs
+        docs.switchToMode('insert').pressKey(keys['ArrowLeft']) as typeof docs
       ).isInMotion = false),
-    insert: () => (docs.switchToNormalMode().isInMotion = false)
+    insert: () => (docs.switchToMode('normal').isInMotion = false)
   },
   v: {
-    normal: () => docs.pressKey(keys['shift'])?.switchToVisualMode()
+    normal: () => docs.pressKey(keys['shift'])?.switchToMode('visual')
   },
   V: {
     normal: () =>
@@ -58,7 +57,7 @@ export const commandMap = {
         .pressKey(keys['home'])
         ?.pressKey(keys['shift'])
         ?.pressKey(keys['end'], false, true)
-        ?.switchToVisualMode()
+        ?.switchToMode('visual')
   },
   x: {
     normal: () => docs.pressKey(keys['delete'], false, false),
@@ -68,18 +67,18 @@ export const commandMap = {
     normal: () =>
       docs
         .pressKey(keys['z'], true)
-        ?.switchToNormalMode()
+        ?.switchToMode('normal')
         .pressKey(keys['ArrowRight']),
     visual: () =>
       docs
         .pressKey(keys['z'], true)
-        ?.switchToNormalMode()
+        ?.switchToMode('normal')
         .pressKey(keys['ArrowRight'])
   },
   d: {
     normal: () => (mode.isInMotion = true),
     visual: () =>
-      docs.pressKey(keys['delete'], false, false)?.switchToNormalMode()
+      docs.pressKey(keys['delete'], false, false)?.switchToMode('normal')
   },
   D: {
     normal: () =>
@@ -93,7 +92,7 @@ export const commandMap = {
   c: {
     normal: () => (mode.isInMotion = true),
     visual: () =>
-      docs.pressKey(keys['delete'], false, false)?.switchToInsertMode()
+      docs.pressKey(keys['delete'], false, false)?.switchToMode('insert')
   },
   $: {
     normal: () => docs.pressKey(keys['end']),
@@ -117,7 +116,7 @@ export const commandMap = {
   },
   o: {
     normal: () =>
-      docs.pressKey(keys['end'])?.pressKey(keys['enter'])?.switchToInsertMode()
+      docs.pressKey(keys['end'])?.pressKey(keys['enter'])?.switchToMode('insert')
   },
   O: {
     normal: () =>
@@ -125,6 +124,6 @@ export const commandMap = {
         .pressKey(keys['end'])
         ?.pressKey(keys['ArrowUp'])
         ?.pressKey(keys['enter'])
-        ?.switchToInsertMode()
+        ?.switchToMode('insert')
   }
 };

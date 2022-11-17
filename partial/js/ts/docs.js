@@ -52,20 +52,27 @@ export class docs {
     static keydownInit() {
         return !docs._hasEventListenerBeenAdded ? this._keydown() : false;
     }
-    static switchToNormalMode() {
-        mode.mode = 'normal';
+    static switchToMode(setMode) {
+        mode.mode = setMode;
         this._listOfCommands = [];
+        this.correctCursor();
         return this;
     }
-    static switchToInsertMode() {
-        mode.mode = 'insert';
-        this._listOfCommands = [];
-        return this;
-    }
-    static switchToVisualMode() {
-        mode.mode = 'visual';
-        this._listOfCommands = [];
-        return this;
+    static correctCursor() {
+        console.log(mode.mode, 'mode.mode');
+        switch (mode.mode) {
+            case 'normal':
+                this._setCursorWidth('7px', false);
+                break;
+            case 'insert':
+                this._setCursorWidth('2px', true);
+                break;
+            case 'visual':
+                this._setCursorWidth('2px', true);
+                break;
+            default:
+                break;
+        }
     }
     static _setCursorWidth(width, isInsertMode) {
         const cursor = this.getUserCursor;
@@ -129,5 +136,6 @@ docs.pressKey = (keyCode, ctrlKey, shiftKey = mode.mode === 'visual') => {
     };
     const key_event = new KeyboardEvent('keydown', data);
     element.dispatchEvent(key_event);
+    _a.correctCursor();
     return _a;
 };

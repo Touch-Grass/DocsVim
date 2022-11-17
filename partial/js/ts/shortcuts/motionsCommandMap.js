@@ -11,7 +11,7 @@ export const motionsCommandMap = {
         .pressKey(keys['ArrowLeft'], true, false)
         ?.pressKey(keys['ArrowRight'], true, true)
         ?.pressKey(keys['delete'], false, false)
-        ?.switchToInsertMode(),
+        ?.switchToMode('insert'),
     gg: () => docs.pressKey(keys['home'], true, false),
     dd: () => docs
         .pressKey(keys['home'])

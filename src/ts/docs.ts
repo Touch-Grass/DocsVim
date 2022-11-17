@@ -1,6 +1,7 @@
 import { mode } from './mode/mode';
 import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
+import { vimModeType } from './types/types.js';
 
 /**
  * The main class for Google Docs. This class is used to add event listeners to the document and do other things related to the actual document.
@@ -146,6 +147,7 @@ export class docs {
     const key_event = new KeyboardEvent('keydown', data);
 
     element.dispatchEvent(key_event);
+    this.correctCursor();
     return this;
   };
 
@@ -158,33 +160,31 @@ export class docs {
   }
 
   /**
-   * Switches the current mode to normal
+   * Switches the current mode to the mode that is passed in.
    */
-  public static switchToNormalMode() {
-    mode.mode = 'normal';
+  public static switchToMode(setMode: vimModeType) {
+    mode.mode = setMode;
     this._listOfCommands = [];
 
+    this.correctCursor();
     return this;
   }
 
-  /**
-   * Switches the current mode to insert
-   */
-  public static switchToInsertMode() {
-    mode.mode = 'insert';
-    this._listOfCommands = [];
-
-    return this;
-  }
-
-  /**
-   * Switches the current mode to visual
-   */
-  public static switchToVisualMode() {
-    mode.mode = 'visual';
-    this._listOfCommands = [];
-
-    return this;
+  public static correctCursor() {
+    console.log(mode.mode, 'mode.mode');
+    switch (mode.mode) {
+      case 'normal':
+        this._setCursorWidth('7px', false);
+        break;
+      case 'insert':
+        this._setCursorWidth('2px', true);
+        break;
+      case 'visual':
+        this._setCursorWidth('2px', true);
+        break;
+      default:
+        break;
+    }
   }
 
   /**

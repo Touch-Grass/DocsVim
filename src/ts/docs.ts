@@ -197,9 +197,10 @@ export class docs {
 
     if (cursor === null) return false;
     const caret = cursor.querySelector('.kix-cursor-caret') as HTMLElement;
+
     caret.style.borderWidth = width;
-    caret.style.borderColor = `rgba(
-      ${isInsertMode ? 0 : 255}, 0, 0, ${isInsertMode ? 1 : 0.5})`;
+    const cursorColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, ${isInsertMode ? 1 : 0.5})`;
+    caret.style.setProperty('border-color', cursorColor, 'important');
     caret.style.mixBlendMode = 'difference';
     return true;
   }

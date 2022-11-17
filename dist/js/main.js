@@ -175,8 +175,8 @@ class docs {
             return false;
         const caret = cursor.querySelector('.kix-cursor-caret');
         caret.style.borderWidth = width;
-        caret.style.borderColor = `rgba(
-      ${isInsertMode ? 0 : 255}, 0, 0, ${isInsertMode ? 1 : 0.5})`;
+        const cursorColor = `rgba(${isInsertMode ? 0 : 255}, 0, 0, ${isInsertMode ? 1 : 0.5})`;
+        caret.style.setProperty('border-color', cursorColor, 'important');
         caret.style.mixBlendMode = 'difference';
         return true;
     }
@@ -366,6 +366,8 @@ vim._mode = 'insert';
 vim._number = 1;
 vim._isInMotion = false;
 
+{};
+
 
 
 const functionMap = {
@@ -492,7 +494,6 @@ const checkBindings = (currentMode) => {
                         (key === 'Escape' ? true : !mode.isInMotion)) {
                         for (let i = 0; i < modeNumber; i++)
                             v[1]();
-                        console.log('Clearing the array', mode.isInMotion);
                         if (!mode.isInMotion)
                             clearArray(keyArray);
                     }
@@ -709,8 +710,6 @@ const commandMap = {
             ?.switchToInsertMode()
     }
 };
-
-{};
 
 
 statusLine.initStatusLine();

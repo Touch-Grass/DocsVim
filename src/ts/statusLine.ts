@@ -6,12 +6,19 @@ import { vim } from './vim';
  */
 export class statusLine extends docs {
   private static readonly _statusLine = document.createElement('div');
+  private static readonly _docId = document.createElement('div');
+  private static readonly _docName = document.createElement('div');
 
   /**
    * Initializes the statusline, and adds it to the DOM.
    */
   public static async initStatusLine(): Promise<void> {
-    this._statusLine.classList.add('vim_statusbar');
+    this._addClass(this._statusLine, 'vim_statusbar');
+    this._addClass(this._docId, 'vim_statusbar');
+    this._addClass(this._docName, 'vim_statusbar');
+    this._addClass(this._docId, 'vim_docId');
+    this._addClass(this._docName, 'vim_docName');
+
     const style = document.createElement('style');
     style.textContent = `
         .vim_statusbar {
@@ -19,7 +26,7 @@ export class statusLine extends docs {
             width: 100%;
             height: 50px;
             position: absolute;
-            bottom: 7px;
+            bottom: 10px;
             left: 7px;
             display: flex;
             justify-content: flex-start;
@@ -27,10 +34,18 @@ export class statusLine extends docs {
             font-size: 13px;
             color: black;
             font-weight: bold;
+          }
+          .vim_docId {
+            font-size: 11px;
+            bottom: 25px;
+            right: 7px;
+          }
         `;
     document.body.append(this._statusLine);
+    document.body.append(this._docId);
     document.body.append(style);
     this.updateStatusbar(vim.mode);
+    this._docId.innerHTML = `${this.docID ?? this.docName ?? ''}`;
   }
 
   /**
@@ -39,6 +54,10 @@ export class statusLine extends docs {
    */
   public static updateStatusbar(mode: string): void {
     this._statusLine.innerHTML = `-- ${mode} --`;
+  }
+
+  private static _addClass(elem: HTMLElement, className: string): void {
+    elem.classList.add(className);
   }
 
   /**

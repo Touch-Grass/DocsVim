@@ -170,7 +170,7 @@ class docs {
                 this._setCursorWidth('2px', true);
                 break;
             case 'visual':
-                this._setCursorWidth('2px', false);
+                this._setCursorWidth('2px', true);
                 break;
             default:
                 break;
@@ -306,7 +306,11 @@ class mode extends docs {
 
 class statusLine extends docs {
     static async initStatusLine() {
-        this._statusLine.classList.add('vim_statusbar');
+        this._addClass(this._statusLine, 'vim_statusbar');
+        this._addClass(this._docId, 'vim_statusbar');
+        this._addClass(this._docName, 'vim_statusbar');
+        this._addClass(this._docId, 'vim_docId');
+        this._addClass(this._docName, 'vim_docName');
         const style = document.createElement('style');
         style.textContent = `
         .vim_statusbar {
@@ -314,7 +318,7 @@ class statusLine extends docs {
             width: 100%;
             height: 50px;
             position: absolute;
-            bottom: 7px;
+            bottom: 10px;
             left: 7px;
             display: flex;
             justify-content: flex-start;
@@ -322,13 +326,24 @@ class statusLine extends docs {
             font-size: 13px;
             color: black;
             font-weight: bold;
+          }
+          .vim_docId {
+            font-size: 11px;
+            bottom: 25px;
+            right: 7px;
+          }
         `;
         document.body.append(this._statusLine);
+        document.body.append(this._docId);
         document.body.append(style);
         this.updateStatusbar(vim.mode);
+        this._docId.innerHTML = `${this.docID ?? this.docName ?? ''}`;
     }
     static updateStatusbar(mode) {
         this._statusLine.innerHTML = `-- ${mode} --`;
+    }
+    static _addClass(elem, className) {
+        elem.classList.add(className);
     }
     static _waitForElement(selector) {
         return new Promise(resolve => {
@@ -348,6 +363,8 @@ class statusLine extends docs {
     }
 }
 statusLine._statusLine = document.createElement('div');
+statusLine._docId = document.createElement('div');
+statusLine._docName = document.createElement('div');
 
 
 class vim extends mode {

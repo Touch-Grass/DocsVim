@@ -128,5 +128,9 @@ export const commandMap = {
         ?.pressKey(keys['ArrowUp'])
         ?.pressKey(keys['enter'])
         ?.switchToMode('insert')
+  },
+  Backspace: {
+    normal: () => docs.pressKey(keys['ArrowLeft']),
+    visual: () => docs.pressKey(keys['ArrowLeft'])
   }
 };

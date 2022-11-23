@@ -12,7 +12,6 @@ export class mode extends docs {
     vim.number = 1;
     // Updates the statusbar to display the current mode ect.
     statusLine.updateStatusbar(mode);
-    console.log('switching to mode: ', mode);
 
     // Handles the cursor and vim Mode login when switching modes.
     switch (mode) {
@@ -47,7 +46,6 @@ export class mode extends docs {
    * Sets the mode that vim is in.
    */
   static set mode(mode: vimModeType) {
-    console.log('In the setter', mode);
     this._switchToMode(mode);
   }
 
@@ -56,6 +54,12 @@ export class mode extends docs {
   }
 
   static set number(number: number) {
+    console.trace('Setting number to: ' + number);
+    if (isNaN(number)) {
+      console.log('num is nan, num is: ', number);
+      vim.number = 1;
+      return;
+    }
     vim.number = number;
   }
 

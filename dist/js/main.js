@@ -161,7 +161,6 @@ class docs {
         return this;
     }
     static correctCursor() {
-        console.log(mode.mode, 'mode.mode');
         switch (mode.mode) {
             case 'normal':
                 this._setCursorWidth('7px', false);
@@ -201,6 +200,7 @@ class docs {
             keyboardEvent.stopImmediatePropagation();
         }
         this._listOfCommands.push(keyboardEvent.key);
+        console.log('Calling _keyToArray', vim.mode, this._listOfCommands);
         checkBindings(vim.mode);
         return this._listOfCommands;
     }
@@ -249,7 +249,6 @@ class mode extends docs {
     static _switchToMode(mode) {
         vim.number = 1;
         statusLine.updateStatusbar(mode);
-        console.log('switching to mode: ', mode);
         switch (mode) {
             case 'insert':
                 vim.mode = 'insert';
@@ -271,13 +270,18 @@ class mode extends docs {
         return vim.mode;
     }
     static set mode(mode) {
-        console.log('In the setter', mode);
         this._switchToMode(mode);
     }
     static get number() {
         return vim.number;
     }
     static set number(number) {
+        console.trace('Setting number to: ' + number);
+        if (isNaN(number)) {
+            console.log('num is nan, num is: ', number);
+            vim.number = 1;
+            return;
+        }
         vim.number = number;
     }
     static get isInMotion() {
@@ -502,7 +506,7 @@ const fancyLogSuccess = (text) => {
 
 if (!docs.keyListenerStatus)
     docs.keydownInit();
-const checkBindings = (currentMode) => {
+const checkBindings = (currentMode, overRideModeNumber) => {
     const keyArray = docs.keyArray;
     const hasInvalidChar = keyArray.some(key => !keysThatAreUsed.includes(key.toString()));
     const initShortcuts = () => {
@@ -518,11 +522,12 @@ const checkBindings = (currentMode) => {
                         (key === 'Escape' ? true : !mode.isInMotion)) {
                         for (let i = 0; i < modeNumber; i++)
                             v[1]();
-                        if (!mode.isInMotion)
+                        if (!mode.isInMotion && isNaN(parseInt(key)))
                             clearArray(keyArray);
                     }
                 }
             }
+            console.log('mode.number', mode.number);
         }
         for (const [key, value] of Object.entries(motionsCommandMap)) {
             if (mode.isInMotion) {
@@ -534,16 +539,6 @@ const checkBindings = (currentMode) => {
                 }
             }
         }
-        let num = '';
-        for (let i = 0; i < keyArray.length; i++) {
-            if (keyArray[i].toString().match(/[0-9]/g)) {
-                console.log('I have a number');
-                num += parseInt(keyArray[i].toString());
-                console.log('Number is now', num);
-            }
-        }
-        mode.number = parseInt(num);
-        console.log(isNaN(mode.number) ? 1 : mode.number, 'mode.number');
     };
     initShortcuts();
     if (currentMode === 'normal') {
@@ -553,6 +548,15 @@ const checkBindings = (currentMode) => {
             return;
         }
     }
+    let num = '';
+    console.log('keyArray', keyArray);
+    for (let i = 0; i < keyArray.length; i++) {
+        if (keyArray[i].toString().match(/[0-9]/g)) {
+            num += parseInt(keyArray[i].toString());
+            console.log('Number is now', num);
+        }
+    }
+    isNaN(parseInt(num)) ? (mode.number = 1) : (mode.number = parseInt(num));
 };
 
 const keysThatAreUsed = [
@@ -708,7 +712,15 @@ const commandMap = {
         visual: () => docs.pressKey(keys['end'])
     },
     0: {
-        normal: () => docs.pressKey(keys['home']),
+        normal: () => {
+            if (isNaN(mode.number)) {
+                docs.pressKey(keys['home']);
+            }
+            else {
+                console.log('0 is pressed and num is not nan', mode.number);
+                console.log('after', mode.number);
+            }
+        },
         visual: () => docs.pressKey(keys['home'])
     },
     '^': {
@@ -724,7 +736,10 @@ const commandMap = {
         visual: () => docs.pressKey(keys['end'], true)
     },
     o: {
-        normal: () => docs.pressKey(keys['end'])?.pressKey(keys['enter'])?.switchToMode('insert')
+        normal: () => docs
+            .pressKey(keys['end'])
+            ?.pressKey(keys['enter'])
+            ?.switchToMode('insert')
     },
     O: {
         normal: () => docs
@@ -732,10 +747,14 @@ const commandMap = {
             ?.pressKey(keys['ArrowUp'])
             ?.pressKey(keys['enter'])
             ?.switchToMode('insert')
+    },
+    Backspace: {
+        normal: () => docs.pressKey(keys['ArrowLeft']),
+        visual: () => docs.pressKey(keys['ArrowLeft'])
     }
 };
 
-{};
-
 
 statusLine.initStatusLine();
+
+{};

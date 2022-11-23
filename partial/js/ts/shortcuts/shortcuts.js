@@ -22,7 +22,7 @@ export const checkBindings = (currentMode, overRideModeNumber) => {
                         (key === 'Escape' ? true : !mode.isInMotion)) {
                         for (let i = 0; i < modeNumber; i++)
                             v[1]();
-                        if (!mode.isInMotion)
+                        if (!mode.isInMotion && isNaN(parseInt(key)))
                             clearArray(keyArray);
                     }
                 }
@@ -38,22 +38,6 @@ export const checkBindings = (currentMode, overRideModeNumber) => {
                 }
             }
         }
-        if (!overRideModeNumber) {
-            let num = '';
-            for (let i = 0; i < keyArray.length; i++) {
-                if (keyArray[i].toString().match(/[0-9]/g)) {
-                    console.log('I have a number');
-                    num += parseInt(keyArray[i].toString());
-                    console.log('Number is now', num);
-                }
-            }
-            mode.number = parseInt(num);
-            console.log(isNaN(mode.number) ? 1 : mode.number, 'mode.number');
-        }
-        else {
-            console.log('Overriding mode number', mode.number);
-            mode.number = overRideModeNumber;
-        }
     };
     initShortcuts();
     if (currentMode === 'normal') {
@@ -63,4 +47,13 @@ export const checkBindings = (currentMode, overRideModeNumber) => {
             return;
         }
     }
+    let num = '';
+    console.log('keyArray', keyArray);
+    for (let i = 0; i < keyArray.length; i++) {
+        if (keyArray[i].toString().match(/[0-9]/g)) {
+            num += parseInt(keyArray[i].toString());
+            console.log('Number is now', num);
+        }
+    }
+    isNaN(parseInt(num)) ? (mode.number = 1) : (mode.number = parseInt(num));
 };

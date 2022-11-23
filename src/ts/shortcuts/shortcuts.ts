@@ -12,7 +12,10 @@ if (!docs.keyListenerStatus) docs.keydownInit();
 /**
  * Main function that handles all the shortcuts.
  */
-export const checkBindings = (currentMode: vimModeType, overRideModeNumber?: number) => {
+export const checkBindings = (
+  currentMode: vimModeType,
+  overRideModeNumber?: number
+) => {
   const keyArray = docs.keyArray;
   const hasInvalidChar = keyArray.some(
     key => !keysThatAreUsed.includes(key.toString())
@@ -22,8 +25,8 @@ export const checkBindings = (currentMode: vimModeType, overRideModeNumber?: num
     const modeNumber = isNaN(mode.number)
       ? 1
       : mode.number < 50
-        ? mode.number
-        : 1;
+      ? mode.number
+      : 1;
     // Loops through nested functionMap object.
     for (const [key, value] of Object.entries(commandMap)) {
       for (const v of Object.entries(value)) {
@@ -34,7 +37,7 @@ export const checkBindings = (currentMode: vimModeType, overRideModeNumber?: num
             (key === 'Escape' ? true : !mode.isInMotion)
           ) {
             for (let i = 0; i < modeNumber; i++) v[1]();
-            if (!mode.isInMotion) clearArray(keyArray);
+            if (!mode.isInMotion && isNaN(parseInt(key))) clearArray(keyArray);
           }
         }
       }
@@ -49,22 +52,6 @@ export const checkBindings = (currentMode: vimModeType, overRideModeNumber?: num
         }
       }
     }
-
-    if (!overRideModeNumber) {
-      let num = '';
-      for (let i = 0; i < keyArray.length; i++) {
-        if (keyArray[i].toString().match(/[0-9]/g)) {
-          console.log('I have a number');
-          num += parseInt(keyArray[i].toString());
-          console.log('Number is now', num);
-        }
-      }
-      mode.number = parseInt(num);
-      console.log(isNaN(mode.number) ? 1 : mode.number, 'mode.number');
-    } else {
-      console.log('Overriding mode number', mode.number);
-      mode.number = overRideModeNumber;
-    }
   };
 
   initShortcuts();
@@ -78,4 +65,15 @@ export const checkBindings = (currentMode: vimModeType, overRideModeNumber?: num
       return;
     }
   }
+
+  let num = '';
+  console.log('keyArray', keyArray);
+  for (let i = 0; i < keyArray.length; i++) {
+    if (keyArray[i].toString().match(/[0-9]/g)) {
+      num += parseInt(keyArray[i].toString());
+      console.log('Number is now', num);
+    }
+  }
+
+  isNaN(parseInt(num)) ? (mode.number = 1) : (mode.number = parseInt(num));
 };

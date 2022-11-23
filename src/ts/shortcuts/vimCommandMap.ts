@@ -1,5 +1,6 @@
 import { docs } from '../docs';
 import { mode } from '../mode/mode';
+import { vim } from '../vim';
 import { keys } from './keymap';
 import { checkBindings } from './shortcuts.js';
 
@@ -101,16 +102,11 @@ export const commandMap = {
   },
   0: {
     normal: () => {
-      console.log(mode.number, 'Mode number from 0');
       if (isNaN(mode.number)) {
         docs.pressKey(keys['home']);
       } else {
-        console.log('Checking binding', mode.number);
-        checkBindings('normal', mode.number);
-        // docs.keyArray.push(0);
-        console.log(docs.keyArray, 'Key Array from 0');
-        // mode.number += 10;
-        // console.log(mode.number, 'Mode number after chang');
+        console.log('0 is pressed and num is not nan', mode.number);
+        console.log('after', mode.number);
       }
     },
     visual: () => docs.pressKey(keys['home'])

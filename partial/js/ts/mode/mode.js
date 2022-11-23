@@ -5,7 +5,6 @@ export class mode extends docs {
     static _switchToMode(mode) {
         vim.number = 1;
         statusLine.updateStatusbar(mode);
-        console.log('switching to mode: ', mode);
         switch (mode) {
             case 'insert':
                 vim.mode = 'insert';
@@ -27,13 +26,18 @@ export class mode extends docs {
         return vim.mode;
     }
     static set mode(mode) {
-        console.log('In the setter', mode);
         this._switchToMode(mode);
     }
     static get number() {
         return vim.number;
     }
     static set number(number) {
+        console.trace('Setting number to: ' + number);
+        if (isNaN(number)) {
+            console.log('num is nan, num is: ', number);
+            vim.number = 1;
+            return;
+        }
         vim.number = number;
     }
     static get isInMotion() {

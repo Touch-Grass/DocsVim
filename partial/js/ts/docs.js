@@ -59,7 +59,6 @@ export class docs {
         return this;
     }
     static correctCursor() {
-        console.log(mode.mode, 'mode.mode');
         switch (mode.mode) {
             case 'normal':
                 this._setCursorWidth('7px', false);
@@ -99,6 +98,7 @@ export class docs {
             keyboardEvent.stopImmediatePropagation();
         }
         this._listOfCommands.push(keyboardEvent.key);
+        console.log('Calling _keyToArray', vim.mode, this._listOfCommands);
         checkBindings(vim.mode);
         return this._listOfCommands;
     }

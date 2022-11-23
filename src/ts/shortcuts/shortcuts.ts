@@ -4,6 +4,7 @@ import { commandMap } from './vimCommandMap';
 import { clearArray, fancyLogError } from './shortcutHelper';
 import { keysThatAreUsed } from './usedKeys';
 import { motionsCommandMap } from './motionsCommandMap';
+import { vimModeType } from '../types/types.js';
 
 //Adds the init shortcut once.
 if (!docs.keyListenerStatus) docs.keydownInit();
@@ -11,7 +12,7 @@ if (!docs.keyListenerStatus) docs.keydownInit();
 /**
  * Main function that handles all the shortcuts.
  */
-export const checkBindings = (currentMode: string) => {
+export const checkBindings = (currentMode: vimModeType, overRideModeNumber?: number) => {
   const keyArray = docs.keyArray;
   const hasInvalidChar = keyArray.some(
     key => !keysThatAreUsed.includes(key.toString())
@@ -49,16 +50,21 @@ export const checkBindings = (currentMode: string) => {
       }
     }
 
-    let num = '';
-    for (let i = 0; i < keyArray.length; i++) {
-      if (keyArray[i].toString().match(/[0-9]/g)) {
-        console.log('I have a number');
-        num += parseInt(keyArray[i].toString());
-        console.log('Number is now', num);
+    if (!overRideModeNumber) {
+      let num = '';
+      for (let i = 0; i < keyArray.length; i++) {
+        if (keyArray[i].toString().match(/[0-9]/g)) {
+          console.log('I have a number');
+          num += parseInt(keyArray[i].toString());
+          console.log('Number is now', num);
+        }
       }
+      mode.number = parseInt(num);
+      console.log(isNaN(mode.number) ? 1 : mode.number, 'mode.number');
+    } else {
+      console.log('Overriding mode number', mode.number);
+      mode.number = overRideModeNumber;
     }
-    mode.number = parseInt(num);
-    console.log(isNaN(mode.number) ? 1 : mode.number, 'mode.number');
   };
 
   initShortcuts();

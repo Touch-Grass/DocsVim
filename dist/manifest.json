@@ -2,11 +2,14 @@
   "manifest_version": 3,
   "name": "DocsVim++",
   "version": "0.01",
-
   "content_scripts": [
     {
-      "matches": ["*://*.google.com/*document/d/*/edit*"],
-      "js": ["js/main.js"]
+      "matches": [
+        "*://*.google.com/*document/d/*/edit*"
+      ],
+      "js": [
+        "js/main.min.js"
+      ]
     }
   ]
 }

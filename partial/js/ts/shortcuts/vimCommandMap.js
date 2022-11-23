@@ -1,6 +1,7 @@
 import { docs } from '../docs';
 import { mode } from '../mode/mode';
 import { keys } from './keymap';
+import { checkBindings } from './shortcuts.js';
 export const commandMap = {
     k: {
         normal: () => docs.pressKey(keys['ArrowUp']),
@@ -88,7 +89,17 @@ export const commandMap = {
         visual: () => docs.pressKey(keys['end'])
     },
     0: {
-        normal: () => docs.pressKey(keys['home']),
+        normal: () => {
+            console.log(mode.number, 'Mode number from 0');
+            if (isNaN(mode.number)) {
+                docs.pressKey(keys['home']);
+            }
+            else {
+                console.log('Checking binding', mode.number);
+                checkBindings('normal', mode.number);
+                console.log(docs.keyArray, 'Key Array from 0');
+            }
+        },
         visual: () => docs.pressKey(keys['home'])
     },
     '^': {
@@ -104,7 +115,10 @@ export const commandMap = {
         visual: () => docs.pressKey(keys['end'], true)
     },
     o: {
-        normal: () => docs.pressKey(keys['end'])?.pressKey(keys['enter'])?.switchToMode('insert')
+        normal: () => docs
+            .pressKey(keys['end'])
+            ?.pressKey(keys['enter'])
+            ?.switchToMode('insert')
     },
     O: {
         normal: () => docs
@@ -112,5 +126,9 @@ export const commandMap = {
             ?.pressKey(keys['ArrowUp'])
             ?.pressKey(keys['enter'])
             ?.switchToMode('insert')
+    },
+    Backspace: {
+        normal: () => docs.pressKey(keys['ArrowLeft']),
+        visual: () => docs.pressKey(keys['ArrowLeft'])
     }
 };

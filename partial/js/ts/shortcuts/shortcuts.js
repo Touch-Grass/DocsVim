@@ -6,7 +6,7 @@ import { keysThatAreUsed } from './usedKeys';
 import { motionsCommandMap } from './motionsCommandMap';
 if (!docs.keyListenerStatus)
     docs.keydownInit();
-export const checkBindings = (currentMode) => {
+export const checkBindings = (currentMode, overRideModeNumber) => {
     const keyArray = docs.keyArray;
     const hasInvalidChar = keyArray.some(key => !keysThatAreUsed.includes(key.toString()));
     const initShortcuts = () => {
@@ -38,16 +38,22 @@ export const checkBindings = (currentMode) => {
                 }
             }
         }
-        let num = '';
-        for (let i = 0; i < keyArray.length; i++) {
-            if (keyArray[i].toString().match(/[0-9]/g)) {
-                console.log('I have a number');
-                num += parseInt(keyArray[i].toString());
-                console.log('Number is now', num);
+        if (!overRideModeNumber) {
+            let num = '';
+            for (let i = 0; i < keyArray.length; i++) {
+                if (keyArray[i].toString().match(/[0-9]/g)) {
+                    console.log('I have a number');
+                    num += parseInt(keyArray[i].toString());
+                    console.log('Number is now', num);
+                }
             }
+            mode.number = parseInt(num);
+            console.log(isNaN(mode.number) ? 1 : mode.number, 'mode.number');
         }
-        mode.number = parseInt(num);
-        console.log(isNaN(mode.number) ? 1 : mode.number, 'mode.number');
+        else {
+            console.log('Overriding mode number', mode.number);
+            mode.number = overRideModeNumber;
+        }
     };
     initShortcuts();
     if (currentMode === 'normal') {

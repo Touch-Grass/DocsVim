@@ -12,7 +12,10 @@ if (!docs.keyListenerStatus) docs.keydownInit();
 /**
  * Main function that handles all the shortcuts.
  */
-export const checkBindings = (currentMode: vimModeType, overRideModeNumber?: number) => {
+export const checkBindings = (
+  currentMode: vimModeType,
+  overRideModeNumber?: number
+) => {
   const keyArray = docs.keyArray;
   const hasInvalidChar = keyArray.some(
     key => !keysThatAreUsed.includes(key.toString())
@@ -22,8 +25,8 @@ export const checkBindings = (currentMode: vimModeType, overRideModeNumber?: num
     const modeNumber = isNaN(mode.number)
       ? 1
       : mode.number < 50
-        ? mode.number
-        : 1;
+      ? mode.number
+      : 1;
     // Loops through nested functionMap object.
     for (const [key, value] of Object.entries(commandMap)) {
       for (const v of Object.entries(value)) {

@@ -251,6 +251,7 @@ class mode extends docs {
         statusLine.updateStatusbar(mode);
         switch (mode) {
             case 'insert':
+                console.log('Switching to insert mode.');
                 vim.mode = 'insert';
                 this.setCursorWidth = ['2px', true];
                 break;
@@ -527,7 +528,6 @@ const checkBindings = (currentMode, overRideModeNumber) => {
                     }
                 }
             }
-            console.log('mode.number', mode.number);
         }
         for (const [key, value] of Object.entries(motionsCommandMap)) {
             if (mode.isInMotion) {
@@ -754,7 +754,7 @@ const commandMap = {
     }
 };
 
+{};
+
 
 statusLine.initStatusLine();
-
-{};

@@ -30,7 +30,7 @@ export const checkBindings = (
     // Loops through nested functionMap object.
     for (const [key, value] of Object.entries(commandMap)) {
       for (const v of Object.entries(value)) {
-        if (v[0] === currentMode) {
+        if (v[0].includes(currentMode)) {
           // If key is Escape, it can escape out of a motion.
           if (
             keyArray.includes(key) &&

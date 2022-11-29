@@ -5,7 +5,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.google.com/*document/d/*/edit*"],
-      "js": ["js/main.js"]
+      "js": ["js/main.min.js"]
     }
   ]
 }

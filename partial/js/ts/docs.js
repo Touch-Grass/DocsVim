@@ -97,8 +97,10 @@ export class docs {
             keyboardEvent.preventDefault();
             keyboardEvent.stopImmediatePropagation();
         }
+        const key = keyboardEvent.key;
+        if (key === 'Control' || key === 'Shift' || key === 'Alt')
+            return this._listOfCommands;
         this._listOfCommands.push(keyboardEvent.key);
-        console.log('Calling _keyToArray', vim.mode, this._listOfCommands);
         checkBindings(vim.mode);
         return this._listOfCommands;
     }

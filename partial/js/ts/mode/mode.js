@@ -7,6 +7,7 @@ export class mode extends docs {
         statusLine.updateStatusbar(mode);
         switch (mode) {
             case 'insert':
+                console.log('Switching to insert mode.');
                 vim.mode = 'insert';
                 this.setCursorWidth = ['2px', true];
                 break;
@@ -32,9 +33,7 @@ export class mode extends docs {
         return vim.number;
     }
     static set number(number) {
-        console.trace('Setting number to: ' + number);
         if (isNaN(number)) {
-            console.log('num is nan, num is: ', number);
             vim.number = 1;
             return;
         }

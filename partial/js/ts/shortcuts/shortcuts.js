@@ -17,7 +17,7 @@ export const checkBindings = (currentMode, overRideModeNumber) => {
                 : 1;
         for (const [key, value] of Object.entries(commandMap)) {
             for (const v of Object.entries(value)) {
-                if (v[0] === currentMode) {
+                if (v[0].includes(currentMode)) {
                     if (keyArray.includes(key) &&
                         (key === 'Escape' ? true : !mode.isInMotion)) {
                         for (let i = 0; i < modeNumber; i++)

@@ -2,6 +2,7 @@ var _a;
 import { mode } from './mode/mode';
 import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
+import { keys } from './shortcuts/keymap';
 export class docs {
     static get keyListenerStatus() {
         return docs._hasEventListenerBeenAdded;
@@ -156,4 +157,15 @@ docs.pressKey = (keyCode, ctrlKey, shiftKey = mode.mode === 'visual') => {
     element.dispatchEvent(key_event);
     _a.correctCursor();
     return _a;
+};
+docs.copyText = () => {
+    return docs.pressHTMLElement(':77', 'id', true);
+};
+docs.pasteText = () => {
+    return docs.pressHTMLElement(':78', 'id', true);
+};
+docs.stopSelecting = () => {
+    return docs
+        .pressKey(keys['arrowRight'], false, false)
+        ?.pressKey(keys['ArrowLeft'], false, false);
 };

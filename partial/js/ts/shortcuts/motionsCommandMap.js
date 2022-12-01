@@ -28,4 +28,10 @@ export const motionsCommandMap = {
             .pressKey(keys['ArrowRight'], true, true)
             ?.pressKey(keys['delete'], false, false);
     },
+    yy: () => docs
+        .pressKey(keys['home'])
+        ?.pressKey(keys['shift'])
+        ?.pressKey(keys['end'], false, true)
+        ?.copyText()
+        ?.stopSelecting()
 };

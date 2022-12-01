@@ -70,5 +70,11 @@ export const keysThatAreUsed = [
   'd',
   'D',
   'c',
-  'C'
+  'C',
+
+  // Copy and paste
+  'y',
+  'Y',
+  'p',
+  'P'
 ];

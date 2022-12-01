@@ -61,5 +61,9 @@ export const keysThatAreUsed = [
     'd',
     'D',
     'c',
-    'C'
+    'C',
+    'y',
+    'Y',
+    'p',
+    'P'
 ];

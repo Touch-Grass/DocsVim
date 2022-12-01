@@ -2,6 +2,7 @@ import { mode } from './mode/mode';
 import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
 import { vimModeType } from './types/types.js';
+import { keys } from './shortcuts/keymap';
 
 /**
  * The main class for Google Docs. This class is used to add event listeners to the document and do other things related to the actual document.
@@ -151,6 +152,11 @@ export class docs {
     return this;
   };
 
+  /**
+   * @param selector - The selector of the element that you want to focus on.
+   * @param type type of selection
+   * @param clickingMenuItem if you're clicking an item in a menu or not
+   */
   public static pressHTMLElement(
     selector: string,
     type: 'class' | 'id' | 'tag' = 'id',
@@ -175,6 +181,21 @@ export class docs {
 
     return this;
   }
+
+  public static copyText = () => {
+    return docs.pressHTMLElement(':77', 'id', true);
+  };
+
+  public static pasteText = () => {
+    return docs.pressHTMLElement(':78', 'id', true);
+  };
+
+  public static stopSelecting = () => {
+    return docs
+      .pressKey(keys['arrowRight'], false, false)
+      ?.pressKey(keys['ArrowLeft'], false, false);
+  };
+
   /**
    * Helper function to initialize the keydown event listener.
    * @returns {boolean} - If the event listener has been added or not.

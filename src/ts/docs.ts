@@ -129,7 +129,7 @@ export class docs {
   public static pressKey = (
     keyCode: number,
     ctrlKey?: boolean,
-    shiftKey: boolean = mode.mode === 'visual'
+    shiftKey: boolean = mode.mode === 'visual' || mode.mode === 'visualLine'
   ) => {
     const element = (
       document.getElementsByClassName(
@@ -188,6 +188,16 @@ export class docs {
 
   public static pasteText = () => {
     return docs.pressHTMLElement(':78', 'id', true);
+  };
+
+  public static selectLine = () => {
+    return (
+      docs
+        // .pressKey(keys['home'], false, true)
+        // ?.pressKey(keys['end'], false, true);
+        .pressKey(keys['home'])
+        ?.pressKey(keys['end'], false, true)
+    );
   };
 
   public static stopSelecting = () => {
@@ -274,10 +284,15 @@ export class docs {
     keyboardEvent: KeyboardEvent
   ): (string | number)[] {
     // If the mode is not normal then we don't want the keys that you press to be added to the doc.
-    if (vim.mode === 'normal' || vim.mode === 'visual') {
+    if (
+      vim.mode === 'normal' ||
+      vim.mode === 'visual' ||
+      vim.mode === 'visualLine'
+    ) {
       keyboardEvent.preventDefault();
       keyboardEvent.stopImmediatePropagation();
     }
+
     const key = keyboardEvent.key;
     if (key === 'Control' || key === 'Shift' || key === 'Alt')
       return this._listOfCommands;

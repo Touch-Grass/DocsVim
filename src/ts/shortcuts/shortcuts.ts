@@ -36,6 +36,15 @@ export const checkBindings = (
             keyArray.includes(key) &&
             (key === 'Escape' ? true : !mode.isInMotion)
           ) {
+            if (currentMode === 'visualLine') {
+              for (let i = 0; i < modeNumber; i++) {
+                console.log('Visual Line Mode');
+                v[1]();
+              }
+              if (!mode.isInMotion && isNaN(parseInt(key)))
+                clearArray(keyArray);
+              return;
+            }
             for (let i = 0; i < modeNumber; i++) v[1]();
             if (!mode.isInMotion && isNaN(parseInt(key))) clearArray(keyArray);
           }

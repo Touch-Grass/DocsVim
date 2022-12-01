@@ -110,7 +110,9 @@ export class docs {
             parseInt(caret.style.borderRightWidth)}px`;
     }
     static _keyToArray(keyboardEvent) {
-        if (vim.mode === 'normal' || vim.mode === 'visual') {
+        if (vim.mode === 'normal' ||
+            vim.mode === 'visual' ||
+            vim.mode === 'visualLine') {
             keyboardEvent.preventDefault();
             keyboardEvent.stopImmediatePropagation();
         }
@@ -144,7 +146,7 @@ export class docs {
 _a = docs;
 docs._listOfCommands = [];
 docs._hasEventListenerBeenAdded = false;
-docs.pressKey = (keyCode, ctrlKey, shiftKey = mode.mode === 'visual') => {
+docs.pressKey = (keyCode, ctrlKey, shiftKey = mode.mode === 'visual' || mode.mode === 'visualLine') => {
     const element = document.getElementsByClassName('docs-texteventtarget-iframe')[0].contentDocument;
     if (element === null)
         return;
@@ -163,6 +165,11 @@ docs.copyText = () => {
 };
 docs.pasteText = () => {
     return docs.pressHTMLElement(':78', 'id', true);
+};
+docs.selectLine = () => {
+    return (docs
+        .pressKey(keys['home'])
+        ?.pressKey(keys['end'], false, true));
 };
 docs.stopSelecting = () => {
     return docs

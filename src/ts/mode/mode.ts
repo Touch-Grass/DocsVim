@@ -31,6 +31,11 @@ export class mode extends docs {
         this.setCursorWidth = ['7px', false];
         break;
 
+      case 'visualLine':
+        vim.mode = 'visualLine';
+        this.setCursorWidth = ['7px', false];
+        break;
+
       default:
         break;
     }

@@ -31,5 +31,5 @@ export const motionsCommandMap: Record<string, () => any> = {
     docs
       .pressKey(keys['ArrowRight'], true, true)
       ?.pressKey(keys['delete'], false, false);
-  },
+  }
 };

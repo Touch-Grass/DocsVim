@@ -151,6 +151,30 @@ export class docs {
     return this;
   };
 
+  public static pressHTMLElement(
+    selector: string,
+    type: 'class' | 'id' | 'tag' = 'id',
+    clickingMenuItem: boolean = false
+  ) {
+    const elSelector = document.querySelector(
+      `[${type}="${selector}"]`
+    ) as HTMLElement | null;
+    if (!elSelector) return;
+
+    if (!clickingMenuItem)
+      elSelector.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+
+    if (clickingMenuItem) {
+      console.log('clicking menu item');
+      elSelector.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+      elSelector.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+      elSelector.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+      elSelector.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      elSelector.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+    }
+
+    return this;
+  }
   /**
    * Helper function to initialize the keydown event listener.
    * @returns {boolean} - If the event listener has been added or not.

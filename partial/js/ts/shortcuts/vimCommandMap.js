@@ -111,6 +111,20 @@ export const commandMap = {
         normal: () => docs.pressKey(keys['end'], true),
         visual: () => docs.pressKey(keys['end'], true)
     },
+    y: {
+        normal: () => {
+            console.log('y is pressed 2');
+            docs
+                .pressHTMLElement('docs-edit-menu', 'id')
+                ?.pressHTMLElement(':77', 'id', true);
+        },
+        visual: () => {
+            console.log('y is pressed, visual 2');
+            docs
+                .pressHTMLElement('docs-edit-menu', 'id')
+                ?.pressHTMLElement(':77', 'id', true);
+        }
+    },
     o: {
         normal: () => docs
             .pressKey(keys['end'])

@@ -49,6 +49,22 @@ export class docs {
     static set isInMotion(isInMotion) {
         mode.isInMotion = isInMotion;
     }
+    static pressHTMLElement(selector, type = 'id', clickingMenuItem = false) {
+        const elSelector = document.querySelector(`[${type}="${selector}"]`);
+        if (!elSelector)
+            return;
+        if (!clickingMenuItem)
+            elSelector.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+        if (clickingMenuItem) {
+            console.log('clicking menu item');
+            elSelector.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+            elSelector.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+            elSelector.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+            elSelector.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            elSelector.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+        }
+        return this;
+    }
     static keydownInit() {
         return !docs._hasEventListenerBeenAdded ? this._keydown() : false;
     }

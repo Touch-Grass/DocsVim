@@ -17,7 +17,6 @@ export const motionsCommandMap = {
         .pressKey(keys['home'])
         ?.pressKey(keys['shift'])
         ?.pressKey(keys['end'], false, true)
-        ?.pressKey(keys['delete'])
         ?.pressKey(keys['delete']),
     cw: () => docs
         .pressKey(keys['ArrowRight'], true, true)
@@ -33,5 +32,35 @@ export const motionsCommandMap = {
         ?.pressKey(keys['shift'])
         ?.pressKey(keys['end'], false, true)
         ?.copyText()
-        ?.stopSelecting()
+        ?.stopSelecting(),
+    yiw: () => docs
+        .pressKey(keys['ArrowLeft'], true, false)
+        ?.pressKey(keys['ArrowRight'], true, true)
+        ?.copyText()
+        ?.stopSelecting(),
+    yw: () => docs.pressKey(keys['ArrowRight'], true, true)?.copyText()?.stopSelecting(),
+    dj: () => docs
+        .pressKey(keys['home'])
+        ?.pressKey(keys['shift'])
+        ?.pressKey(keys['end'], false, true)
+        ?.pressKey(keys['delete'])
+        ?.pressKey(keys['backspace'])
+        ?.pressKey(keys['ArrowDown'], true)
+        ?.pressKey(keys['shift'])
+        ?.pressKey(keys['end'], false, true)
+        ?.pressKey(keys['delete'])
+        ?.pressKey(keys['backspace'])
+        ?.pressKey(keys['home']),
+    dk: () => docs
+        .pressKey(keys['home'])
+        ?.pressKey(keys['shift'])
+        ?.pressKey(keys['end'], false, true)
+        ?.pressKey(keys['delete'])
+        ?.pressKey(keys['backspace'])
+        ?.pressKey(keys['ArrowUp'], true)
+        ?.pressKey(keys['shift'])
+        ?.pressKey(keys['end'], false, true)
+        ?.pressKey(keys['delete'])
+        ?.pressKey(keys['backspace'])
+        ?.pressKey(keys['home'])
 };

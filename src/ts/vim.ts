@@ -8,6 +8,7 @@ export class vim extends mode {
   private static _mode: vimModeType = 'insert';
   private static _number = 1;
   private static _isInMotion = false;
+  private static _lastCommand = '';
 
   static get mode(): vimModeType {
     return this._mode;
@@ -31,5 +32,13 @@ export class vim extends mode {
 
   static set isInMotion(isInMotion: boolean) {
     this._isInMotion = isInMotion;
+  }
+
+  static get lastCommand(): string {
+    return this._lastCommand;
+  }
+
+  static set lastCommand(lastCommand: string) {
+    this._lastCommand = lastCommand;
   }
 }

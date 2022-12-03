@@ -9,7 +9,7 @@ export const commandMap = {
     normal: () => (docs.switchToMode('normal').isInMotion = false),
     visual: () =>
       ((
-        docs.switchToMode('insert').pressKey(keys['ArrowLeft']) as typeof docs
+        docs.switchToMode('normal').pressKey(keys['ArrowLeft']) as typeof docs
       ).isInMotion = false),
     insert: () => (docs.switchToMode('normal').isInMotion = false),
     visualLine: () => (docs.switchToMode('normal').isInMotion = false)
@@ -73,7 +73,8 @@ export const commandMap = {
   },
   x: {
     normal: () => docs.pressKey(keys['delete'], false, false),
-    visual: () => docs.pressKey(keys['delete'], false, false)
+    visual: () => docs.pressKey(keys['delete'], false, false),
+    visulLine: () => docs.pressKey(keys['delete'], false, false)
   },
   u: {
     normal: () =>
@@ -115,7 +116,7 @@ export const commandMap = {
     normal: () => {
       if (
         isNaN(mode.number) ||
-        (mode.number === 1 && docs.keyArray.length === 0)
+        (mode.number === 1 && docs.keyArray.length !== 0)
       ) {
         docs.pressKey(keys['home']);
       } else {
@@ -139,12 +140,8 @@ export const commandMap = {
   },
   y: {
     normal: () => (mode.isInMotion = true),
-    visual: () =>
-      docs
-        .copyText()
-        ?.pressKey(keys['arrowRight'], false, false)
-        ?.pressKey(keys['ArrowLeft'], false, false)
-        ?.switchToMode('normal')
+    visual: () => docs.copyText()?.stopSelecting()?.switchToMode('normal'),
+    visualLine: () => docs.copyText()?.stopSelecting()?.switchToMode('normal')
   },
   p: {
     normal: () => {

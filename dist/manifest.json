@@ -4,8 +4,12 @@
   "version": "0.01",
   "content_scripts": [
     {
-      "matches": ["*://*.google.com/*document/d/*/edit*"],
-      "js": ["js/main.min.js"]
+      "matches": [
+        "*://*.google.com/*document/d/*/edit*"
+      ],
+      "js": [
+        "js/main.min.js"
+      ]
     }
   ]
 }

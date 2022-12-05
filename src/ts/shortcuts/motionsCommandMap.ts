@@ -20,15 +20,18 @@ export const motionsCommandMap: Record<string, () => any> = {
       .pressKey(keys['home'])
       ?.pressKey(keys['shift'])
       ?.pressKey(keys['end'], false, true)
+      ?.copyText(true)
       ?.pressKey(keys['delete']),
   cw: () =>
     docs
       .pressKey(keys['ArrowRight'], true, true)
       ?.pressKey(keys['delete'], false, false)
+      ?.copyText()
       ?.switchToMode('insert'),
   dw: () => {
     docs
       .pressKey(keys['ArrowRight'], true, true)
+      ?.copyText()
       ?.pressKey(keys['delete'], false, false);
   },
   yy: () =>
@@ -51,25 +54,23 @@ export const motionsCommandMap: Record<string, () => any> = {
       .pressKey(keys['home'])
       ?.pressKey(keys['shift'])
       ?.pressKey(keys['end'], false, true)
-      ?.pressKey(keys['delete'])
-      ?.pressKey(keys['backspace'])
-      ?.pressKey(keys['ArrowDown'], true)
-      ?.pressKey(keys['shift'])
-      ?.pressKey(keys['end'], false, true)
-      ?.pressKey(keys['delete'])
-      ?.pressKey(keys['backspace'])
-      ?.pressKey(keys['home']),
+      ?.pressKey(keys['ArrowDown'], true, true)
+      ?.pressKey(keys['ArrowDown'], true, true)
+      ?.copyText()
+      ?.pressKey(keys['delete']),
   dk: () =>
     docs
-      .pressKey(keys['home'])
-      ?.pressKey(keys['shift'])
-      ?.pressKey(keys['end'], false, true)
+      .pressKey(keys['ArrowDown'], true, false)
+      ?.pressKey(keys['ArrowUp'], true, true)
+      ?.pressKey(keys['ArrowUp'], true, true)
+      ?.copyText()
       ?.pressKey(keys['delete'])
-      ?.pressKey(keys['backspace'])
-      ?.pressKey(keys['ArrowUp'], true)
-      ?.pressKey(keys['shift'])
-      ?.pressKey(keys['end'], false, true)
-      ?.pressKey(keys['delete'])
-      ?.pressKey(keys['backspace'])
-      ?.pressKey(keys['home'])
+  // .pressKey(keys['home'])
+  // ?.pressKey(keys['shift'])
+  // ?.pressKey(keys['end'], false, true)
+  // ?.pressKey(keys['ArrowDown'])
+  // ?.pressKey(keys['ArrowUp'], true, true)
+  // ?.pressKey(keys['ArrowUp'], true, true)
+  // ?.pressKey(keys['ArrowUp'], true, true)
+  // ?.pressKey(keys['delete']),
 };

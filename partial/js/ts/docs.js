@@ -39,7 +39,7 @@ export class docs {
         docs._setCursorWidth(width, isInsertMode);
     }
     static get textTarget() {
-        return document.querySelector('.docs-texteventtarget-iframe').contentDocument.activeElement;
+        return async () => (await this._waitForElm('.docs-texteventtarget-iframe')).contentDocument.activeElement;
     }
     static get keyArray() {
         return this._listOfCommands;
@@ -50,19 +50,29 @@ export class docs {
     static set isInMotion(isInMotion) {
         mode.isInMotion = isInMotion;
     }
-    static pressHTMLElement(selector, type = 'id', clickingMenuItem = false) {
+    static pressHTMLElement(selector, type = 'id', clickingMenuItem = false, addNewLine = false) {
         const elSelector = document.querySelector(`[${type}="${selector}"]`);
         if (!elSelector)
             return;
         if (!clickingMenuItem)
             elSelector.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
         if (clickingMenuItem) {
-            console.log('clicking menu item');
             elSelector.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
             elSelector.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
             elSelector.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
             elSelector.dispatchEvent(new MouseEvent('click', { bubbles: true }));
             elSelector.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
+        }
+        if (addNewLine) {
+            try {
+                navigator.clipboard.readText().then(clipboardText => {
+                    console.log(`"${clipboardText.trim()}"`);
+                    navigator.clipboard.writeText(`${clipboardText.trim()}\n`);
+                });
+            }
+            catch (e) {
+                console.error(e);
+            }
         }
         return this;
     }
@@ -89,6 +99,22 @@ export class docs {
             default:
                 break;
         }
+    }
+    static _waitForElm(selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector))
+                return resolve(document.querySelector(selector));
+            const observer = new MutationObserver(() => {
+                if (document.querySelector(selector)) {
+                    resolve(document.querySelector(selector));
+                    observer.disconnect();
+                }
+            });
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
     }
     static _setCursorWidth(width, isInsertMode) {
         const cursor = this.getUserCursor;
@@ -124,11 +150,13 @@ export class docs {
         return this._listOfCommands;
     }
     static _keydown() {
-        docs.textTarget.addEventListener('keydown', e => {
-            this._keyToArray(e);
-            return;
+        docs.textTarget().then(target => {
+            target.addEventListener('keydown', e => {
+                this._keyToArray(e);
+                return;
+            });
+            this._hasEventListenerBeenAdded = true;
         });
-        this._hasEventListenerBeenAdded = true;
         return true;
     }
     _pasteText(text) {
@@ -148,8 +176,6 @@ docs._listOfCommands = [];
 docs._hasEventListenerBeenAdded = false;
 docs.pressKey = (keyCode, ctrlKey, shiftKey = mode.mode === 'visual' || mode.mode === 'visualLine') => {
     const element = document.getElementsByClassName('docs-texteventtarget-iframe')[0].contentDocument;
-    if (element === null)
-        return;
     const data = {
         keyCode: keyCode,
         ctrlKey: ctrlKey ?? false,
@@ -160,8 +186,8 @@ docs.pressKey = (keyCode, ctrlKey, shiftKey = mode.mode === 'visual' || mode.mod
     _a.correctCursor();
     return _a;
 };
-docs.copyText = () => {
-    return docs.pressHTMLElement(':77', 'id', true);
+docs.copyText = (clickingMenuItem = true) => {
+    return docs.pressHTMLElement(':77', 'id', clickingMenuItem, false);
 };
 docs.pasteText = () => {
     return docs.pressHTMLElement(':78', 'id', true);

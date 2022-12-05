@@ -83,18 +83,20 @@ export class docs {
     docs._setCursorWidth(width, isInsertMode);
   }
 
-  // https://stackoverflow.com/questions/27291021/google-docs-simulate-keyboard/63595176#63595176
   /**
-   * Gets the iframe that Google Docs uses to detect key-presses.
+   * Gets the docs target for typing into
+   * @return {HTMLIFrameElement | Null}
    */
-  static get textTarget(): HTMLElement {
-    return (
+  static get textTarget(): () => Promise<HTMLElement> {
+    return async () =>
       (
-        document.querySelector(
-          '.docs-texteventtarget-iframe'
-        ) as HTMLIFrameElement
-      ).contentDocument as Document
-    ).activeElement as HTMLElement;
+        (
+          (await this._waitForElm(
+            '.docs-texteventtarget-iframe'
+          )) as HTMLIFrameElement
+        ).contentDocument as Document
+      ).activeElement as HTMLElement;
+    //
   }
 
   /**
@@ -137,8 +139,6 @@ export class docs {
       )[0] as HTMLIFrameElement
     ).contentDocument as Document;
 
-    if (element === null) return;
-
     const data = {
       keyCode: keyCode,
       ctrlKey: ctrlKey ?? false,
@@ -156,11 +156,13 @@ export class docs {
    * @param selector - The selector of the element that you want to focus on.
    * @param type type of selection
    * @param clickingMenuItem if you're clicking an item in a menu or not
+   * @param addNewLine if you want to add a new line or not
    */
   public static pressHTMLElement(
     selector: string,
     type: 'class' | 'id' | 'tag' = 'id',
-    clickingMenuItem: boolean = false
+    clickingMenuItem: boolean = false,
+    addNewLine = false
   ) {
     const elSelector = document.querySelector(
       `[${type}="${selector}"]`
@@ -171,7 +173,6 @@ export class docs {
       elSelector.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
 
     if (clickingMenuItem) {
-      console.log('clicking menu item');
       elSelector.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
       elSelector.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
       elSelector.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
@@ -179,11 +180,25 @@ export class docs {
       elSelector.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
     }
 
+    /**
+     * Unused
+     */
+    if (addNewLine) {
+      try {
+        navigator.clipboard.readText().then(clipboardText => {
+          console.log(`"${clipboardText.trim()}"`);
+          navigator.clipboard.writeText(`${clipboardText.trim()}\n`);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     return this;
   }
 
-  public static copyText = () => {
-    return docs.pressHTMLElement(':77', 'id', true);
+  public static copyText = (clickingMenuItem = true) => {
+    return docs.pressHTMLElement(':77', 'id', clickingMenuItem, false);
   };
 
   public static pasteText = () => {
@@ -225,6 +240,9 @@ export class docs {
     return this;
   }
 
+  /**
+   * Corrects the cursor just incase you went over some colored text.
+   */
   public static correctCursor() {
     switch (mode.mode) {
       case 'normal':
@@ -240,6 +258,35 @@ export class docs {
         break;
     }
   }
+
+  /**
+   * Waits for a DOM elem to exist
+   * @param {string} selector
+   * @return {Promise<HTMLElement>}
+   */
+  private static _waitForElm(selector: string): Promise<HTMLElement> {
+    return new Promise(resolve => {
+      if (document.querySelector(selector))
+        return resolve(document.querySelector(selector) as HTMLElement);
+
+      const observer = new MutationObserver(() => {
+        if (document.querySelector(selector)) {
+          resolve(document.querySelector(selector) as HTMLElement);
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
+  }
+
+  // https://stackoverflow.com/questions/27291021/google-docs-simulate-keyboard/63595176#63595176
+  /**
+   * Gets the iframe that Google Docs uses to detect key-presses.
+   */
 
   /**
    * Sets the cursor's width.
@@ -305,12 +352,14 @@ export class docs {
   /**
    * Gets the users input
    */
-  private static _keydown(): boolean {
-    docs.textTarget.addEventListener('keydown', e => {
-      this._keyToArray(e);
-      return;
+  private static _keydown() {
+    docs.textTarget().then(target => {
+      target.addEventListener('keydown', e => {
+        this._keyToArray(e);
+        return;
+      });
+      this._hasEventListenerBeenAdded = true;
     });
-    this._hasEventListenerBeenAdded = true;
     return true;
   }
 

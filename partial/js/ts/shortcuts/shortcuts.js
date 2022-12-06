@@ -6,6 +6,8 @@ import { keysThatAreUsed } from './usedKeys';
 import { motionsCommandMap } from './motionsCommandMap';
 if (!docs.keyListenerStatus)
     docs.keydownInit();
+if (!docs.clickListenerStatus)
+    docs.clickInit();
 export const checkBindings = (currentMode, overRideModeNumber) => {
     const keyArray = docs.keyArray;
     const hasInvalidChar = keyArray.some(key => !keysThatAreUsed.includes(key.toString()));

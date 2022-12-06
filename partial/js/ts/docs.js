@@ -5,7 +5,10 @@ import { vim } from './vim';
 import { keys } from './shortcuts/keymap';
 export class docs {
     static get keyListenerStatus() {
-        return docs._hasEventListenerBeenAdded;
+        return docs._keyListener;
+    }
+    static get clickListenerStatus() {
+        return docs._mouseListener;
     }
     static get docID() {
         return window.location.href.split('/document/d/')[1].split('/')[0];
@@ -77,7 +80,10 @@ export class docs {
         return this;
     }
     static keydownInit() {
-        return !docs._hasEventListenerBeenAdded ? this._keydown() : false;
+        return !docs._keyListener ? this._keydown() : false;
+    }
+    static clickInit() {
+        return !docs._mouseListener ? this._clickEvent() : false;
     }
     static switchToMode(setMode) {
         mode.mode = setMode;
@@ -155,7 +161,16 @@ export class docs {
                 this._keyToArray(e);
                 return;
             });
-            this._hasEventListenerBeenAdded = true;
+            this._keyListener = true;
+        });
+        return true;
+    }
+    static _clickEvent() {
+        docs.textTarget().then(target => {
+            target.addEventListener('click', e => {
+                console.log('clicked');
+            });
+            this._mouseListener = true;
         });
         return true;
     }
@@ -173,7 +188,8 @@ export class docs {
 }
 _a = docs;
 docs._listOfCommands = [];
-docs._hasEventListenerBeenAdded = false;
+docs._keyListener = false;
+docs._mouseListener = false;
 docs.pressKey = (keyCode, ctrlKey, shiftKey = mode.mode === 'visual' || mode.mode === 'visualLine') => {
     const element = document.getElementsByClassName('docs-texteventtarget-iframe')[0].contentDocument;
     const data = {
@@ -187,6 +203,7 @@ docs.pressKey = (keyCode, ctrlKey, shiftKey = mode.mode === 'visual' || mode.mod
     return _a;
 };
 docs.copyText = (clickingMenuItem = true) => {
+    console.log('copying text');
     return docs.pressHTMLElement(':77', 'id', clickingMenuItem, false);
 };
 docs.pasteText = () => {

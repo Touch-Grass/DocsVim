@@ -127,7 +127,8 @@ export const commandMap = {
   },
   p: {
     normal: () => {
-      docs.pressKey(keys['end'])?.pasteText();
+      docs /*.pressKey(keys['end'])?*/
+        .pasteText();
     }
   },
   u: {
@@ -151,11 +152,8 @@ export const commandMap = {
     visualLine: () => docs.pressKey(keys['ArrowRight'], true)?.selectLine()
   },
   x: {
-    normal: () =>
-      docs
-        .pressKey(keys['ArrowRight'], false, true)
-        ?.copyText()
-        ?.pressKey(keys['delete']),
+    normal: () => docs.pressKey(keys['ArrowRight'], false, true)?.copyText(),
+    // ?.pressKey(keys['backspace']),
     visual: () => docs.copyText()?.pressKey(keys['delete'], false, false),
     visualLine: () => docs.copyText()?.pressKey(keys['delete'], false, false)
   },

@@ -9,13 +9,22 @@ import { keys } from './shortcuts/keymap';
  */
 export class docs {
   private static _listOfCommands: (string | number)[] = [];
-  private static _hasEventListenerBeenAdded = false;
+  private static _keyListener = false;
+  private static _mouseListener = false;
 
   /**
    * @returns {boolean} If the keyboard event listener has been added, it will return true, else false
    */
   static get keyListenerStatus(): boolean {
-    return docs._hasEventListenerBeenAdded;
+    return docs._keyListener;
+  }
+
+  /**
+   * Adds the keydown event listener to the document.
+   * @returns {boolean} If the click event listener has been added, it will return true, else false
+   */
+  static get clickListenerStatus(): boolean {
+    return docs._mouseListener;
   }
 
   /**
@@ -124,9 +133,9 @@ export class docs {
 
   /**
    * Simulates a key press
-   * @param keyCode {number} - The key code of the key that was pressed. (Has to be keycode for arrowKeys to work.)
-   * @param ctrlKey {boolean} - If the ctrl key was pressed.
-   * @param shiftKey {boolean} - If the shift key was pressed.
+   * @param {number} keyCode  - The key code of the key that was pressed. (Has to be keycode for arrowKeys to work.)
+   * @param {boolean} ctrlKey - If the ctrl key was pressed.
+   * @param {boolean} shiftKey - If the shift key was pressed.
    */
   public static pressKey = (
     keyCode: number,
@@ -198,6 +207,7 @@ export class docs {
   }
 
   public static copyText = (clickingMenuItem = true) => {
+    console.log('copying text');
     return docs.pressHTMLElement(':77', 'id', clickingMenuItem, false);
   };
 
@@ -226,7 +236,15 @@ export class docs {
    * @returns {boolean} - If the event listener has been added or not.
    */
   public static keydownInit(): boolean {
-    return !docs._hasEventListenerBeenAdded ? this._keydown() : false;
+    return !docs._keyListener ? this._keydown() : false;
+  }
+
+  /**
+   * Helper function to initialize the keydown event listener.
+   * @returns {boolean} - If the event listener has been added or not.
+   */
+  public static clickInit(): boolean {
+    return !docs._mouseListener ? this._clickEvent() : false;
   }
 
   /**
@@ -358,7 +376,17 @@ export class docs {
         this._keyToArray(e);
         return;
       });
-      this._hasEventListenerBeenAdded = true;
+      this._keyListener = true;
+    });
+    return true;
+  }
+
+  private static _clickEvent() {
+    docs.textTarget().then(target => {
+      target.addEventListener('click', e => {
+        console.log('clicked');
+      });
+      this._mouseListener = true;
     });
     return true;
   }

@@ -8,6 +8,7 @@ import { vimModeType } from '../types/types.js';
 
 //Adds the init shortcut once.
 if (!docs.keyListenerStatus) docs.keydownInit();
+if (!docs.clickListenerStatus) docs.clickInit();
 
 /**
  * Main function that handles all the shortcuts.

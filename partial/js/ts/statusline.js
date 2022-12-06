@@ -2,44 +2,97 @@ import { docs } from './docs';
 import { vim } from './vim';
 export class statusLine extends docs {
     static async initStatusLine() {
-        this._addClass(this._statusLine, 'vim_statusbar');
-        this._addClass(this._docId, 'vim_statusbar');
-        this._addClass(this._docName, 'vim_statusbar');
-        this._addClass(this._docId, 'vim_docId');
-        this._addClass(this._docName, 'vim_docName');
+        this._addClass(this._statusLineWrapper, ['vim_statusbar']);
+        this._addClass(this._docId, ['vim_statusbar_child']);
+        this._addClass(this._docsMode, ['vim_statusbar_child']);
+        this._addClass(this._keystrokes, ['vim_statusbar_child']);
         const style = document.createElement('style');
         style.textContent = `
         .vim_statusbar {
             background-color: transparent;
             width: 100%;
             height: 50px;
-            position: absolute;
             bottom: 10px;
             left: 7px;
+            position: absolute;
+            padding: 0.25rem 0.5rem;
+
             display: flex;
-            justify-content: flex-start;
-            align-items: flex-end;
+            justify-content: flex-end;
+            align-items: flex-start;
+            flex-direction: column;
+
+            font-family: monospace;
             font-size: 13px;
-            color: black;
+            color: grey;
             font-weight: bold;
           }
-          .vim_docId {
-            font-size: 11px;
-            bottom: 25px;
-            right: 7px;
-          }
         `;
-        document.body.append(this._statusLine);
-        document.body.append(this._docId);
+        document.body.append(this._statusLineWrapper);
         document.body.append(style);
+        this._statusLineWrapper.append(this._keystrokes);
+        this._statusLineWrapper.append(this._docsMode);
+        this._statusLineWrapper.append(this._docId);
         this.updateStatusbar(vim.mode);
-        this._docId.innerHTML = `${this.docID ?? this.docName ?? ''}`;
+        this.updateKeyArray();
+        this._docId.innerHTML = `${this.docID ?? ''}`;
     }
     static updateStatusbar(mode) {
-        this._statusLine.innerHTML = `-- ${mode} --`;
+        this._docsMode.innerHTML = mode
+            ? `-- ${mode.toUpperCase()} --`
+            : '-- NORMAL --';
+    }
+    static updateKeyArray() {
+        const betterKeyArray = this.keyArray
+            .map(key => {
+            if (key === 'Escape')
+                return 'Esc';
+            if (key === 'Control')
+                return 'Ctrl';
+            if (key === 'ArrowLeft')
+                return '←';
+            if (key === 'ArrowRight')
+                return '→';
+            if (key === 'ArrowUp')
+                return '↑';
+            if (key === 'ArrowDown')
+                return '↓';
+            if (key === 'Backspace')
+                return '⌫';
+            if (key === 'Delete')
+                return '⌦';
+            if (key === 'Enter')
+                return '⏎';
+            if (key === 'Tab')
+                return '⇥';
+            if (key === 'Shift')
+                return '⇧';
+            if (key === 'Alt')
+                return '⌥';
+            if (key === 'Meta')
+                return '⌘';
+            if (key === 'CapsLock')
+                return '⇪';
+            if (key === 'PageUp')
+                return '⇞';
+            if (key === 'PageDown')
+                return '⇟';
+            if (key === 'Home')
+                return '↖';
+            if (key === 'End')
+                return '↘';
+            if (key === 'Insert')
+                return 'Ins';
+            if (key === 'ContextMenu')
+                return '⌘';
+            else
+                return key;
+        })
+            .join('');
+        this._keystrokes.innerHTML = `${betterKeyArray ?? ''}`;
     }
     static _addClass(elem, className) {
-        elem.classList.add(className);
+        elem.classList.add(...className);
     }
     static _waitForElement(selector) {
         return new Promise(resolve => {
@@ -58,6 +111,7 @@ export class statusLine extends docs {
         });
     }
 }
-statusLine._statusLine = document.createElement('div');
+statusLine._statusLineWrapper = document.createElement('div');
 statusLine._docId = document.createElement('div');
-statusLine._docName = document.createElement('div');
+statusLine._docsMode = document.createElement('div');
+statusLine._keystrokes = document.createElement('div');

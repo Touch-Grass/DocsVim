@@ -60,6 +60,10 @@ export const checkBindings = (
           clearArray(keyArray);
           mode.isInMotion = false;
         }
+        if (keyArray.length >= 4) {
+          clearArray(keyArray);
+          mode.isInMotion = false;
+        }
       }
     }
   };

@@ -47,6 +47,10 @@ export const checkBindings = (currentMode, overRideModeNumber) => {
                     clearArray(keyArray);
                     mode.isInMotion = false;
                 }
+                if (keyArray.length >= 4) {
+                    clearArray(keyArray);
+                    mode.isInMotion = false;
+                }
             }
         }
     };

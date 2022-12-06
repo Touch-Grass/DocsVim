@@ -3,6 +3,7 @@ import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
 import { vimModeType } from './types/types.js';
 import { keys } from './shortcuts/keymap';
+import { statusLine } from './statusLine';
 
 /**
  * The main class for Google Docs. This class is used to add event listeners to the document and do other things related to the actual document.
@@ -261,7 +262,7 @@ export class docs {
   /**
    * Corrects the cursor just incase you went over some colored text.
    */
-  public static correctCursor() {
+  public static correctCursor(): void {
     switch (mode.mode) {
       case 'normal':
         this._setCursorWidth('7px', false);
@@ -279,8 +280,8 @@ export class docs {
 
   /**
    * Waits for a DOM elem to exist
-   * @param {string} selector
-   * @return {Promise<HTMLElement>}
+   * @param {string} selector - The selector of the element that you want to wait for.
+   * @return {Promise<HTMLElement>} - The element that was found.
    */
   private static _waitForElm(selector: string): Promise<HTMLElement> {
     return new Promise(resolve => {
@@ -363,6 +364,7 @@ export class docs {
       return this._listOfCommands;
 
     this._listOfCommands.push(keyboardEvent.key);
+    statusLine.updateKeyArray();
     checkBindings(vim.mode);
     return this._listOfCommands;
   }
@@ -370,7 +372,7 @@ export class docs {
   /**
    * Gets the users input
    */
-  private static _keydown() {
+  private static _keydown(): boolean {
     docs.textTarget().then(target => {
       target.addEventListener('keydown', e => {
         this._keyToArray(e);
@@ -381,13 +383,12 @@ export class docs {
     return true;
   }
 
-  private static _clickEvent() {
-    docs.textTarget().then(target => {
-      target.addEventListener('click', e => {
-        console.log('clicked');
-      });
+  private static _clickEvent(): boolean {
+    document.addEventListener('click', e => {
+      this.correctCursor();
       this._mouseListener = true;
     });
+
     return true;
   }
 

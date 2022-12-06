@@ -19,6 +19,13 @@ export const motionsCommandMap = {
         ?.pressKey(keys['end'], false, true)
         ?.copyText(true)
         ?.pressKey(keys['delete']),
+    cc: () => docs
+        .pressKey(keys['home'])
+        ?.pressKey(keys['shift'])
+        ?.pressKey(keys['end'], false, true)
+        ?.copyText(true)
+        ?.pressKey(keys['delete'])
+        ?.switchToMode('insert'),
     cw: () => docs
         .pressKey(keys['ArrowRight'], true, true)
         ?.pressKey(keys['delete'], false, false)

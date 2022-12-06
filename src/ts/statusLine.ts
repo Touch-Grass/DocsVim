@@ -5,19 +5,19 @@ import { vim } from './vim';
  * This class handles the statusbar and updating it.
  */
 export class statusLine extends docs {
-  private static readonly _statusLine = document.createElement('div');
+  private static readonly _statusLineWrapper = document.createElement('div');
   private static readonly _docId = document.createElement('div');
-  private static readonly _docName = document.createElement('div');
+  private static readonly _docsMode = document.createElement('div');
+  private static readonly _keystrokes = document.createElement('div');
 
   /**
    * Initializes the statusline, and adds it to the DOM.
    */
   public static async initStatusLine(): Promise<void> {
-    this._addClass(this._statusLine, 'vim_statusbar');
-    this._addClass(this._docId, 'vim_statusbar');
-    this._addClass(this._docName, 'vim_statusbar');
-    this._addClass(this._docId, 'vim_docId');
-    this._addClass(this._docName, 'vim_docName');
+    this._addClass(this._statusLineWrapper, ['vim_statusbar']);
+    this._addClass(this._docId, ['vim_statusbar_child']);
+    this._addClass(this._docsMode, ['vim_statusbar_child']);
+    this._addClass(this._keystrokes, ['vim_statusbar_child']);
 
     const style = document.createElement('style');
     style.textContent = `
@@ -25,39 +25,78 @@ export class statusLine extends docs {
             background-color: transparent;
             width: 100%;
             height: 50px;
-            position: absolute;
             bottom: 10px;
             left: 7px;
+            position: absolute;
+            padding: 0.25rem 0.5rem;
+
             display: flex;
-            justify-content: flex-start;
-            align-items: flex-end;
+            justify-content: flex-end;
+            align-items: flex-start;
+            flex-direction: column;
+
+            font-family: monospace;
             font-size: 13px;
-            color: black;
+            color: grey;
             font-weight: bold;
           }
-          .vim_docId {
-            font-size: 11px;
-            bottom: 25px;
-            right: 7px;
-          }
         `;
-    document.body.append(this._statusLine);
-    document.body.append(this._docId);
+    document.body.append(this._statusLineWrapper);
     document.body.append(style);
+    this._statusLineWrapper.append(this._keystrokes);
+    this._statusLineWrapper.append(this._docsMode);
+    this._statusLineWrapper.append(this._docId);
+
     this.updateStatusbar(vim.mode);
-    this._docId.innerHTML = `${this.docID ?? this.docName ?? ''}`;
+    this.updateKeyArray();
+
+    this._docId.innerHTML = `${this.docID ?? ''}`;
   }
 
   /**
    * Updates the statusline with the current mode.
-   * @param mode Mode that the statusline will display
+   * @param {string} mode Mode that the statusline will display
    */
   public static updateStatusbar(mode: string): void {
-    this._statusLine.innerHTML = `-- ${mode} --`;
+    this._docsMode.innerHTML = mode
+      ? `-- ${mode.toUpperCase()} --`
+      : '-- NORMAL --';
   }
 
-  private static _addClass(elem: HTMLElement, className: string): void {
-    elem.classList.add(className);
+  public static updateKeyArray(): void {
+    const betterKeyArray = this.keyArray
+      .map(key => {
+        if (key === 'Escape') return 'Esc';
+        if (key === 'Control') return 'Ctrl';
+        if (key === 'ArrowLeft') return '←';
+        if (key === 'ArrowRight') return '→';
+        if (key === 'ArrowUp') return '↑';
+        if (key === 'ArrowDown') return '↓';
+        if (key === 'Backspace') return '⌫';
+        if (key === 'Delete') return '⌦';
+        if (key === 'Enter') return '⏎';
+        if (key === 'Tab') return '⇥';
+        if (key === 'Shift') return '⇧';
+        if (key === 'Alt') return '⌥';
+        if (key === 'Meta') return '⌘';
+        if (key === 'CapsLock') return '⇪';
+        if (key === 'PageUp') return '⇞';
+        if (key === 'PageDown') return '⇟';
+        if (key === 'Home') return '↖';
+        if (key === 'End') return '↘';
+        if (key === 'Insert') return 'Ins';
+        if (key === 'ContextMenu') return '⌘';
+        else return key;
+      })
+      .join('');
+    this._keystrokes.innerHTML = `${betterKeyArray ?? ''}`;
+  }
+
+  /**
+   * Adds a class to an element.
+   */
+  private static _addClass(elem: HTMLElement, className: string[]): void {
+    elem.classList.add(...className);
   }
 
   /**

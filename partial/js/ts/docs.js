@@ -3,6 +3,7 @@ import { mode } from './mode/mode';
 import { checkBindings } from './shortcuts/shortcuts';
 import { vim } from './vim';
 import { keys } from './shortcuts/keymap';
+import { statusLine } from './statusLine';
 export class docs {
     static get keyListenerStatus() {
         return docs._keyListener;
@@ -152,6 +153,7 @@ export class docs {
         if (key === 'Control' || key === 'Shift' || key === 'Alt')
             return this._listOfCommands;
         this._listOfCommands.push(keyboardEvent.key);
+        statusLine.updateKeyArray();
         checkBindings(vim.mode);
         return this._listOfCommands;
     }
@@ -166,10 +168,8 @@ export class docs {
         return true;
     }
     static _clickEvent() {
-        docs.textTarget().then(target => {
-            target.addEventListener('click', e => {
-                console.log('clicked');
-            });
+        document.addEventListener('click', e => {
+            this.correctCursor();
             this._mouseListener = true;
         });
         return true;

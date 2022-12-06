@@ -21,6 +21,12 @@ export const commandMap = {
     D: {
         normal: () => docs?.pressKey(keys['end'], false, true)?.pressKey(keys['delete'])
     },
+    C: {
+        normal: () => docs
+            ?.pressKey(keys['end'], false, true)
+            ?.pressKey(keys['delete'])
+            ?.switchToMode('insert')
+    },
     Escape: {
         normal: () => (docs.switchToMode('normal').isInMotion = false),
         visual: () => (docs.switchToMode('normal').pressKey(keys['ArrowLeft']).isInMotion = false),
@@ -111,8 +117,12 @@ export const commandMap = {
     },
     p: {
         normal: () => {
-            docs
-                .pasteText();
+            docs.pasteText();
+        }
+    },
+    P: {
+        normal: () => {
+            docs.pressKey(keys['ArrowLeft'], false, false)?.pasteText();
         }
     },
     u: {
@@ -134,7 +144,10 @@ export const commandMap = {
         visualLine: () => docs.pressKey(keys['ArrowRight'], true)?.selectLine()
     },
     x: {
-        normal: () => docs.pressKey(keys['ArrowRight'], false, true)?.copyText(),
+        normal: () => docs
+            .pressKey(keys['ArrowRight'], false, true)
+            ?.copyText()
+            ?.pressKey(keys['backspace']),
         visual: () => docs.copyText()?.pressKey(keys['delete'], false, false),
         visualLine: () => docs.copyText()?.pressKey(keys['delete'], false, false)
     },

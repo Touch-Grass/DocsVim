@@ -19,7 +19,13 @@ export const commandMap = {
   },
   Backspace: {
     normal: () => docs.pressKey(keys['ArrowLeft']),
-    visual: () => docs.pressKey(keys['ArrowLeft'])
+    visual: () => docs.pressKey(keys['ArrowLeft']),
+    visualLine: () => docs.pressKey(keys['ArrowLeft'])
+  },
+  Space: {
+    normal: () => docs.pressKey(keys['ArrowRight']),
+    visual: () => docs.pressKey(keys['ArrowRight']),
+    visualLine: () => docs.pressKey(keys['ArrowRight'])
   },
   D: {
     normal: () =>
@@ -107,6 +113,12 @@ export const commandMap = {
   },
   i: {
     normal: () => docs.switchToMode('insert')
+  },
+  I: {
+    normal: () => docs.pressKey(keys['home'])?.switchToMode('insert')
+  },
+  A: {
+    normal: () => docs.pressKey(keys['end'])?.switchToMode('insert')
   },
   j: {
     normal: () => docs.pressKey(keys['ArrowDown']),

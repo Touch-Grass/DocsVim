@@ -34,7 +34,7 @@ export class statusLine extends docs {
         this._statusLineWrapper.append(this._docsMode);
         this._statusLineWrapper.append(this._docId);
         this.updateStatusbar(vim.mode);
-        this.updateKeyArray();
+        this.updateKeyArray(vim.mode);
         this._docId.innerHTML = `${this.docID ?? ''}`;
     }
     static updateStatusbar(mode) {
@@ -42,7 +42,7 @@ export class statusLine extends docs {
             ? `-- ${mode.toUpperCase()} --`
             : '-- NORMAL --';
     }
-    static updateKeyArray() {
+    static updateKeyArray(mode) {
         const betterKeyArray = this.keyArray
             .map(key => {
             if (key === 'Escape')
@@ -89,7 +89,8 @@ export class statusLine extends docs {
                 return key;
         })
             .join('');
-        this._keystrokes.innerHTML = `${betterKeyArray ?? ''}`;
+        this._keystrokes.innerHTML =
+            mode === 'insert' ? `` : `${betterKeyArray ?? ''}`;
     }
     static _addClass(elem, className) {
         elem.classList.add(...className);

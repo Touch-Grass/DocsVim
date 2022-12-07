@@ -5,6 +5,7 @@ export class mode extends docs {
     static _switchToMode(mode) {
         vim.number = 1;
         statusLine.updateStatusbar(mode);
+        statusLine.updateKeyArray(mode);
         switch (mode) {
             case 'insert':
                 console.log('Switching to insert mode.');

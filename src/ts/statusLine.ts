@@ -1,4 +1,5 @@
 import { docs } from './docs';
+import { vimModeType } from './types/types';
 import { vim } from './vim';
 
 /**
@@ -48,7 +49,7 @@ export class statusLine extends docs {
     this._statusLineWrapper.append(this._docId);
 
     this.updateStatusbar(vim.mode);
-    this.updateKeyArray();
+    this.updateKeyArray(vim.mode);
 
     this._docId.innerHTML = `${this.docID ?? ''}`;
   }
@@ -57,13 +58,13 @@ export class statusLine extends docs {
    * Updates the statusline with the current mode.
    * @param {string} mode Mode that the statusline will display
    */
-  public static updateStatusbar(mode: string): void {
+  public static updateStatusbar(mode: vimModeType): void {
     this._docsMode.innerHTML = mode
       ? `-- ${mode.toUpperCase()} --`
       : '-- NORMAL --';
   }
 
-  public static updateKeyArray(): void {
+  public static updateKeyArray(mode: vimModeType): void {
     const betterKeyArray = this.keyArray
       .map(key => {
         if (key === 'Escape') return 'Esc';
@@ -89,7 +90,9 @@ export class statusLine extends docs {
         else return key;
       })
       .join('');
-    this._keystrokes.innerHTML = `${betterKeyArray ?? ''}`;
+    // this._keystrokes.innerHTML = `${betterKeyArray ?? ''}`;
+    this._keystrokes.innerHTML =
+      mode === 'insert' ? `` : `${betterKeyArray ?? ''}`;
   }
 
   /**

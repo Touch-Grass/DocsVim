@@ -364,7 +364,7 @@ export class docs {
       return this._listOfCommands;
 
     this._listOfCommands.push(keyboardEvent.key);
-    statusLine.updateKeyArray();
+    statusLine.updateKeyArray(vim.mode);
     checkBindings(vim.mode);
     return this._listOfCommands;
   }

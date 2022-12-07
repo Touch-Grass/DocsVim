@@ -153,7 +153,7 @@ export class docs {
         if (key === 'Control' || key === 'Shift' || key === 'Alt')
             return this._listOfCommands;
         this._listOfCommands.push(keyboardEvent.key);
-        statusLine.updateKeyArray();
+        statusLine.updateKeyArray(vim.mode);
         checkBindings(vim.mode);
         return this._listOfCommands;
     }

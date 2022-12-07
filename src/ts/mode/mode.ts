@@ -12,6 +12,7 @@ export class mode extends docs {
     vim.number = 1;
     // Updates the statusbar to display the current mode ect.
     statusLine.updateStatusbar(mode);
+    statusLine.updateKeyArray(mode);
 
     // Handles the cursor and vim Mode login when switching modes.
     switch (mode) {
